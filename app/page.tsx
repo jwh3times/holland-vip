@@ -154,29 +154,74 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Featured Projects</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3].map((project) => (
-                <div
-                  key={project}
-                  className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-xl transition-shadow"
-                >
-                  <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600"></div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2">Project {project}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">
-                      A brief description of this amazing project and the technologies used to build
-                      it.
-                    </p>
-                    <div className="flex gap-2">
-                      <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">
-                        React
-                      </span>
-                      <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">
-                        TypeScript
-                      </span>
-                    </div>
+              {/* Project 1 */}
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-xl transition-shadow">
+                <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600"></div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-2">E-Commerce Platform</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    A full-stack e-commerce solution with real-time inventory management, payment
+                    processing, and responsive design.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">
+                      React
+                    </span>
+                    <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">
+                      Node.js
+                    </span>
+                    <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">
+                      PostgreSQL
+                    </span>
                   </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Project 2 */}
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-xl transition-shadow">
+                <div className="h-48 bg-gradient-to-br from-purple-400 to-purple-600"></div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-2">Task Management Dashboard</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    An intuitive project management tool with drag-and-drop functionality, team
+                    collaboration features, and analytics.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded">
+                      Next.js
+                    </span>
+                    <span className="text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded">
+                      TypeScript
+                    </span>
+                    <span className="text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded">
+                      MongoDB
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Project 3 */}
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-xl transition-shadow">
+                <div className="h-48 bg-gradient-to-br from-green-400 to-green-600"></div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-2">Real-Time Analytics API</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    A high-performance REST API for processing and visualizing large datasets with
+                    real-time updates and WebSocket support.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded">
+                      Python
+                    </span>
+                    <span className="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded">
+                      FastAPI
+                    </span>
+                    <span className="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded">
+                      Redis
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
