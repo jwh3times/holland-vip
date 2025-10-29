@@ -6,7 +6,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex-shrink-0">
-              <span className="text-2xl font-bold text-blue-600">Holland.VIP</span>
+              <span className="text-2xl font-bold text-blue-600">Jerry Holland</span>
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
@@ -45,7 +45,7 @@ export default function Home() {
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Hi, I'm <span className="text-blue-600">Holland</span>
+              Hi, I'm <span className="text-blue-600">Jerry Holland</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-8">
               Senior Software Engineer | Fullstack Developer
@@ -190,7 +190,7 @@ export default function Home() {
               technology.
             </p>
             <a
-              href="mailto:contact@holland.vip"
+              href="mailto:jerry@holland.vip"
               className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
             >
               Send Me an Email
@@ -235,7 +235,7 @@ export default function Home() {
 
             {/* Copyright */}
             <p className="text-gray-600 dark:text-gray-400">
-              &copy; {new Date().getFullYear()} Holland.VIP. All rights reserved.
+              &copy; {new Date().getFullYear()} Holland. All rights reserved.
             </p>
           </div>
         </div>
