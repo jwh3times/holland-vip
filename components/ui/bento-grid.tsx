@@ -36,7 +36,7 @@ const BentoGridItem = React.forwardRef<
         className
       )}
     >
-      <div className="group-hover/bento:translate-x-1 transition duration-300 text-gray-700 dark:text-gray-200 flex-grow flex flex-col gap-4">
+      <div className="group-hover/bento:translate-x-1 transition duration-300 text-body flex-grow flex flex-col gap-4">
         {icon && (
           <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-300 dark:bg-blue-500/15 ring-1 ring-blue-500/20 dark:ring-blue-500/25 flex-shrink-0">
             {icon}
@@ -45,7 +45,7 @@ const BentoGridItem = React.forwardRef<
         <div className="font-sans font-bold text-lg text-heading flex-shrink-0">
           {title}
         </div>
-        <div className="font-sans text-sm leading-relaxed text-gray-600 dark:text-gray-300 flex-grow overflow-hidden">
+        <div className="font-sans text-sm leading-relaxed text-muted flex-grow overflow-hidden">
           {description}
         </div>
       </div>
@@ -55,3 +55,5 @@ const BentoGridItem = React.forwardRef<
 BentoGridItem.displayName = "BentoGridItem";
 
 export { BentoGrid, BentoGridItem };
+
+
