@@ -32,7 +32,7 @@ const items = [
   {
     title: "Third-Party System Integration Platform",
     description:
-      "Built flexible integration layer connecting multiple enterprise systems via REST APIs. Implemented data synchronization, transformation pipelines, and error recovery mechanisms. Reduced manual data entry by 80% through automated workflows.",
+      "Built flexible integration layer connecting multiple enterprise systems via REST APIs. Implemented data synchronization, transformation pipelines, and error recovery mechanisms. Streamlined workflows by automating data exchange between systems.",
     icon: <IconTableColumn className="h-5 w-5" />,
     className: "md:col-span-2",
   },
@@ -394,15 +394,7 @@ export default function Home() {
                   Databases & Messaging
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                  {[
-                    "PostgreSQL",
-                    "SQL Server",
-                    "Redis",
-                    "RabbitMQ",
-                    "Geode",
-                    "MongoDB",
-                    "Apache Kafka",
-                  ].map((skill) => (
+                  {["PostgreSQL", "SQL Server", "Redis", "RabbitMQ", "Geode"].map((skill) => (
                     <div
                       key={skill}
                       className="rounded-xl p-4 text-center shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl card-bg-white-transparent ring-1 ring-inset ring-gray-200/70 dark:ring-blue-500/40"
