@@ -51,31 +51,31 @@ export default function Home() {
             <div className="hidden md:flex items-center space-x-4">
               <a
                 href="#about"
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:scale-105"
+                className="text-label hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:scale-105"
               >
                 About
               </a>
               <a
                 href="#skills"
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:scale-105"
+                className="text-label hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:scale-105"
               >
                 Skills
               </a>
               <a
                 href="#experience"
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:scale-105"
+                className="text-label hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:scale-105"
               >
                 Experience
               </a>
               <a
                 href="#projects"
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:scale-105"
+                className="text-label hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:scale-105"
               >
                 Projects
               </a>
               <a
                 href="#contact"
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:scale-105"
+                className="text-label hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:scale-105"
               >
                 Contact
               </a>
@@ -98,7 +98,7 @@ export default function Home() {
               <p className="text-2xl md:text-3xl text-subheading mb-6 animate-fadeInUp font-semibold">
                 Senior Software Engineer | 12+ Years Experience
               </p>
-              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-10 animate-fadeInUp leading-relaxed">
+              <p className="text-lg md:text-xl text-muted max-w-3xl mx-auto mb-10 animate-fadeInUp leading-relaxed">
                 Building scalable, high-performance applications with expertise in full-stack
                 development, cloud architecture, and system optimization.
               </p>
@@ -109,7 +109,7 @@ export default function Home() {
                   href="https://github.com/jwh3times"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-125 transform"
+                  className="text-muted hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-125 transform"
                   aria-label="GitHub"
                 >
                   <svg
@@ -129,7 +129,7 @@ export default function Home() {
                   href="https://www.linkedin.com/in/jerryhollandiii"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-125 transform"
+                  className="text-muted hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-125 transform"
                   aria-label="LinkedIn"
                 >
                   <svg
@@ -169,13 +169,13 @@ export default function Home() {
             </h2>
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                <p className="text-lg text-muted mb-6 leading-relaxed">
                   Senior Software Engineer with 12 years of experience spanning full-stack
                   development, back-end architecture, and embedded systems. I specialize in building
                   scalable, high-performance applications using modern cloud technologies and
                   microservices architecture.
                 </p>
-                <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                <p className="text-lg text-muted mb-6 leading-relaxed">
                   Currently working on enterprise cloud infrastructure modernization, migrating
                   legacy systems to modern containerized architectures. Specializing in performance
                   optimization, real-time data processing, and building scalable SaaS solutions for
@@ -183,7 +183,7 @@ export default function Home() {
                   millions of daily requests, implementing message queue systems for asynchronous
                   processing, and creating interactive visualization tools for complex datasets.
                 </p>
-                <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+                <p className="text-lg text-muted leading-relaxed">
                   Passionate about performance tuning, system optimization, and mentoring
                   developers. I believe in test-driven development, Agile best practices, and
                   continuous learning to stay at the forefront of technology.
@@ -196,10 +196,10 @@ export default function Home() {
                   <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
                     15%
                   </div>
-                  <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                  <div className="text-sm font-semibold text-label mb-1">
                     Developer Productivity Increase
                   </div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400">
+                  <div className="text-xs text-muted">
                     Through CI/CD pipeline automation and improved deployment processes
                   </div>
                 </div>
@@ -208,10 +208,10 @@ export default function Home() {
                   <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">
                     11%
                   </div>
-                  <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                  <div className="text-sm font-semibold text-label mb-1">
                     Query Performance Improvement
                   </div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400">
+                  <div className="text-xs text-muted">
                     Database optimization reducing execution times across the platform
                   </div>
                 </div>
@@ -220,10 +220,10 @@ export default function Home() {
                   <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
                     7%
                   </div>
-                  <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                  <div className="text-sm font-semibold text-label mb-1">
                     Execution Efficiency Gain
                   </div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400">
+                  <div className="text-xs text-muted">
                     Java application modernization to latest LTS version
                   </div>
                 </div>
@@ -232,10 +232,10 @@ export default function Home() {
                   <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-2">
                     83%
                   </div>
-                  <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                  <div className="text-sm font-semibold text-label mb-1">
                     Failure Rate Reduction
                   </div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400">
+                  <div className="text-xs text-muted">
                     Li-Ion battery failures reduced from 30% to 5% through design optimization
                   </div>
                 </div>
@@ -251,7 +251,7 @@ export default function Home() {
                     <h4 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-3">
                       Enterprise Cloud Platform Migration
                     </h4>
-                    <ul className="space-y-2 text-gray-600 dark:text-gray-400">
+                    <ul className="space-y-2 text-muted">
                       <li className="flex items-start">
                         <span className="mr-2 text-blue-500">▸</span>
                         <span>
@@ -276,7 +276,7 @@ export default function Home() {
                     <h4 className="text-xl font-bold text-green-600 dark:text-green-400 mb-3">
                       Database Performance Optimization
                     </h4>
-                    <ul className="space-y-2 text-gray-600 dark:text-gray-400">
+                    <ul className="space-y-2 text-muted">
                       <li className="flex items-start">
                         <span className="mr-2 text-green-500">▸</span>
                         <span>
@@ -304,7 +304,7 @@ export default function Home() {
                     <h4 className="text-xl font-bold text-purple-600 dark:text-purple-400 mb-3">
                       Real-Time Data Pipeline Architecture
                     </h4>
-                    <ul className="space-y-2 text-gray-600 dark:text-gray-400">
+                    <ul className="space-y-2 text-muted">
                       <li className="flex items-start">
                         <span className="mr-2 text-purple-500">▸</span>
                         <span>
@@ -456,27 +456,21 @@ export default function Home() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="flex items-start">
                     <span className="mr-2 text-blue-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
+                    <span className="text-label">
                       Microservices architecture with containerization
                     </span>
                   </div>
                   <div className="flex items-start">
                     <span className="mr-2 text-blue-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      Event-driven systems using message queues
-                    </span>
+                    <span className="text-label">Event-driven systems using message queues</span>
                   </div>
                   <div className="flex items-start">
                     <span className="mr-2 text-blue-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      Multi-tenant SaaS platform design
-                    </span>
+                    <span className="text-label">Multi-tenant SaaS platform design</span>
                   </div>
                   <div className="flex items-start">
                     <span className="mr-2 text-blue-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      RESTful API development with versioning
-                    </span>
+                    <span className="text-label">RESTful API development with versioning</span>
                   </div>
                 </div>
               </div>
@@ -489,27 +483,23 @@ export default function Home() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="flex items-start">
                     <span className="mr-2 text-green-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
+                    <span className="text-label">
                       Database query optimization and indexing strategies
                     </span>
                   </div>
                   <div className="flex items-start">
                     <span className="mr-2 text-green-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
+                    <span className="text-label">
                       Caching layer implementation (distributed & in-memory)
                     </span>
                   </div>
                   <div className="flex items-start">
                     <span className="mr-2 text-green-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      Multi-threaded data processing
-                    </span>
+                    <span className="text-label">Multi-threaded data processing</span>
                   </div>
                   <div className="flex items-start">
                     <span className="mr-2 text-green-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      Load balancing and horizontal scaling
-                    </span>
+                    <span className="text-label">Load balancing and horizontal scaling</span>
                   </div>
                 </div>
               </div>
@@ -522,27 +512,19 @@ export default function Home() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="flex items-start">
                     <span className="mr-2 text-purple-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      CI/CD pipeline automation and optimization
-                    </span>
+                    <span className="text-label">CI/CD pipeline automation and optimization</span>
                   </div>
                   <div className="flex items-start">
                     <span className="mr-2 text-purple-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      Container orchestration (Kubernetes)
-                    </span>
+                    <span className="text-label">Container orchestration (Kubernetes)</span>
                   </div>
                   <div className="flex items-start">
                     <span className="mr-2 text-purple-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      Cloud platform migration strategies
-                    </span>
+                    <span className="text-label">Cloud platform migration strategies</span>
                   </div>
                   <div className="flex items-start">
                     <span className="mr-2 text-purple-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      Infrastructure as Code (IaC)
-                    </span>
+                    <span className="text-label">Infrastructure as Code (IaC)</span>
                   </div>
                 </div>
               </div>
@@ -555,27 +537,19 @@ export default function Home() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="flex items-start">
                     <span className="mr-2 text-orange-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      Real-time data streaming and processing
-                    </span>
+                    <span className="text-label">Real-time data streaming and processing</span>
                   </div>
                   <div className="flex items-start">
                     <span className="mr-2 text-orange-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      Time-series data storage and retrieval
-                    </span>
+                    <span className="text-label">Time-series data storage and retrieval</span>
                   </div>
                   <div className="flex items-start">
                     <span className="mr-2 text-orange-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      ETL pipeline development
-                    </span>
+                    <span className="text-label">ETL pipeline development</span>
                   </div>
                   <div className="flex items-start">
                     <span className="mr-2 text-orange-500 text-xl">•</span>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      Data validation and quality assurance
-                    </span>
+                    <span className="text-label">Data validation and quality assurance</span>
                   </div>
                 </div>
               </div>
@@ -599,7 +573,7 @@ export default function Home() {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-heading mb-2">Challenge</h3>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-label">
                       Legacy authentication system causing frequent user lockouts and poor session
                       management
                     </p>
@@ -611,7 +585,7 @@ export default function Home() {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-heading mb-2">Solution</h3>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-label">
                       Implemented modern OAuth/OIDC flow with refresh token management and dual
                       authentication provider support for seamless failover
                     </p>
@@ -623,7 +597,7 @@ export default function Home() {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-heading mb-2">Impact</h3>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-label">
                       Reduced authentication support tickets by 75%, improved user satisfaction
                       scores, and enabled single sign-on capabilities
                     </p>
@@ -639,7 +613,7 @@ export default function Home() {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-heading mb-2">Challenge</h3>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-label">
                       Complex database queries timing out in production, causing application
                       slowdowns and poor user experience
                     </p>
@@ -651,7 +625,7 @@ export default function Home() {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-heading mb-2">Solution</h3>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-label">
                       Analyzed execution plans, identified bottlenecks, added strategic indexes, and
                       refactored complex CTEs for better query optimization
                     </p>
@@ -663,7 +637,7 @@ export default function Home() {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-heading mb-2">Impact</h3>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-label">
                       Reduced query execution time from 45 seconds to under 3 seconds, dramatically
                       improved user experience and system throughput
                     </p>
@@ -679,7 +653,7 @@ export default function Home() {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-heading mb-2">Challenge</h3>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-label">
                       Manual data import process prone to errors, consuming significant staff time
                       and causing data quality issues
                     </p>
@@ -691,7 +665,7 @@ export default function Home() {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-heading mb-2">Solution</h3>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-label">
                       Built automated import system with comprehensive validation, error recovery
                       mechanisms, and transactional rollback capabilities
                     </p>
@@ -703,7 +677,7 @@ export default function Home() {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-heading mb-2">Impact</h3>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-label">
                       Eliminated 95% of data import errors, freed up 10+ hours per week of staff
                       time, and improved data quality metrics
                     </p>
@@ -733,17 +707,13 @@ export default function Home() {
                   <div className="rounded-2xl p-6 card-bg-white-80 backdrop-blur-sm border border-gray-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300">
                     <div className="flex flex-wrap items-center gap-3 mb-3">
                       <h3 className="text-xl font-bold text-heading">Senior Web Developer</h3>
-                      <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-full text-xs font-semibold">
+                      <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-badge-blue rounded-full text-xs font-semibold">
                         Current
                       </span>
                     </div>
-                    <div className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                      Prometheus Group
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                      Jun 2024 - Present • Raleigh, NC
-                    </div>
-                    <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-base font-semibold text-label mb-2">Prometheus Group</div>
+                    <div className="text-sm text-muted mb-4">Jun 2024 - Present • Raleigh, NC</div>
+                    <ul className="space-y-2 text-sm text-muted">
                       <li className="flex items-start">
                         <span className="mr-2 text-blue-500">▸</span>
                         <span>
@@ -774,13 +744,9 @@ export default function Home() {
                   <div className="absolute -left-[3.25rem] top-2 w-6 h-6 rounded-full bg-purple-500 border-4 border-white dark:border-slate-900 ring-4 ring-purple-500/20"></div>
                   <div className="rounded-2xl p-6 card-bg-white-80 backdrop-blur-sm border border-gray-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300">
                     <h3 className="text-xl font-bold text-heading mb-3">Software Developer</h3>
-                    <div className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                      SAS Institute
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                      Aug 2017 - Apr 2024 • Cary, NC
-                    </div>
-                    <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-base font-semibold text-label mb-2">SAS Institute</div>
+                    <div className="text-sm text-muted mb-4">Aug 2017 - Apr 2024 • Cary, NC</div>
+                    <ul className="space-y-2 text-sm text-muted">
                       <li className="flex items-start">
                         <span className="mr-2 text-purple-500">▸</span>
                         <span>
@@ -811,13 +777,11 @@ export default function Home() {
                   <div className="absolute -left-[3.25rem] top-2 w-6 h-6 rounded-full bg-green-500 border-4 border-white dark:border-slate-900 ring-4 ring-green-500/20"></div>
                   <div className="rounded-2xl p-6 card-bg-white-80 backdrop-blur-sm border border-gray-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300">
                     <h3 className="text-xl font-bold text-heading mb-3">Electrical Engineer</h3>
-                    <div className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    <div className="text-base font-semibold text-label mb-2">
                       Humboldt Scientific
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                      Jun 2013 - Aug 2017 • Raleigh, NC
-                    </div>
-                    <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-sm text-muted mb-4">Jun 2013 - Aug 2017 • Raleigh, NC</div>
+                    <ul className="space-y-2 text-sm text-muted">
                       <li className="flex items-start">
                         <span className="mr-2 text-green-500">▸</span>
                         <span>
@@ -889,9 +853,7 @@ export default function Home() {
                     <h3 className="text-2xl font-bold text-heading mb-2">
                       North Carolina State University
                     </h3>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                      Raleigh, NC • Graduated May 2013
-                    </div>
+                    <div className="text-sm text-muted mb-4">Raleigh, NC • Graduated May 2013</div>
 
                     {/* Degrees */}
                     <div className="space-y-3">
@@ -916,13 +878,13 @@ export default function Home() {
                     {/* Highlights */}
                     <div className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700">
                       <div className="flex flex-wrap gap-2">
-                        <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-full text-xs font-semibold">
+                        <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-badge-blue rounded-full text-xs font-semibold">
                           Dual Degree Program
                         </span>
-                        <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 rounded-full text-xs font-semibold">
+                        <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/40 text-badge-purple rounded-full text-xs font-semibold">
                           Engineering Focus
                         </span>
-                        <span className="px-3 py-1 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 rounded-full text-xs font-semibold">
+                        <span className="px-3 py-1 bg-green-100 dark:bg-green-900/40 text-badge-green rounded-full text-xs font-semibold">
                           Computer Science
                         </span>
                       </div>
@@ -938,7 +900,7 @@ export default function Home() {
         <section id="contact" className="section-surface-contrast py-20">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-heading">Get In Touch</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
+            <p className="text-lg text-muted mb-8">
               I'm always open to discussing new opportunities, projects, or just having a chat about
               technology.
             </p>
@@ -962,7 +924,7 @@ export default function Home() {
                 href="https://github.com/YOUR_GITHUB_USERNAME"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="text-muted hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 aria-label="GitHub"
               >
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -977,7 +939,7 @@ export default function Home() {
                 href="https://www.linkedin.com/in/YOUR_LINKEDIN_USERNAME"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="text-muted hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 aria-label="LinkedIn"
               >
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -987,7 +949,7 @@ export default function Home() {
             </div>
 
             {/* Copyright */}
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-muted">
               &copy; {new Date().getFullYear()} Holland. All rights reserved.
             </p>
           </div>
