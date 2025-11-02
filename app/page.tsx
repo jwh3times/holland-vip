@@ -913,7 +913,7 @@ export default function Home() {
             {/* Social Links */}
             <div className="flex gap-6">
               <a
-                href="https://github.com/YOUR_GITHUB_USERNAME"
+                href="https://github.com/jwh3times"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
@@ -928,7 +928,7 @@ export default function Home() {
                 </svg>
               </a>
               <a
-                href="https://www.linkedin.com/in/YOUR_LINKEDIN_USERNAME"
+                href="https://www.linkedin.com/in/jerryhollandiii"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
