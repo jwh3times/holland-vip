@@ -24,6 +24,15 @@
     --heading-text: 222 47% 11%;
     --badge-text: 222 47% 11%; /* Dark text for badges/pills in light mode */
     --subheading-text: 222 47% 11%; /* Dark text for subtitles/subheadings in light mode */
+    --body-text: 75 85% 6%; /* Body text - dark gray-600 equivalent */
+    --label-text: 222 47% 11%; /* Labels/semibold text - dark gray-700 equivalent */
+    --muted-text: 220 9% 46%; /* Muted/secondary text - gray-600 equivalent */
+
+    /* Colored badge text - darker for better contrast in light mode */
+    --badge-blue-text: 214 100% 25%; /* Much darker blue for light backgrounds */
+    --badge-green-text: 142 76% 20%; /* Much darker green for light backgrounds */
+    --badge-purple-text: 250 100% 28%; /* Much darker purple for light backgrounds */
+    --badge-orange-text: 33 100% 30%; /* Much darker orange for light backgrounds */
   }
 
   .dark {
@@ -49,6 +58,15 @@
     --heading-text: 210 40% 98%;
     --badge-text: 210 40% 98%; /* Light text for badges/pills in dark mode */
     --subheading-text: 210 40% 98%; /* Light text for subtitles/subheadings in dark mode */
+    --body-text: 218 11% 65%; /* Body text - light gray-400 equivalent */
+    --label-text: 215 20% 65%; /* Labels/semibold text - light gray-300 equivalent */
+    --muted-text: 218 11% 65%; /* Muted/secondary text - gray-400 equivalent */
+
+    /* Colored badge text - lighter for dark backgrounds */
+    --badge-blue-text: 214 100% 75%; /* Light blue for dark backgrounds */
+    --badge-green-text: 142 76% 70%; /* Light green for dark backgrounds */
+    --badge-purple-text: 250 100% 75%; /* Light purple for dark backgrounds */
+    --badge-orange-text: 33 100% 70%; /* Light orange for dark backgrounds */
   }
 
   body {
@@ -86,6 +104,34 @@
 
   .text-subheading {
     color: hsl(var(--subheading-text));
+  }
+
+  .text-body {
+    color: hsl(var(--body-text));
+  }
+
+  .text-label {
+    color: hsl(var(--label-text));
+  }
+
+  .text-muted {
+    color: hsl(var(--muted-text));
+  }
+
+  .text-badge-blue {
+    color: hsl(var(--badge-blue-text));
+  }
+
+  .text-badge-green {
+    color: hsl(var(--badge-green-text));
+  }
+
+  .text-badge-purple {
+    color: hsl(var(--badge-purple-text));
+  }
+
+  .text-badge-orange {
+    color: hsl(var(--badge-orange-text));
   }
 
   .card-bg-blue {
