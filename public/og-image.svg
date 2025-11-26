@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0f4ff"/>
+      <stop offset="50%" style="stop-color:#ffffff"/>
+      <stop offset="100%" style="stop-color:#ede9fe"/>
+    </linearGradient>
+    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg-grad)"/>
+  
+  <!-- Logo Box -->
+  <rect x="540" y="80" width="120" height="120" rx="24" fill="url(#logo-grad)"/>
+  <text x="600" y="160" font-family="system-ui, -apple-system, sans-serif" font-size="60" font-weight="700" text-anchor="middle" fill="white">JH</text>
+  
+  <!-- Name -->
+  <text x="600" y="270" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="700" text-anchor="middle" fill="#667eea">Jerry Holland</text>
+  
+  <!-- Title -->
+  <text x="600" y="330" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="600" text-anchor="middle" fill="#1e293b">Senior Software Engineer</text>
+  
+  <!-- Description -->
+  <text x="600" y="390" font-family="system-ui, -apple-system, sans-serif" font-size="24" text-anchor="middle" fill="#64748b">12+ years of experience in full-stack development,</text>
+  <text x="600" y="425" font-family="system-ui, -apple-system, sans-serif" font-size="24" text-anchor="middle" fill="#64748b">cloud architecture, and system optimization</text>
+  
+  <!-- Tech badges -->
+  <g font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500">
+    <rect x="290" y="470" width="70" height="36" rx="18" fill="rgba(59, 130, 246, 0.1)"/>
+    <text x="325" y="494" text-anchor="middle" fill="#3b82f6">.NET</text>
+    
+    <rect x="380" y="470" width="70" height="36" rx="18" fill="rgba(59, 130, 246, 0.1)"/>
+    <text x="415" y="494" text-anchor="middle" fill="#3b82f6">Java</text>
+    
+    <rect x="470" y="470" width="85" height="36" rx="18" fill="rgba(59, 130, 246, 0.1)"/>
+    <text x="512" y="494" text-anchor="middle" fill="#3b82f6">Python</text>
+    
+    <rect x="575" y="470" width="70" height="36" rx="18" fill="rgba(59, 130, 246, 0.1)"/>
+    <text x="610" y="494" text-anchor="middle" fill="#3b82f6">AWS</text>
+    
+    <rect x="665" y="470" width="75" height="36" rx="18" fill="rgba(59, 130, 246, 0.1)"/>
+    <text x="702" y="494" text-anchor="middle" fill="#3b82f6">Azure</text>
+    
+    <rect x="760" y="470" width="75" height="36" rx="18" fill="rgba(59, 130, 246, 0.1)"/>
+    <text x="797" y="494" text-anchor="middle" fill="#3b82f6">React</text>
+  </g>
+  
+  <!-- URL -->
+  <text x="600" y="580" font-family="system-ui, -apple-system, sans-serif" font-size="20" text-anchor="middle" fill="#94a3b8">holland.vip</text>
+</svg>
