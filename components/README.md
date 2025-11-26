@@ -4,13 +4,28 @@ Reusable React components for the Holland.VIP portfolio website.
 
 ## 📁 Structure
 
-```
+```text
 components/
-├── ui/                    # UI primitives and building blocks
-│   ├── bento-grid.tsx    # Feature showcase grid component
-│   └── button.tsx        # Reusable button component
-├── mode-toggle.tsx       # Dark/light theme switcher
-└── theme-provider.tsx    # Theme context wrapper
+├── ui/                       # UI primitives and building blocks
+│   ├── bento-grid.tsx       # Feature showcase grid component
+│   └── button.tsx           # Reusable button component
+├── sections/                 # Page section components
+│   ├── HeroSection.tsx      # Hero/intro section
+│   ├── AboutSection.tsx     # About me section
+│   ├── SkillsSection.tsx    # Skills showcase
+│   ├── TechnicalCapabilities.tsx # Technical skills grid
+│   ├── ProblemSolving.tsx   # Problem solving highlight
+│   ├── ExperienceSection.tsx # Work experience timeline
+│   ├── ProjectsSection.tsx  # Projects bento grid
+│   ├── EducationSection.tsx # Education & certifications
+│   ├── ContactSection.tsx   # Contact information
+│   └── index.ts             # Section exports
+├── icons/                    # Custom icon components
+│   └── SocialIcons.tsx      # GitHub, LinkedIn icons
+├── Navigation.tsx           # Header navigation with mobile menu
+├── Footer.tsx               # Site footer with social links
+├── mode-toggle.tsx          # Dark/light theme switcher
+└── theme-provider.tsx       # Theme context wrapper
 ```
 
 ## 🧩 Current Components
@@ -90,6 +105,86 @@ User-facing toggle button for switching between light/dark themes.
 - Smooth transitions
 - Accessible (keyboard navigation)
 - Positioned in navigation header
+
+### Layout Components
+
+#### `Navigation.tsx`
+
+Responsive header navigation with mobile hamburger menu.
+
+**Features:**
+
+- Desktop navigation links
+- Mobile hamburger menu (Menu/X icons)
+- Scroll-aware sticky positioning
+- Smooth transitions
+- Accessible (keyboard navigation, ARIA attributes)
+- Includes theme toggle
+
+#### `Footer.tsx`
+
+Site footer with social links and copyright.
+
+**Features:**
+
+- Social media links (GitHub, LinkedIn)
+- Copyright notice
+- Responsive layout
+- Dark/light theme support
+
+### Section Components (`/sections`)
+
+Modular page sections for the portfolio:
+
+| Component                   | Description                                  |
+| --------------------------- | -------------------------------------------- |
+| `HeroSection.tsx`           | Hero intro with name, title, and CTA buttons |
+| `AboutSection.tsx`          | Personal introduction and background         |
+| `SkillsSection.tsx`         | Core skills and technologies                 |
+| `TechnicalCapabilities.tsx` | Technical skills in a grid layout            |
+| `ProblemSolving.tsx`        | Problem-solving approach highlight           |
+| `ExperienceSection.tsx`     | Work experience timeline                     |
+| `ProjectsSection.tsx`       | Projects showcase using BentoGrid            |
+| `EducationSection.tsx`      | Education and certifications                 |
+| `ContactSection.tsx`        | Contact information and links                |
+
+**Usage:**
+
+```tsx
+import { HeroSection, AboutSection, SkillsSection, ExperienceSection } from "@/components/sections";
+
+export default function Page() {
+  return (
+    <main>
+      <HeroSection />
+      <AboutSection />
+      <SkillsSection />
+      <ExperienceSection />
+    </main>
+  );
+}
+```
+
+### Icon Components (`/icons`)
+
+#### `SocialIcons.tsx`
+
+Custom SVG icons for social media links.
+
+**Available Icons:**
+
+- `GitHubIcon` - GitHub logo
+- `LinkedInIcon` - LinkedIn logo
+
+**Usage:**
+
+```tsx
+import { GitHubIcon, LinkedInIcon } from "@/components/icons/SocialIcons";
+
+<a href="https://github.com/username">
+  <GitHubIcon className="h-6 w-6" />
+</a>;
+```
 
 ## 🎨 Styling Approach
 
