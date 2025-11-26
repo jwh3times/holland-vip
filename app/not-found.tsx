@@ -12,7 +12,7 @@ export default function NotFound() {
 
         {/* Description */}
         <p className="text-lg text-muted max-w-md mx-auto mb-8">
-          Sorry, the page you're looking for doesn't exist or has been moved.
+          Sorry, the page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
 
         {/* Back to Home Button */}
