@@ -42,9 +42,7 @@ const BentoGridItem = React.forwardRef<
             {icon}
           </div>
         )}
-        <div className="font-sans font-bold text-lg text-heading flex-shrink-0">
-          {title}
-        </div>
+        <div className="font-sans font-bold text-lg text-heading flex-shrink-0">{title}</div>
         <div className="font-sans text-sm leading-relaxed text-muted flex-grow overflow-hidden">
           {description}
         </div>
@@ -55,5 +53,3 @@ const BentoGridItem = React.forwardRef<
 BentoGridItem.displayName = "BentoGridItem";
 
 export { BentoGrid, BentoGridItem };
-
-
