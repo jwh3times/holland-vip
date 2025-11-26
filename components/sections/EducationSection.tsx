@@ -10,7 +10,7 @@ export function EducationSection() {
               {/* University Logo/Icon */}
               <div className="flex-shrink-0">
                 <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white font-bold text-2xl shadow-lg">
-                  NC
+                  NCSU
                 </div>
               </div>
 
