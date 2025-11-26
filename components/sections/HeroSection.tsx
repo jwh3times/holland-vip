@@ -21,7 +21,7 @@ export function HeroSection() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
         <div className="text-center">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fadeInUp text-heading">
-            Hi, I'm <span className="gradient-text">Jerry Holland</span>
+            Hi, I&apos;m <span className="gradient-text">Jerry Holland</span>
           </h1>
           <p className="text-2xl md:text-3xl text-subheading mb-6 animate-fadeInUp font-semibold">
             Senior Software Engineer | 12+ Years Experience

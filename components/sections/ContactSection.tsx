@@ -4,8 +4,8 @@ export function ContactSection() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-6 text-heading">Get In Touch</h2>
         <p className="text-lg text-muted mb-8">
-          I'm always open to discussing new opportunities, projects, or just having a chat about
-          technology.
+          I&apos;m always open to discussing new opportunities, projects, or just having a chat
+          about technology.
         </p>
         <a
           href="mailto:jerry@holland.vip"
