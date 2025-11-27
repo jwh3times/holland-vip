@@ -85,6 +85,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="antialiased">
+        {/* Cloudflare Web Analytics */}
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token": "3a0baab3867e43ca98f5c11091fe22af"}'
+        ></script>
+
         {/* Skip to main content link for accessibility */}
         <a
           href="#main-content"
