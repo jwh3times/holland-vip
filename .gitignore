@@ -40,3 +40,4 @@ yarn-error.log*
 
 # AI assistant files
 CLAUDE.md
+.claude/
