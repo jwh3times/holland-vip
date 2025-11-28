@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export function EducationSection() {
   return (
     <section id="education" className="section-surface py-20">
@@ -9,8 +11,15 @@ export function EducationSection() {
             <div className="flex items-start gap-6">
               {/* University Logo/Icon */}
               <div className="flex-shrink-0">
-                <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white font-bold text-2xl shadow-lg">
-                  NCSU
+                <div className="w-20 h-20 rounded-xl bg-white dark:bg-slate-800 flex items-center justify-center shadow-lg overflow-hidden transition-colors duration-300">
+                  <Image
+                    src="/ncsu-logo.jpg"
+                    alt="NC State University"
+                    width={80}
+                    height={80}
+                    unoptimized
+                    className="object-contain p-1"
+                  />
                 </div>
               </div>
 
