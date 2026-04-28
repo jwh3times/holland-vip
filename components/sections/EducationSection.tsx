@@ -54,13 +54,13 @@ export function EducationSection() {
                 <div className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700">
                   <div className="flex flex-wrap gap-2">
                     <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-badge-blue rounded-full text-xs font-semibold">
-                      Dual Degree Program
+                      Embedded Systems
                     </span>
                     <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/40 text-badge-purple rounded-full text-xs font-semibold">
-                      Engineering Focus
+                      Software Development
                     </span>
                     <span className="px-3 py-1 bg-green-100 dark:bg-green-900/40 text-badge-green rounded-full text-xs font-semibold">
-                      Computer Science
+                      Led Senior Design Project
                     </span>
                   </div>
                 </div>
