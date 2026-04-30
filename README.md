@@ -4,16 +4,16 @@ Professional portfolio website for Jerry Holland showcasing 12 years of software
 
 ## 🚀 Tech Stack
 
-- **Framework**: Next.js 16.0+ (App Router)
+- **Framework**: Next.js 16.2+ (App Router)
 - **UI Library**: React 19.2+
-- **Styling**: Tailwind CSS 4.1+
-- **Language**: TypeScript 5.9+
+- **Styling**: Tailwind CSS 4.2+
+- **Language**: TypeScript 6.0+
 - **Icons**: Tabler Icons, Lucide React
 - **Theme**: next-themes (dark/light mode support)
 - **UI Components**: Radix UI primitives
 - **Testing**: Playwright (E2E testing)
-- **CI/CD**: GitHub Actions
-- **Deployment**: Static Export (SSG)
+- **CI/CD**: GitHub Actions (CI + GitHub Pages deploy)
+- **Deployment**: Static Export (SSG) → GitHub Pages
 
 ## ✨ Features
 
@@ -96,15 +96,15 @@ The static files will be generated in the `/out` directory, ready for deployment
 
 ## 🌐 Deployment
 
-This site is configured for static export and can be deployed to any static hosting provider:
+The site is configured for static export and deployed to **GitHub Pages** via the automated workflow in `.github/workflows/deploy.yml`. Deployment triggers automatically after CI passes on `main`, or can be triggered manually via `workflow_dispatch`.
 
-- **Vercel** (recommended for Next.js)
+The static export can also be hosted on any other static provider:
+
 - **Netlify**
 - **Cloudflare Pages**
-- **GitHub Pages**
 - **GoDaddy** or any traditional web host
 
-### Deploying to Static Hosts
+### Deploying Manually to a Static Host
 
 1. Run `npm run build`
 2. Upload the contents of the `/out` folder to your hosting provider
@@ -129,11 +129,12 @@ holland-vip/
 │   │   ├── HeroSection.tsx  # Hero/intro section
 │   │   ├── AboutSection.tsx # About me section
 │   │   ├── SkillsSection.tsx
+│   │   ├── TechnicalCapabilities.tsx
+│   │   ├── ProblemSolving.tsx
 │   │   ├── ExperienceSection.tsx
 │   │   ├── ProjectsSection.tsx
 │   │   ├── EducationSection.tsx
-│   │   ├── ContactSection.tsx
-│   │   └── ...              # Other sections
+│   │   └── ContactSection.tsx
 │   ├── icons/               # Custom icon components
 │   │   └── SocialIcons.tsx  # Social media icons
 │   ├── Navigation.tsx       # Header navigation with mobile menu
@@ -158,7 +159,8 @@ holland-vip/
 │   └── _headers             # Security headers (Netlify/Cloudflare)
 ├── .github/
 │   ├── workflows/
-│   │   └── ci.yml           # GitHub Actions CI pipeline
+│   │   ├── ci.yml           # GitHub Actions CI pipeline
+│   │   └── deploy.yml       # GitHub Pages deployment
 │   └── copilot-instructions.md
 └── playwright.config.ts     # Playwright test configuration
 ```
@@ -175,7 +177,7 @@ holland-vip/
 ### Styling
 
 - **CSS variables**: Modify `/app/globals.css` (design tokens for colors, spacing)
-- **Tailwind config**: Adjust `tailwind.config.ts` for theme customization
+- **Tailwind config**: Tailwind v4 uses CSS-based configuration — edit `/app/globals.css` for theme customization (no `tailwind.config.ts`)
 - **Component styles**: Components use Tailwind utility classes
 
 ### Theme System
@@ -214,9 +216,8 @@ MIT
 
 **Jerry Holland**  
 Senior Web Developer  
-[GitHub](https://github.com/jwh3times) | [LinkedIn](https://www.linkedin.com/in/jerry-holland-60177a102)
+[GitHub](https://github.com/jwh3times) | [LinkedIn](https://www.linkedin.com/in/jerryhollandiii)
 
 ---
 
 Built with ❤️ using Next.js and React
-# caitlyn-holland-vip
