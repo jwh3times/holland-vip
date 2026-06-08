@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Personal portfolio website for Jerry Holland built with Next.js 16+ (App Router), React 19.2+, TypeScript 6+, and Tailwind CSS v4. The site is configured for **static export** (SSG) and is deployed to **GitHub Pages** via GitHub Actions (the static `/out` output is portable to any static host — Netlify, Cloudflare Pages, GoDaddy, etc.).
+Personal portfolio website for Jerry Holland built with Next.js 16+ (App Router), React 19.2+, TypeScript 6+, and Tailwind CSS v4. The site is configured for **static export** (SSG) and is deployed to **Cloudflare Pages** (custom domain `holland.vip`, with `www` 301-redirecting to the apex). Cloudflare Pages builds directly from the repo on push to `main`. The static `/out` output is portable to any static host.
 
 Tailwind v4 is loaded via `@import "tailwindcss"` in [app/globals.css](app/globals.css) and configured entirely in CSS (custom properties + utility classes) — there is **no `tailwind.config.ts`**.
 
@@ -46,10 +46,9 @@ After `npm run build`, the `/out` directory contains the complete static site. T
 
 ## CI/CD
 
-Two GitHub Actions workflows drive validation and deployment:
-
-- **[.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main`. The `build` job runs `npm run lint`, `npm run format:check`, then `npm run build`; the `test` job (needs `build`) installs chromium and runs Playwright against chromium only. **A PR will fail CI if formatting drifts — run `npm run format` before committing.**
-- **[.github/workflows/deploy.yml](.github/workflows/deploy.yml)** — triggered automatically after the CI workflow completes successfully on `main` (or via manual `workflow_dispatch`). It rebuilds and publishes `/out` to GitHub Pages. Deployment is gated on CI success, so a failing lint/format/build/test blocks the release.
+- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main`. The `build` job runs `npm run lint`, `npm run format:check`, then `npm run build`; the `test` job (needs `build`) installs chromium and runs Playwright against chromium only. **A PR will fail CI if formatting drifts — run `npm run format` before committing.**
+- **Deployment — Cloudflare Pages** — Cloudflare builds and deploys directly from the GitHub repo on every push to `main` (build command `npm run build`, output dir `out`). There is **no deploy workflow in this repo** — deployment is configured in the Cloudflare dashboard, not GitHub Actions. CI is a parallel quality gate, not a deploy gate.
+- **Node version** — pinned in [.nvmrc](.nvmrc) (single source of truth). CI reads it via `node-version-file`; Cloudflare Pages reads `.nvmrc` automatically. Bump Node by editing that one file.
 
 ## Architecture
 
@@ -60,7 +59,7 @@ Two GitHub Actions workflows drive validation and deployment:
 - **No server-side features**: No API routes, no `getServerSideProps`, all content is static
 - **Build target**: Static HTML/CSS/JS exported to `/out` directory
 - **Static assets**: Images and other static files go in `/public` (referenced as `/filename` in code)
-- **Security headers**: The `headers()` block in [next.config.ts](next.config.ts) is **ignored by static export** (it only applies on a Node/Vercel/Netlify server). For static hosts, headers are delivered via `public/_headers` (Netlify/Cloudflare format). Edit both to keep them in sync.
+- **Security headers**: Delivered via [public/\_headers](public/_headers), served by Cloudflare Pages — this file is the **single source of truth**. `next.config.ts` intentionally has no `headers()` block (it is ignored by static export anyway). Note: the CSP keeps `'unsafe-inline'` in `script-src` on purpose (next-themes + Next inline scripts; no nonces on a static export) — see the comment in `_headers`.
 
 ### Theme System
 
