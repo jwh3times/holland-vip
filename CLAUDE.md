@@ -252,7 +252,12 @@ Example from [components/mode-toggle.tsx](components/mode-toggle.tsx):
 ```tsx
 const [mounted, setMounted] = React.useState(false);
 React.useEffect(() => setMounted(true), []);
-if (!mounted) return <Button variant="ghost" size="icon">...</Button>;
+if (!mounted)
+  return (
+    <Button variant="ghost" size="icon">
+      ...
+    </Button>
+  );
 ```
 
 ### Code Quality
