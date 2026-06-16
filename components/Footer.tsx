@@ -13,6 +13,8 @@ const socialLinks = [
   },
 ];
 
+const currentYear = new Date().getFullYear();
+
 export function Footer() {
   return (
     <footer className="border-t border-gray-200 dark:border-gray-800 py-8">
@@ -35,9 +37,7 @@ export function Footer() {
           </div>
 
           {/* Copyright */}
-          <p className="text-muted">
-            &copy; {new Date().getFullYear()} Holland. All rights reserved.
-          </p>
+          <p className="text-muted">&copy; {currentYear} Holland. All rights reserved.</p>
         </div>
       </div>
     </footer>

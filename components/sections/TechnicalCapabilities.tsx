@@ -63,8 +63,8 @@ export function TechnicalCapabilities() {
                 {capability.title}
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
-                {capability.items.map((item, index) => (
-                  <div key={index} className="flex items-start">
+                {capability.items.map((item) => (
+                  <div key={item} className="flex items-start">
                     <span className={`mr-2 ${capability.bulletColor} text-xl`}>•</span>
                     <span className="text-label">{item}</span>
                   </div>

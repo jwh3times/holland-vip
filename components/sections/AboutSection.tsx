@@ -142,8 +142,8 @@ export function AboutSection() {
                   >
                     <h4 className={`text-xl font-bold ${colors.text} mb-3`}>{achievement.title}</h4>
                     <ul className="space-y-2 text-muted">
-                      {achievement.items.map((item, index) => (
-                        <li key={index} className="flex items-start">
+                      {achievement.items.map((item) => (
+                        <li key={item} className="flex items-start">
                           <span className={`mr-2 ${colors.bullet}`}>▸</span>
                           <span>{item}</span>
                         </li>

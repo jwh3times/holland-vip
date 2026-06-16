@@ -76,7 +76,7 @@ export function ExperienceSection() {
               const colors = colorMap[exp.colorClass as keyof typeof colorMap];
               return (
                 <div
-                  key={index}
+                  key={exp.company}
                   className={`relative ${index < experiences.length - 1 ? "mb-12" : ""} ml-20`}
                 >
                   <div
@@ -96,8 +96,8 @@ export function ExperienceSection() {
                       {exp.period} • {exp.location}
                     </div>
                     <ul className="space-y-2 text-sm text-muted">
-                      {exp.highlights.map((highlight, hIndex) => (
-                        <li key={hIndex} className="flex items-start">
+                      {exp.highlights.map((highlight) => (
+                        <li key={highlight} className="flex items-start">
                           <span className={`mr-2 ${colors.bullet}`}>▸</span>
                           <span>{highlight}</span>
                         </li>
