@@ -14,6 +14,7 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    open-pull-requests-limit: 10
     groups:
       # Bundle low-risk minor + patch bumps into one PR; majors stay separate.
       minor-and-patch:
@@ -25,11 +26,13 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      day: "monday"
       time: "07:00"
       timezone: "America/New_York"
     commit-message:
       prefix: "ci"
+    open-pull-requests-limit: 10
     groups:
       actions-minor-and-patch:
         update-types:
