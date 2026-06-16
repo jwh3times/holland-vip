@@ -38,5 +38,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-# Repo Analysis
-repo-analysis.md
+# Private Files
+private/
