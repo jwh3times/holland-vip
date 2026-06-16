@@ -1,0 +1,17 @@
+# Normalize all text files to LF so the working tree matches what Git stores
+# and what Prettier expects (endOfLine: "lf" in .prettierrc). Without this,
+# Windows checkouts (core.autocrlf=true) produce CRLF files that fail
+# `npm run format:check` locally even though CI on Linux passes.
+* text=auto eol=lf
+
+# Explicitly treat lock files and common binaries correctly.
+package-lock.json -diff
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
