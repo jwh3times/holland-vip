@@ -38,16 +38,16 @@ Professional portfolio website for Jerry Holland showcasing 12 years of software
 
 1. Clone the repository:
 
-```bash
-git clone https://github.com/jwh3times/holland-vip.git
-cd holland-vip
-```
+   ```bash
+   git clone https://github.com/jwh3times/holland-vip.git
+   cd holland-vip
+   ```
 
 2. Install dependencies:
 
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 ### Development
 

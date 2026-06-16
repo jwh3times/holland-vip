@@ -1,3 +1,5 @@
+import { siteConfig } from "@/lib/site-config";
+
 export function ContactSection() {
   return (
     <section id="contact" className="section-surface-contrast py-20">
@@ -8,8 +10,8 @@ export function ContactSection() {
           about technology.
         </p>
         <a
-          href="mailto:jerry@holland.vip"
-          className="inline-block bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+          href={`mailto:${siteConfig.email}`}
+          className="inline-block bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
         >
           Send Me an Email
         </a>

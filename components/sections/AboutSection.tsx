@@ -1,4 +1,19 @@
-const careerHighlights = [
+type ColorKey = keyof typeof colorMap;
+
+interface CareerHighlight {
+  value: string;
+  title: string;
+  description: string;
+  colorClass: ColorKey;
+}
+
+interface TechnicalAchievement {
+  title: string;
+  colorClass: ColorKey;
+  items: string[];
+}
+
+const careerHighlights: CareerHighlight[] = [
   {
     value: "15%",
     title: "Developer Productivity Increase",
@@ -25,7 +40,7 @@ const careerHighlights = [
   },
 ];
 
-const technicalAchievements = [
+const technicalAchievements: TechnicalAchievement[] = [
   {
     title: "Enterprise Cloud Platform Migration",
     colorClass: "blue",
@@ -113,7 +128,7 @@ export function AboutSection() {
           {/* Career Highlights */}
           <div className="grid md:grid-cols-2 gap-6 mt-12">
             {careerHighlights.map((highlight) => {
-              const colors = colorMap[highlight.colorClass as keyof typeof colorMap];
+              const colors = colorMap[highlight.colorClass];
               return (
                 <div
                   key={highlight.title}
@@ -134,7 +149,7 @@ export function AboutSection() {
             </h3>
             <div className="space-y-6">
               {technicalAchievements.map((achievement) => {
-                const colors = colorMap[achievement.colorClass as keyof typeof colorMap];
+                const colors = colorMap[achievement.colorClass];
                 return (
                   <div
                     key={achievement.title}

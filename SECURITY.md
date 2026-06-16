@@ -10,7 +10,7 @@ supported — there are no released versions, tags, or backports.
 
 Please report security issues **privately** rather than opening a public issue:
 
-- **Email:** jerry@holland.vip
+- **Email:** <jerry@holland.vip>
 - Or use GitHub's [private vulnerability reporting](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability)
   on this repository (**Security → Report a vulnerability**).
 

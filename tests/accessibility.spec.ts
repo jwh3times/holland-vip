@@ -1,4 +1,10 @@
 import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+
+// Scope to WCAG 2.0/2.1 A & AA success criteria — the conformance bar we hold
+// ourselves to — rather than axe's best-practice rules (which flag stylistic
+// nits like every region needing a landmark).
+const WCAG_AA_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
 
 test.describe("Accessibility", () => {
   test.beforeEach(async ({ page }) => {
@@ -89,5 +95,23 @@ test.describe("Accessibility", () => {
       const isAccessible = alt !== null || ariaHidden === "true";
       expect(isAccessible).toBeTruthy();
     }
+  });
+
+  test("has no WCAG A/AA violations in light mode", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await page.goto("/");
+
+    const results = await new AxeBuilder({ page }).withTags(WCAG_AA_TAGS).analyze();
+
+    expect(results.violations).toEqual([]);
+  });
+
+  test("has no WCAG A/AA violations in dark mode", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
+    await page.goto("/");
+
+    const results = await new AxeBuilder({ page }).withTags(WCAG_AA_TAGS).analyze();
+
+    expect(results.violations).toEqual([]);
   });
 });

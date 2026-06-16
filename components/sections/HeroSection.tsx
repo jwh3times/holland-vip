@@ -1,17 +1,4 @@
-import { GitHubIcon, LinkedInIcon } from "@/components/icons/SocialIcons";
-
-const socialLinks = [
-  {
-    href: "https://github.com/jwh3times",
-    label: "GitHub",
-    icon: GitHubIcon,
-  },
-  {
-    href: "https://www.linkedin.com/in/jerryhollandiii",
-    label: "LinkedIn",
-    icon: LinkedInIcon,
-  },
-];
+import { socialLinks } from "@/lib/site-config";
 
 export function HeroSection() {
   return (
