@@ -45,9 +45,9 @@ export function ProjectsSection() {
           Featured Projects
         </h2>
         <BentoGrid className="max-w-4xl mx-auto">
-          {projects.map((project, i) => (
+          {projects.map((project) => (
             <BentoGridItem
-              key={i}
+              key={project.title}
               title={project.title}
               description={project.description}
               icon={project.icon}

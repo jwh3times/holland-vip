@@ -57,9 +57,9 @@ export function ProblemSolving() {
         </h2>
 
         <div className="max-w-5xl mx-auto space-y-8">
-          {challenges.map((item, index) => (
+          {challenges.map((item) => (
             <div
-              key={index}
+              key={item.challenge}
               className="rounded-2xl p-8 card-bg-white border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-2xl transition-all duration-300"
             >
               <div className="space-y-4">

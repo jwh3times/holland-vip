@@ -6,11 +6,17 @@ import { Sun, Moon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
+// Hydration-safe mount detection without setState-in-effect: returns the
+// server snapshot (false) during SSR + initial hydration, then true on the client.
+const emptySubscribe = () => () => {};
+
 export function ModeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => setMounted(true), []);
+  const mounted = React.useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   if (!mounted) {
     return (

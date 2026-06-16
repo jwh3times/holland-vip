@@ -1,33 +1,39 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 
-const BentoGrid = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, children, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          "grid md:grid-rows-[auto] grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto transition-colors duration-300",
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
-    );
-  }
-);
-BentoGrid.displayName = "BentoGrid";
+function BentoGrid({
+  className,
+  children,
+  ref,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { ref?: React.Ref<HTMLDivElement> }) {
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "grid md:grid-rows-[auto] grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto transition-colors duration-300",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
 
-const BentoGridItem = React.forwardRef<
-  HTMLDivElement,
-  {
-    className?: string;
-    title?: string | React.ReactNode;
-    description?: string | React.ReactNode;
-    icon?: React.ReactNode;
-  }
->(({ className, title, description, icon }, ref) => {
+function BentoGridItem({
+  className,
+  title,
+  description,
+  icon,
+  ref,
+}: {
+  className?: string;
+  title?: string | React.ReactNode;
+  description?: string | React.ReactNode;
+  icon?: React.ReactNode;
+  ref?: React.Ref<HTMLDivElement>;
+}) {
   return (
     <div
       ref={ref}
@@ -49,7 +55,6 @@ const BentoGridItem = React.forwardRef<
       </div>
     </div>
   );
-});
-BentoGridItem.displayName = "BentoGridItem";
+}
 
 export { BentoGrid, BentoGridItem };

@@ -49,7 +49,6 @@ export default defineConfig([
       ...pluginReactHooks.configs.recommended.rules,
       ...pluginNext.configs.recommended.rules,
       ...pluginNext.configs["core-web-vitals"].rules,
-      "react-hooks/set-state-in-effect": "off",
     },
   },
   // Must come last so formatting rules are disabled (Prettier owns formatting).
