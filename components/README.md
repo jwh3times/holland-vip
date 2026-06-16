@@ -64,8 +64,11 @@ Flexible button component built on Radix UI with multiple variants.
 **Variants:**
 
 - `default` - Primary blue button
+- `destructive` - Red/danger button
 - `outline` - Border with transparent background
+- `secondary` - Muted gray button
 - `ghost` - Minimal styling, hover effects only
+- `link` - Text link with underline-on-hover
 
 **Sizes:**
 

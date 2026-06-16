@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Personal portfolio website built with **Next.js 16.0+ (App Router)**, **React 19.2+**, and **TypeScript 5.9+**. Configured for **static export** (SSG) targeting deployment on GoDaddy or similar static hosting.
+Personal portfolio website built with **Next.js 16.2+ (App Router)**, **React 19.2+**, **TypeScript 6.0+**, and **Tailwind CSS v4**. Configured for **static export** (SSG) and deployed to **Cloudflare Pages** (custom domain `holland.vip`). The `/out` static output is portable to any static host.
 
 **Purpose**: Professional portfolio showcasing 12+ years of software engineering experience.
 
@@ -61,7 +61,16 @@ npm run format:check # Verify formatting without changes
 npm run build        # Generate static files to /out directory
 ```
 
-**Important**: Build creates fully static site (no Node.js runtime required). Test build output before deployment.
+**Important**: Build creates fully static site (no Node.js runtime required). `next start` does not serve the export — preview with `npx serve out`.
+
+### Testing
+
+```bash
+npm run test:unit:coverage  # Vitest + Testing Library unit tests (V8 coverage, 80% gate)
+npm run test                # Playwright E2E (auto-starts the dev server)
+```
+
+Unit tests live in `tests/unit/` (jsdom; `next/image`/`next/link` stubbed); E2E specs are `tests/*.spec.ts`. CI runs lint, format check, unit coverage, and chromium-only E2E.
 
 ### Adding New Components
 
@@ -100,20 +109,24 @@ Apply directly as Tailwind classes: `<div className="animate-fadeInUp">...</div>
 ### Static Export Limitations
 
 - No `getServerSideProps` or API routes (all content must be static)
-- Images must use `unoptimized: true` in Next.js config
-- Links should use Next.js `<Link>` component, not `<a>` for internal navigation (though this project uses `<a>` for simplicity)
+- Images must use the `unoptimized` prop (image optimization is disabled in `next.config.ts`)
+- In-page navigation uses `<a href="#section">` anchor links (correct for hash scrolling); `next/link` is used for route links in `error.tsx` / `not-found.tsx`
 
 ### Theme Toggle Pattern
 
-`mode-toggle.tsx` uses mount guard to prevent hydration errors:
+`mode-toggle.tsx` uses a `useSyncExternalStore` mount guard (not `useState` + `useEffect`) to prevent hydration errors:
 
 ```tsx
-const [mounted, setMounted] = React.useState(false);
-React.useEffect(() => setMounted(true), []);
+const emptySubscribe = () => () => {};
+const mounted = React.useSyncExternalStore(
+  emptySubscribe,
+  () => true,
+  () => false
+);
 if (!mounted) return <PlaceholderButton />; // Match server HTML
 ```
 
-**Why**: `next-themes` reads localStorage client-side only. Always return fallback UI before mounting.
+**Why**: `next-themes` reads localStorage client-side only. The store returns the server snapshot (`false`) during SSR + hydration, then `true` on the client — no state update in an effect. Always return fallback UI before mounting.
 
 ### CSS Transition Coordination
 
@@ -123,29 +136,30 @@ All theme-aware elements use `transition-colors duration-300` for smooth mode sw
 
 **Core Dependencies**:
 
-- `next@^16.0.1` - React framework with App Router
-- `react@^19.2.0`, `react-dom@^19.2.0` - UI library
+- `next@^16.2.9` - React framework with App Router
+- `react@^19.2.7`, `react-dom@^19.2.7` - UI library
 - `next-themes@^0.4.6` - Theme management
-- `@radix-ui/react-slot@^1.2.3` - Composable component primitives
-- `tailwind-merge@^3.3.1` + `clsx@^2.1.1` - Utility class merging (via `cn()`)
-- `lucide-react@^0.552.0`, `@tabler/icons-react@^3.35.0` - Icon libraries
+- `@radix-ui/react-slot@^1.3.0` - Composable component primitives
+- `class-variance-authority@^0.7.1` - Typed variant styling (`Button`)
+- `tailwind-merge@^3.6.0` + `clsx@^2.1.1` - Utility class merging (via `cn()`)
+- `lucide-react@^1.18.0`, `@tabler/icons-react@^3.44.0` - Icon libraries
 
 **Linting/Formatting**:
 
-- ESLint with Next.js config + Prettier integration
-- Configured in `package.json` scripts, no custom config files needed
+- ESLint flat config in `eslint.config.mjs` (ESLint 10) — `@eslint-react`, `typescript-eslint`, `react-hooks`, `@next/next`; `eslint-config-prettier` last so Prettier owns formatting
+- Prettier config in `.prettierrc` (100-col, LF, double quotes, ES5 trailing commas)
 
 ## Content Updates
 
-**Main portfolio content**: Edit `app/page.tsx` (single-page application)
+**Main portfolio content**: Edit the section components in `components/sections/` (re-exported from `components/sections/index.ts`, composed in `app/page.tsx`)
 
-- Hero section, About, Skills, Experience timeline, Projects (BentoGrid), Education, Contact
-- All content is inline JSX (no CMS or markdown)
+- Hero, About, Skills, Technical Capabilities, Problem-Solving, Experience, Projects (BentoGrid), Education, Contact
+- Each section holds its content as module-level `const` data arrays — no CMS or markdown
 
 **Site metadata**: Update `app/layout.tsx` `Metadata` export
 
 - Change title, description, Open Graph tags here
 
-**Contact info**: Email links hardcoded in `page.tsx` (search for `jerry@holland.vip`)
+**Contact info**: Email `jerry@holland.vip` hardcoded in `components/sections/ContactSection.tsx`
 
-**Social links**: GitHub/LinkedIn URLs in hero and footer sections of `page.tsx`
+**Social links**: GitHub/LinkedIn URLs in `components/sections/HeroSection.tsx` and `components/Footer.tsx`
