@@ -20,7 +20,14 @@ export function ModeToggle() {
 
   if (!mounted) {
     return (
-      <Button variant="ghost" size="icon" className="relative h-10 w-10" aria-hidden>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="relative h-10 w-10"
+        disabled
+        tabIndex={-1}
+        aria-hidden
+      >
         <Sun className="h-5 w-5" />
       </Button>
     );

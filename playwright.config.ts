@@ -53,9 +53,17 @@ export default defineConfig({
     },
   ],
 
-  /* Run your local dev server before starting the tests */
+  /*
+   * Serve the app for tests. In CI (and when E2E_TARGET=build locally) we serve
+   * the static export from `out/` — the exact artifact that ships — so e2e covers
+   * the production build, not the dev server. Locally we default to `npm run dev`
+   * for fast iteration. Requires `out/` to exist (run `npm run build` first).
+   */
   webServer: {
-    command: "npm run dev",
+    command:
+      process.env.CI || process.env.E2E_TARGET === "build"
+        ? "npx serve out --listen 3000 --no-clipboard"
+        : "npm run dev",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,

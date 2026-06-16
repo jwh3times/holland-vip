@@ -1,11 +1,8 @@
 /** @type {import('postcss-load-config').Config} */
 const config = {
   plugins: {
-    "@tailwindcss/postcss": {
-      config: {
-        darkMode: "class",
-      },
-    },
+    // Dark mode is driven by `@custom-variant dark` in app/globals.css.
+    "@tailwindcss/postcss": {},
   },
 };
 

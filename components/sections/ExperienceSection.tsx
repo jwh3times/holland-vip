@@ -1,4 +1,16 @@
-const experiences = [
+type ColorKey = keyof typeof colorMap;
+
+interface Experience {
+  title: string;
+  company: string;
+  period: string;
+  location: string;
+  isCurrent: boolean;
+  colorClass: ColorKey;
+  highlights: string[];
+}
+
+const experiences: Experience[] = [
   {
     title: "Senior Web Developer",
     company: "Prometheus Group",
@@ -73,7 +85,7 @@ export function ExperienceSection() {
             <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-green-500"></div>
 
             {experiences.map((exp, index) => {
-              const colors = colorMap[exp.colorClass as keyof typeof colorMap];
+              const colors = colorMap[exp.colorClass];
               return (
                 <div
                   key={exp.company}

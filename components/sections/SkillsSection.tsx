@@ -21,12 +21,12 @@ const skillCategories = [
   },
   {
     title: "Databases & Messaging",
-    colorClass: "text-green-600 dark:text-green-400",
+    colorClass: "text-green-700 dark:text-green-400",
     skills: ["PostgreSQL", "SQL Server", "Redis", "RabbitMQ", "Geode"],
   },
   {
     title: "Architecture & Design",
-    colorClass: "text-orange-600 dark:text-orange-400",
+    colorClass: "text-orange-700 dark:text-orange-400",
     skills: [
       "REST APIs",
       "Microservices",

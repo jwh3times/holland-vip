@@ -1,74 +1,51 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
+
+// The visible toggle (desktop or mobile). The pre-hydration placeholder has no
+// aria-label, so this only matches the hydrated, interactive button.
+const themeToggle = (page: Page) => page.locator('button[aria-label*="mode"]:visible').first();
 
 test.describe("Theme Toggle", () => {
   test.beforeEach(async ({ page }) => {
+    // Pin the OS color scheme so `defaultTheme="system"` resolves deterministically
+    // to light on load (each test gets a fresh context, so localStorage is clean).
+    await page.emulateMedia({ colorScheme: "light" });
     await page.goto("/");
   });
 
-  test("should have a theme toggle button", async ({ page }) => {
-    // Select the visible theme toggle (works on both desktop and mobile)
-    const themeToggle = page.locator('button[aria-label*="mode"]:visible').first();
-    await expect(themeToggle).toBeVisible();
+  test("renders a theme toggle button", async ({ page }) => {
+    await expect(themeToggle(page)).toBeVisible();
   });
 
-  test("should toggle between light and dark mode", async ({ page }) => {
+  test("toggles from light to dark and back", async ({ page }) => {
     const html = page.locator("html");
-    const themeToggle = page.locator('button[aria-label*="mode"]:visible').first();
+    const button = themeToggle(page);
 
-    // Get initial theme state
-    const initialClass = await html.getAttribute("class");
+    // Starts light (system = emulated light, no stored preference).
+    await expect(html).not.toHaveClass(/dark/);
 
-    // Click to toggle theme
-    await themeToggle.click();
+    await button.click();
+    await expect(html).toHaveClass(/dark/);
 
-    // Wait for theme to change
-    await page.waitForTimeout(500);
-
-    // Check that theme has changed
-    const newClass = await html.getAttribute("class");
-
-    // One should have 'dark' class, the other shouldn't
-    const wasLight = !initialClass?.includes("dark");
-    const isNowDark = newClass?.includes("dark");
-
-    if (wasLight) {
-      expect(isNowDark).toBe(true);
-    } else {
-      expect(isNowDark).toBe(false);
-    }
+    await button.click();
+    await expect(html).not.toHaveClass(/dark/);
   });
 
-  test("should update aria-label when theme changes", async ({ page }) => {
-    const themeToggle = page.locator('button[aria-label*="mode"]:visible').first();
+  test("updates aria-label to reflect the next action", async ({ page }) => {
+    const button = themeToggle(page);
 
-    const initialLabel = await themeToggle.getAttribute("aria-label");
-
-    await themeToggle.click();
-    await page.waitForTimeout(500);
-
-    const newLabel = await themeToggle.getAttribute("aria-label");
-
-    // Labels should be different after toggle
-    expect(newLabel).not.toBe(initialLabel);
+    await expect(button).toHaveAttribute("aria-label", "Activate dark mode");
+    await button.click();
+    await expect(button).toHaveAttribute("aria-label", "Activate light mode");
   });
 
-  test("should persist theme preference", async ({ page }) => {
-    const themeToggle = page.locator('button[aria-label*="mode"]:visible').first();
+  test("persists the selected theme across reload", async ({ page }) => {
+    const html = page.locator("html");
+    const button = themeToggle(page);
 
-    // Switch to dark mode
-    await themeToggle.click();
-    await page.waitForTimeout(500);
+    await button.click();
+    await expect(html).toHaveClass(/dark/);
 
-    // Check if dark mode is active
-    const isDark = await page.locator("html").evaluate((el) => el.classList.contains("dark"));
-
-    // Reload the page
     await page.reload();
-    await page.waitForTimeout(500);
-
-    // Theme should persist
-    const isStillDark = await page.locator("html").evaluate((el) => el.classList.contains("dark"));
-
-    expect(isStillDark).toBe(isDark);
+    await expect(html).toHaveClass(/dark/);
   });
 });
