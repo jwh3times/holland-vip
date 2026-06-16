@@ -44,6 +44,13 @@ export default [
     },
   },
   {
-    ignores: [".next/**", "out/**", "node_modules/**", "playwright-report/**", "test-results/**"],
+    ignores: [
+      ".next/**",
+      "out/**",
+      "node_modules/**",
+      "playwright-report/**",
+      "test-results/**",
+      "coverage/**",
+    ],
   },
 ];

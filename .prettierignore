@@ -9,6 +9,9 @@ out/
 build/
 dist/
 
+# Test coverage
+coverage/
+
 # Misc
 .DS_Store
 *.pem
