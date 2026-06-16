@@ -22,7 +22,21 @@ npm run format:check # Check formatting without changes
 
 ### Testing
 
-Playwright is used for end-to-end testing. The dev server is started automatically — `playwright.config.ts` defines a `webServer` that runs `npm run dev` and waits on `localhost:3000` (`reuseExistingServer` is on locally, off in CI). You do **not** need to start a server manually.
+There are two test layers: **Vitest + Testing Library** for fast unit/component tests, and **Playwright** for end-to-end browser tests.
+
+#### Unit tests (Vitest)
+
+Component/unit tests live in [tests/unit/](tests/unit/) (`*.test.tsx`). They run in jsdom; `next/image` and `next/link` are stubbed via `tests/unit/mocks/*`, and CSS is not processed (Tailwind/PostCSS stay out of unit runs). Coverage is collected with V8 and **gated at 80%** (statements/branches/functions/lines) in [vitest.config.ts](vitest.config.ts).
+
+```bash
+npm run test:unit            # Run unit tests once
+npm run test:unit:watch      # Watch mode
+npm run test:unit:coverage   # Run with V8 coverage (enforces the 80% thresholds)
+```
+
+#### End-to-end (Playwright)
+
+The dev server is started automatically — `playwright.config.ts` defines a `webServer` that runs `npm run dev` and waits on `localhost:3000` (`reuseExistingServer` is on locally, off in CI). You do **not** need to start a server manually.
 
 ```bash
 npm test              # Run all Playwright tests (headless)
@@ -46,7 +60,8 @@ After `npm run build`, the `/out` directory contains the complete static site. T
 
 ## CI/CD
 
-- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main`. The `build` job runs `npm run lint`, `npm run format:check`, then `npm run build`; the `test` job (needs `build`) installs chromium and runs Playwright against chromium only. **A PR will fail CI if formatting drifts — run `npm run format` before committing.**
+- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with three jobs: the `build` job runs `npm run lint`, `npm run format:check`, then `npm run build` (and uploads the `out/` artifact); the `unit` job runs `npm run test:unit:coverage` and **fails if coverage drops below the 80% thresholds** in `vitest.config.ts`; the `test` job (needs `build`) installs chromium and runs Playwright against chromium only. **A PR will fail CI if formatting drifts — run `npm run format` before committing.**
+- **Dependency review — [.github/workflows/dependency-review.yml](.github/workflows/dependency-review.yml)** — on PRs to `main`, fails on high-severity dependency vulnerabilities.
 - **Deployment — Cloudflare Pages** — Cloudflare builds and deploys directly from the GitHub repo on every push to `main` (build command `npm run build`, output dir `out`). There is **no deploy workflow in this repo** — deployment is configured in the Cloudflare dashboard, not GitHub Actions. CI is a parallel quality gate, not a deploy gate.
 - **Node version** — pinned in [.nvmrc](.nvmrc) (single source of truth). CI reads it via `node-version-file`; Cloudflare Pages reads `.nvmrc` automatically. Bump Node by editing that one file.
 
@@ -80,11 +95,16 @@ The site uses a CSS variable-based theming system with `next-themes`:
 
 **Critical Pattern - Hydration Safety:**
 
-The theme toggle requires a mount guard to prevent hydration mismatches:
+The theme toggle requires a mount guard to prevent hydration mismatches. It uses `useSyncExternalStore` (not `useState` + `useEffect`) so the mounted flag has no state-update-in-effect: the store returns the server snapshot (`false`) during SSR + initial hydration, then `true` on the client.
 
 ```tsx
-const [mounted, setMounted] = React.useState(false);
-React.useEffect(() => setMounted(true), []);
+const emptySubscribe = () => () => {};
+
+const mounted = React.useSyncExternalStore(
+  emptySubscribe,
+  () => true, // client snapshot
+  () => false // server snapshot
+);
 if (!mounted) return <PlaceholderButton />; // Match server HTML
 ```
 
@@ -249,8 +269,13 @@ Any component using `useTheme()` from `next-themes` must:
 Example from [components/mode-toggle.tsx](components/mode-toggle.tsx):
 
 ```tsx
-const [mounted, setMounted] = React.useState(false);
-React.useEffect(() => setMounted(true), []);
+const emptySubscribe = () => () => {};
+
+const mounted = React.useSyncExternalStore(
+  emptySubscribe,
+  () => true,
+  () => false
+);
 if (!mounted)
   return (
     <Button variant="ghost" size="icon">
@@ -261,6 +286,7 @@ if (!mounted)
 
 ### Code Quality
 
-- ESLint configured with Next.js and Prettier rules
+- ESLint flat config ([eslint.config.mjs](eslint.config.mjs)) on ESLint 10, using `@eslint-react` (TS-first, replaces `eslint-plugin-react`), `typescript-eslint`, `react-hooks`, and `@next/next`; `eslint-config-prettier` last so Prettier owns formatting
 - Run `npm run format` before commits
 - Maintain TypeScript strict mode compliance
+- Unit-test coverage is gated at 80% in CI — new components generally need a test in `tests/unit/`
