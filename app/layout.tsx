@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { yearsOfExperience } from "@/lib/site-config";
 
 const siteUrl = "https://holland.vip";
 
@@ -11,8 +12,7 @@ export const metadata: Metadata = {
     default: "Jerry Holland | Senior Software Engineer",
     template: "%s | Jerry Holland",
   },
-  description:
-    "Senior Software Engineer with 12+ years of experience in full-stack development, cloud architecture, and system optimization. Specializing in .NET, Java, Python, AWS, and Azure.",
+  description: `Senior Software Engineer with ${yearsOfExperience} years of experience in full-stack development, cloud architecture, and system optimization. Specializing in .NET, Java, Python, AWS, and Azure.`,
   keywords: [
     "Software Engineer",
     "Full Stack Developer",
@@ -33,8 +33,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: "Jerry Holland",
     title: "Jerry Holland | Senior Software Engineer",
-    description:
-      "Senior Software Engineer with 12+ years of experience in full-stack development, cloud architecture, and system optimization.",
+    description: `Senior Software Engineer with ${yearsOfExperience} years of experience in full-stack development, cloud architecture, and system optimization.`,
     images: [
       {
         url: "/og-image.png",
@@ -47,8 +46,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Jerry Holland | Senior Software Engineer",
-    description:
-      "Senior Software Engineer with 12+ years of experience in full-stack development, cloud architecture, and system optimization.",
+    description: `Senior Software Engineer with ${yearsOfExperience} years of experience in full-stack development, cloud architecture, and system optimization.`,
     images: ["/og-image.png"],
   },
   robots: {

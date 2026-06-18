@@ -4,7 +4,7 @@
 
 Personal portfolio website built with **Next.js 16.2+ (App Router)**, **React 19.2+**, **TypeScript 6.0+**, and **Tailwind CSS v4**. Configured for **static export** (SSG) and deployed to **Cloudflare Pages** (custom domain `holland.vip`). The `/out` static output is portable to any static host.
 
-**Purpose**: Professional portfolio showcasing 12+ years of software engineering experience.
+**Purpose**: Professional portfolio showcasing over a decade of software engineering experience.
 
 ## Architecture & Core Patterns
 
