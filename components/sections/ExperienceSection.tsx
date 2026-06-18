@@ -14,12 +14,25 @@ interface Experience {
 
 const experiences: Experience[] = [
   {
-    title: "Senior Web Developer",
-    company: "Prometheus Group",
-    period: "Jun 2024 - Present",
-    location: "Raleigh, NC",
+    title: "Senior Software Engineer / Tech Lead",
+    company: "SoftPro",
+    period: "Nov 2025 - Present",
+    location: "Raleigh, NC (Remote)",
     isCurrent: true,
     colorClass: "blue",
+    highlights: [
+      "Tech-leading full-stack development of greenfield ledger/register functionality for SoftPro's Sky platform — register balancing for real-estate transaction files, built as a new microservice on AKS with an Angular front end and integrated with the existing Select backend for file data",
+      "Leading the team's AI-in-development initiative — building custom AI agents, maintaining shared Copilot instructions, and authoring reusable prompt files to standardize and accelerate the dev workflow",
+      "Partnering with product to plan and scope team work, clarify requirements, and research technical implementation, while modernizing the Angular app to the latest version of Angular",
+    ],
+  },
+  {
+    title: "Senior Web Developer",
+    company: "Prometheus Group",
+    period: "Jun 2024 - Nov 2025",
+    location: "Raleigh, NC",
+    isCurrent: false,
+    colorClass: "purple",
     highlights: [
       "Architecting cloud-hosted web applications using .NET, AWS, Azure with EKS/AKS, RDS, RabbitMQ, and S3/Azure Blob storage",
       "Developing REST APIs with multi-threaded data processing and real-time account management",
@@ -32,7 +45,7 @@ const experiences: Experience[] = [
     period: "Aug 2017 - Apr 2024",
     location: "Cary, NC",
     isCurrent: false,
-    colorClass: "purple",
+    colorClass: "green",
     highlights: [
       "Engineered high-performance data infrastructure with 64-bit architecture upgrade enabling limitless storage capacity",
       "Achieved 11% database query performance improvement and 7% Java execution efficiency gains",
@@ -45,7 +58,7 @@ const experiences: Experience[] = [
     period: "Jun 2013 - Aug 2017",
     location: "Raleigh, NC",
     isCurrent: false,
-    colorClass: "green",
+    colorClass: "orange",
     highlights: [
       "Developed firmware and UI/UX for embedded systems leading to global product line success",
       "Designed PID control algorithms for hydraulic, pneumatic, and motor-driven systems",
@@ -70,6 +83,11 @@ const colorMap = {
     ring: "ring-green-500/20",
     bullet: "text-green-500",
   },
+  orange: {
+    dot: "bg-orange-500",
+    ring: "ring-orange-500/20",
+    bullet: "text-orange-500",
+  },
 };
 
 export function ExperienceSection() {
@@ -84,7 +102,7 @@ export function ExperienceSection() {
           {/* Timeline */}
           <div className="relative">
             {/* Vertical line */}
-            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-green-500"></div>
+            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-[linear-gradient(to_bottom,var(--color-blue-500),var(--color-purple-500),var(--color-green-500),var(--color-orange-500))]"></div>
 
             {experiences.map((exp, index) => {
               const colors = colorMap[exp.colorClass];

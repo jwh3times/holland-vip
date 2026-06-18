@@ -252,7 +252,7 @@ Licensed under the [MIT License](LICENSE) — © 2026 Jerry Holland.
 ## 👤 Author
 
 **Jerry Holland**  
-Senior Web Developer  
+Senior Software Engineer / Tech Lead  
 [GitHub](https://github.com/jwh3times) | [LinkedIn](https://www.linkedin.com/in/jerryhollandiii)
 
 ---
