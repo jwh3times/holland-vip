@@ -187,7 +187,6 @@ holland-vip/
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml                  # CI: build/lint/format + unit coverage + E2E
-│   │   ├── codeql.yml              # CodeQL SAST (PRs to main + weekly)
 │   │   ├── dependency-review.yml   # Fails PRs on high-severity vuln deps
 │   │   └── smoke.yml               # Daily smoke check against the live site
 │   ├── dependabot.yml              # npm + GitHub Actions update schedule
