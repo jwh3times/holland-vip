@@ -15,7 +15,7 @@ on:
   schedule:
     # Weekly, Mondays at 08:17 UTC (off the hour to dodge cron congestion). Scheduled
     # runs execute on the default branch.
-    - cron: "17 8 * * 1"
+    - cron: "00 8 * * 1"
   workflow_dispatch:
 
 permissions:
