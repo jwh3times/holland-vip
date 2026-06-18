@@ -73,6 +73,17 @@ const technicalAchievements: TechnicalAchievement[] = [
   },
 ];
 
+// A few things I'm currently digging into — edit this list freely.
+const exploringTags = [
+  {
+    label: "Agentic AI dev workflows",
+    className: "bg-blue-100 dark:bg-blue-900/40 text-badge-blue",
+  },
+  { label: "Kubernetes / AKS", className: "bg-purple-100 dark:bg-purple-900/40 text-badge-purple" },
+  { label: "Next.js & RSC", className: "bg-green-100 dark:bg-green-900/40 text-badge-green" },
+  { label: "Go", className: "bg-orange-100 dark:bg-orange-900/40 text-badge-orange" },
+];
+
 const colorMap = {
   blue: {
     border: "border-blue-200 dark:border-slate-700",
@@ -108,10 +119,10 @@ export function AboutSection() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-lg text-muted mb-6 leading-relaxed">
-              Senior Software Engineer with {yearsOfExperience} years of experience spanning
-              full-stack development, back-end architecture, and embedded systems. I specialize in
-              building scalable, high-performance applications using modern cloud technologies and
-              microservices architecture.
+              I&apos;m a senior software engineer with {yearsOfExperience} years across full-stack
+              development, back-end architecture, and embedded systems. I focus on building
+              scalable, high-performance applications with modern cloud technologies and a
+              microservices approach.
             </p>
             <p className="text-lg text-muted mb-6 leading-relaxed">
               Currently a Senior Software Engineer and Tech Lead at SoftPro, building the new ledger
@@ -124,10 +135,25 @@ export function AboutSection() {
               product to scope work and shape technical direction.
             </p>
             <p className="text-lg text-muted leading-relaxed">
-              Passionate about performance tuning, system optimization, and mentoring developers. I
-              believe in test-driven development, Agile best practices, and continuous learning to
-              stay at the forefront of technology.
+              Outside of feature work, I focus on performance tuning, system optimization, and
+              mentoring other developers. I lean on test-driven development and Agile practices, and
+              I make a habit of learning continuously.
             </p>
+
+            {/* Currently exploring */}
+            <div className="mt-10">
+              <p className="text-sm font-semibold text-label mb-3">Currently exploring</p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {exploringTags.map((tag) => (
+                  <span
+                    key={tag.label}
+                    className={cn("px-3 py-1 rounded-full text-xs font-semibold", tag.className)}
+                  >
+                    {tag.label}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Career Highlights */}

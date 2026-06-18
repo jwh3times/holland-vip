@@ -20,10 +20,12 @@ describe("section components", () => {
     expect(screen.getByLabelText("LinkedIn")).toBeInTheDocument();
   });
 
-  it("About renders the heading and career highlights", () => {
+  it("About renders the heading, career highlights, and the currently-exploring block", () => {
     render(<AboutSection />);
     expect(screen.getByRole("heading", { name: "About Me" })).toBeInTheDocument();
     expect(screen.getByText("Developer Productivity Increase")).toBeInTheDocument();
+    expect(screen.getByText("Currently exploring")).toBeInTheDocument();
+    expect(screen.getByText("Agentic AI dev workflows")).toBeInTheDocument();
   });
 
   it("Skills renders the technology categories", () => {
@@ -50,9 +52,10 @@ describe("section components", () => {
     expect(screen.getByText("SAS Institute")).toBeInTheDocument();
   });
 
-  it("Projects renders the bento grid items", () => {
+  it("Projects renders as confidential professional work with the bento grid items", () => {
     render(<ProjectsSection />);
-    expect(screen.getByRole("heading", { name: "Featured Projects" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Professional Work" })).toBeInTheDocument();
+    expect(screen.getByText("Confidential")).toBeInTheDocument();
     expect(screen.getByText("Enterprise SaaS Platform Modernization")).toBeInTheDocument();
   });
 
