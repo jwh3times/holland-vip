@@ -61,20 +61,28 @@ test.describe("Accessibility", () => {
   });
 
   test("should have proper button accessibility", async ({ page }) => {
-    const buttons = page.locator("button");
-    const buttonCount = await buttons.count();
+    // Wait for hydration to settle: the theme toggle renders an aria-hidden
+    // placeholder during SSR and swaps to a real, aria-labelled button on mount.
+    // Checking buttons mid-swap races that mutation, so anchor on the real button.
+    await expect(
+      page.getByRole("button", { name: /Activate (light|dark) mode/ }).first()
+    ).toBeVisible();
 
-    for (let i = 0; i < buttonCount; i++) {
-      const button = buttons.nth(i);
-      const text = await button.textContent();
-      const ariaLabel = await button.getAttribute("aria-label");
-      const ariaHidden = await button.getAttribute("aria-hidden");
+    // Snapshot every button's accessible name atomically in the browser so no
+    // single check straddles a DOM mutation. A button is accessible if it has
+    // visible text, an aria-label, or is marked decorative (aria-hidden).
+    const inaccessibleButtons = await page.locator("button").evaluateAll((buttons) =>
+      buttons
+        .filter((btn) => {
+          const text = btn.textContent?.trim() ?? "";
+          const ariaLabel = btn.getAttribute("aria-label");
+          const ariaHidden = btn.getAttribute("aria-hidden");
+          return !(text.length > 0 || ariaLabel || ariaHidden === "true");
+        })
+        .map((btn) => btn.outerHTML)
+    );
 
-      // Each button should have either visible text, an aria-label, or be marked as decorative
-      const hasAccessibleName =
-        (text && text.trim().length > 0) || ariaLabel || ariaHidden === "true";
-      expect(hasAccessibleName).toBeTruthy();
-    }
+    expect(inaccessibleButtons).toEqual([]);
   });
 
   test("should have lang attribute on html element", async ({ page }) => {

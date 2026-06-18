@@ -142,7 +142,7 @@ All theme-aware elements use `transition-colors duration-300` for smooth mode sw
 - `@radix-ui/react-slot@^1.3.0` - Composable component primitives
 - `class-variance-authority@^0.7.1` - Typed variant styling (`Button`)
 - `tailwind-merge@^3.6.0` + `clsx@^2.1.1` - Utility class merging (via `cn()`)
-- `lucide-react@^1.18.0`, `@tabler/icons-react@^3.44.0` - Icon libraries
+- `lucide-react@^1.18.0` - Icon library (the only one; used in Nav, mode toggle, Projects)
 
 **Linting/Formatting**:
 

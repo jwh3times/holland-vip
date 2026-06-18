@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 const challenges = [
   {
     challenge:
@@ -36,7 +38,10 @@ function ChallengeItem({ icon, title, description, bgColor }: ChallengeItemProps
   return (
     <div className="flex items-start gap-4">
       <div
-        className={`flex-shrink-0 w-12 h-12 rounded-full ${bgColor} flex items-center justify-center`}
+        className={cn(
+          "flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center",
+          bgColor
+        )}
       >
         <span className="text-2xl">{icon}</span>
       </div>

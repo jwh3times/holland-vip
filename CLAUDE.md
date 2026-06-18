@@ -50,7 +50,7 @@ npx playwright test -g "theme toggle"
 npx playwright test --project=chromium
 ```
 
-Tests run across 5 projects (Desktop Chrome/Firefox/Safari + Mobile Chrome/Safari). **CI runs chromium only** (`npm run test:e2e -- --project=chromium`), so a test that passes locally on chromium may still surface browser-specific failures only when run across all projects.
+Tests run across 5 projects (Desktop Chrome/Firefox/Safari + Mobile Chrome/Safari). **CI runs the Chromium-engine projects only** (`npm run test:e2e -- --project=chromium --project="Mobile Chrome"` — desktop + mobile viewport), so a test that passes in CI may still surface Firefox/WebKit-specific failures only when run across all projects locally.
 
 Test files are in [tests/](tests/) covering homepage, accessibility, SEO, theme toggling, and mobile navigation.
 
@@ -60,9 +60,11 @@ After `npm run build`, the `/out` directory contains the complete static site. T
 
 ## CI/CD
 
-- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with three jobs: the `build` job runs `npm run lint`, `npm run format:check`, then `npm run build` (and uploads the `out/` artifact); the `unit` job runs `npm run test:unit:coverage` and **fails if coverage drops below the 80% thresholds** in `vitest.config.ts`; the `test` job (needs `build`) installs chromium and runs Playwright against chromium only. **A PR will fail CI if formatting drifts — run `npm run format` before committing.**
+- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with three jobs: the `build` job runs `npm run lint`, `npm run format:check`, then `npm run build` (and uploads the `out/` artifact); the `unit` job runs `npm run test:unit:coverage` and **fails if coverage drops below the 80% thresholds** in `vitest.config.ts`; the `test` job (needs `build`) installs chromium and runs Playwright against the Chromium-engine projects (`chromium` + `Mobile Chrome`). **A PR will fail CI if formatting drifts — run `npm run format` before committing.**
 - **Dependency review — [.github/workflows/dependency-review.yml](.github/workflows/dependency-review.yml)** — on PRs to `main`, fails on high-severity dependency vulnerabilities.
+- **Code scanning — CodeQL (default setup)** — enabled via GitHub's **default setup** (repo _Settings → Code security_), which scans JS/TS + Actions on PRs to `main` and weekly; findings surface in the Security tab. There is intentionally **no `codeql.yml`** in the repo: an advanced CodeQL workflow cannot upload results while default setup is enabled (it fails with _"analyses from advanced configurations cannot be processed when the default setup is enabled"_). Manage CodeQL from the Security settings, not a workflow file.
 - **Deployment — Cloudflare Pages** — Cloudflare builds and deploys directly from the GitHub repo on every push to `main` (build command `npm run build`, output dir `out`). There is **no deploy workflow in this repo** — deployment is configured in the Cloudflare dashboard, not GitHub Actions. CI is a parallel quality gate, not a deploy gate.
+- **Post-deploy smoke — [.github/workflows/smoke.yml](.github/workflows/smoke.yml)** — daily cron (+ manual `workflow_dispatch`) curls the live `https://holland.vip`, asserting HTTP 200, expected content, and the security headers. This is the only check that exercises the _deployed_ site rather than the pre-deploy build.
 - **Node version** — pinned in [.nvmrc](.nvmrc) (single source of truth). CI reads it via `node-version-file`; Cloudflare Pages reads `.nvmrc` automatically. Bump Node by editing that one file.
 
 ## Architecture
@@ -180,10 +182,9 @@ import { Button } from "@/components/ui/button";
 
 ### Icon Libraries
 
-Two icon libraries are available:
-
-- `lucide-react` — used in Navigation (Menu, X icons) and general UI
-- `@tabler/icons-react` — available for additional icon options
+- `lucide-react` — the single icon library for the site (Navigation, mode toggle,
+  and the Projects bento grid). Import named icons directly, e.g.
+  `import { Menu, X } from "lucide-react"`.
 
 ### Animation System
 

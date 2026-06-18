@@ -97,7 +97,7 @@ E2E tests cover:
 
 The Playwright dev server starts automatically — `playwright.config.ts` defines a
 `webServer` that runs `npm run dev`. Locally, tests fan out across 5 browser/device
-projects; CI runs chromium only.
+projects; CI runs the Chromium-engine projects (chromium + Mobile Chrome).
 
 ### Build for Production
 
@@ -143,7 +143,8 @@ holland-vip/
 │   ├── globals.css          # Global styles and CSS variables
 │   ├── loading.tsx          # Loading state component
 │   ├── error.tsx            # Error boundary component
-│   └── not-found.tsx        # 404 page
+│   ├── not-found.tsx        # 404 page
+│   └── sitemap.ts           # Sitemap route (build-time → out/sitemap.xml)
 ├── components/              # Reusable React components
 │   ├── ui/                  # UI primitives
 │   │   ├── bento-grid.tsx   # Feature showcase grid
@@ -178,15 +179,16 @@ holland-vip/
 ├── public/                  # Static assets
 │   ├── icon.svg             # Favicon
 │   ├── apple-touch-icon.svg # Apple touch icon
-│   ├── og-image.svg         # Open Graph image
+│   ├── og-image.png         # Open Graph image (rendered; what scrapers use)
+│   ├── og-image.svg         # Open Graph source artwork
 │   ├── manifest.json        # Web app manifest
 │   ├── robots.txt           # Search engine directives
-│   ├── sitemap.xml          # Sitemap for SEO
 │   └── _headers             # Security headers (served by Cloudflare Pages)
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml                  # CI: build/lint/format + unit coverage + E2E
-│   │   └── dependency-review.yml   # Fails PRs on high-severity vuln deps
+│   │   ├── dependency-review.yml   # Fails PRs on high-severity vuln deps
+│   │   └── smoke.yml               # Daily smoke check against the live site
 │   ├── dependabot.yml              # npm + GitHub Actions update schedule
 │   └── copilot-instructions.md
 ├── playwright.config.ts     # Playwright (E2E) configuration

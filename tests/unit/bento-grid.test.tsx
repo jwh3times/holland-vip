@@ -32,4 +32,10 @@ describe("BentoGrid", () => {
     expect(screen.getByText("No Icon")).toBeInTheDocument();
     expect(screen.queryByTestId("bento-icon")).not.toBeInTheDocument();
   });
+
+  it("spreads extra props onto the item root", () => {
+    render(<BentoGridItem title="Spread" data-testid="bento-item" aria-label="bento card" />);
+    const item = screen.getByTestId("bento-item");
+    expect(item).toHaveAttribute("aria-label", "bento card");
+  });
 });
