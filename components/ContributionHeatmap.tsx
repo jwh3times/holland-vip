@@ -2,16 +2,26 @@ import { cn } from "@/lib/utils";
 import type { ContributionCalendar, ContributionDay } from "@/lib/github-contributions";
 
 /**
- * Per-level cell colors (0 = none … 4 = most), tuned to read in both themes.
- * These cells carry no text, so they're exempt from WCAG contrast rules.
+ * Per-level cell fills (0 = none … 4 = most). The ramp brightens in dark mode and
+ * darkens in light mode so "more activity" reads as higher contrast against each
+ * background. Empty cells (level 0) sit very close to the section background, so
+ * every cell also gets an inset ring (see `cellBase`) to keep its edge visible —
+ * without it, level-0 days disappear against the page in both themes.
  */
 const levelClass = [
-  "bg-gray-200 dark:bg-slate-800",
-  "bg-green-200 dark:bg-green-900",
-  "bg-green-400 dark:bg-green-800",
-  "bg-green-600 dark:bg-green-600",
+  "bg-gray-200 dark:bg-slate-700",
+  "bg-green-300 dark:bg-green-900",
+  "bg-green-500 dark:bg-green-700",
+  "bg-green-600 dark:bg-green-500",
   "bg-green-800 dark:bg-green-400",
 ] as const;
+
+/**
+ * Shared cell geometry plus a subtle inset ring that outlines every swatch. The
+ * ring is the key to legibility: it gives empty/pale cells a defined edge against
+ * the near-white (light) and dark-slate (dark) section backgrounds.
+ */
+const cellBase = "h-2.5 w-2.5 rounded-[2px] ring-1 ring-inset ring-black/[0.08] dark:ring-white/10";
 
 function formatCount(n: number): string {
   return n.toLocaleString("en-US");
@@ -55,7 +65,7 @@ export function ContributionHeatmap({ calendar }: { calendar: ContributionCalend
           {days.map((day: ContributionDay) => (
             <div
               key={day.date}
-              className={cn("h-2.5 w-2.5 rounded-[2px]", levelClass[day.level])}
+              className={cn(cellBase, levelClass[day.level])}
               title={`${formatCount(day.count)} contribution${day.count === 1 ? "" : "s"} on ${day.date}`}
             />
           ))}
@@ -66,7 +76,7 @@ export function ContributionHeatmap({ calendar }: { calendar: ContributionCalend
       <div className="mt-3 flex items-center gap-1.5 text-xs text-muted">
         <span>Less</span>
         {levelClass.map((cls) => (
-          <span key={cls} className={cn("h-2.5 w-2.5 rounded-[2px]", cls)} aria-hidden="true" />
+          <span key={cls} className={cn(cellBase, cls)} aria-hidden="true" />
         ))}
         <span>More</span>
       </div>
