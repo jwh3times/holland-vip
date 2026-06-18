@@ -1,4 +1,4 @@
-import { socialLinks } from "@/lib/site-config";
+import { socialLinks, yearsOfExperience } from "@/lib/site-config";
 
 export function HeroSection() {
   return (
@@ -11,7 +11,7 @@ export function HeroSection() {
             Hi, I&apos;m <span className="gradient-text">Jerry Holland</span>
           </h1>
           <p className="text-2xl md:text-3xl text-subheading mb-6 animate-fadeInUp font-semibold">
-            Senior Software Engineer | 12+ Years Experience
+            Senior Software Engineer | {yearsOfExperience} Years Experience
           </p>
           <p className="text-lg md:text-xl text-muted max-w-3xl mx-auto mb-10 animate-fadeInUp leading-relaxed">
             Building scalable, high-performance applications with expertise in full-stack

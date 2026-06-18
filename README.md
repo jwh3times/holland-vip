@@ -1,6 +1,6 @@
 # Holland.VIP Personal Website
 
-Professional portfolio website for Jerry Holland showcasing 12 years of software engineering experience. Built with modern web technologies and optimized for performance.
+Professional portfolio website for Jerry Holland showcasing over a decade of software engineering experience. Built with modern web technologies and optimized for performance.
 
 ## 🚀 Tech Stack
 

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { yearsOfExperience } from "@/lib/site-config";
 
 type ColorKey = keyof typeof colorMap;
 
@@ -107,10 +108,10 @@ export function AboutSection() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-lg text-muted mb-6 leading-relaxed">
-              Senior Software Engineer with 12 years of experience spanning full-stack development,
-              back-end architecture, and embedded systems. I specialize in building scalable,
-              high-performance applications using modern cloud technologies and microservices
-              architecture.
+              Senior Software Engineer with {yearsOfExperience} years of experience spanning
+              full-stack development, back-end architecture, and embedded systems. I specialize in
+              building scalable, high-performance applications using modern cloud technologies and
+              microservices architecture.
             </p>
             <p className="text-lg text-muted mb-6 leading-relaxed">
               Currently working on enterprise cloud infrastructure modernization, migrating legacy
