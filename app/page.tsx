@@ -13,10 +13,15 @@ import {
   ContactSection,
 } from "@/components/sections";
 import { getFeaturedRepos } from "@/lib/github";
+import { getContributions } from "@/lib/github-contributions";
+
+// Keep the page fully static (the contributions GraphQL fetch is a POST, which would
+// otherwise opt the route into dynamic rendering — not allowed under `output: export`).
+export const dynamic = "force-static";
 
 export default async function Home() {
-  // Resolved at build time (static export); never throws — see lib/github.ts.
-  const repos = await getFeaturedRepos();
+  // Resolved at build time (static export); neither call throws — see lib/github*.ts.
+  const [repos, contributions] = await Promise.all([getFeaturedRepos(), getContributions()]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -30,7 +35,7 @@ export default async function Home() {
         <ProblemSolving />
         <ExperienceSection />
         <ProjectsSection />
-        <OpenSourceSection repos={repos} />
+        <OpenSourceSection repos={repos} contributions={contributions} />
         <EducationSection />
         <ContactSection />
       </main>

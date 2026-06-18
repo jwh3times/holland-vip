@@ -18,6 +18,10 @@ vi.mock("@/lib/github", () => ({
   ]),
 }));
 
+vi.mock("@/lib/github-contributions", () => ({
+  getContributions: vi.fn(async () => ({ totalContributions: 0, weeks: [] })),
+}));
+
 describe("Home page", () => {
   it("composes navigation, main content, and footer", async () => {
     const ui = await Home();
