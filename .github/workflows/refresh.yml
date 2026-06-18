@@ -1,0 +1,54 @@
+name: Refresh build (repo data)
+
+# The Open Source section bakes GitHub repo data (stars, descriptions, last-pushed)
+# into the static export at build time, so it only refreshes when something triggers
+# a Cloudflare Pages build. Without pushes that data goes stale. This workflow pings a
+# Cloudflare Pages *deploy hook* on a schedule to rebuild + redeploy with fresh data.
+#
+# Manual provisioning (one-time, by the repo owner):
+#   1. Cloudflare dashboard → Pages project → Settings → Builds & deployments →
+#      Deploy hooks → create a hook (branch: main). Copy the generated URL.
+#   2. GitHub → repo Settings → Secrets and variables → Actions → New repository secret
+#      named CLOUDFLARE_DEPLOY_HOOK_URL, value = the hook URL.
+# The hook URL is a write trigger, so it's kept as a secret (not a plain var).
+on:
+  schedule:
+    # Weekly, Mondays at 08:17 UTC (off the hour to dodge cron congestion). Scheduled
+    # runs execute on the default branch.
+    - cron: "17 8 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    name: Trigger Cloudflare rebuild
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Cloudflare deploy hook
+        env:
+          DEPLOY_HOOK_URL: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK_URL }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${DEPLOY_HOOK_URL:-}" ]; then
+            echo "::error::Secret CLOUDFLARE_DEPLOY_HOOK_URL is not set — create the Cloudflare deploy hook and add it as a repo secret (see workflow header)."
+            exit 1
+          fi
+
+          echo "POST <deploy hook> (URL hidden — secret)"
+          status=$(curl -sS -X POST --retry 3 --retry-delay 5 -o response.json -w '%{http_code}' "$DEPLOY_HOOK_URL")
+          echo "HTTP $status"
+          cat response.json || true
+          echo
+
+          case "$status" in
+            2*)
+              echo "Cloudflare rebuild triggered."
+              ;;
+            *)
+              echo "::error::Deploy hook returned HTTP $status (expected 2xx)"
+              exit 1
+              ;;
+          esac
