@@ -114,12 +114,14 @@ export function AboutSection() {
               microservices architecture.
             </p>
             <p className="text-lg text-muted mb-6 leading-relaxed">
-              Currently working on enterprise cloud infrastructure modernization, migrating legacy
-              systems to modern containerized architectures. Specializing in performance
-              optimization, real-time data processing, and building scalable SaaS solutions for
-              industrial applications. Recent work includes designing RESTful APIs serving millions
-              of daily requests, implementing message queue systems for asynchronous processing, and
-              creating interactive visualization tools for complex datasets.
+              Currently a Senior Software Engineer and Tech Lead at SoftPro, building the new ledger
+              and register experience for the Sky platform — letting closing teams balance the
+              register for a real-estate transaction file. My team is building it as a greenfield
+              microservice on AKS behind a modern Angular front end, integrated with SoftPro&apos;s
+              established Select backend. Alongside the full-stack work, I lead our team&apos;s
+              adoption of AI in the development workflow — building custom agents, maintaining
+              shared Copilot instructions, and authoring reusable prompts — and I partner with
+              product to scope work and shape technical direction.
             </p>
             <p className="text-lg text-muted leading-relaxed">
               Passionate about performance tuning, system optimization, and mentoring developers. I
