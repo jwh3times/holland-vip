@@ -8,11 +8,16 @@ import {
   ProblemSolving,
   ExperienceSection,
   ProjectsSection,
+  OpenSourceSection,
   EducationSection,
   ContactSection,
 } from "@/components/sections";
+import { getFeaturedRepos } from "@/lib/github";
 
-export default function Home() {
+export default async function Home() {
+  // Resolved at build time (static export); never throws — see lib/github.ts.
+  const repos = await getFeaturedRepos();
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
@@ -25,6 +30,7 @@ export default function Home() {
         <ProblemSolving />
         <ExperienceSection />
         <ProjectsSection />
+        <OpenSourceSection repos={repos} />
         <EducationSection />
         <ContactSection />
       </main>
