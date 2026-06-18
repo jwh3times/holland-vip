@@ -1,7 +1,7 @@
 import fallbackData from "./github-fallback.json";
 
 /** GitHub account whose public repos are featured. */
-const GITHUB_USER = "jwh3times";
+export const GITHUB_USER = "jwh3times";
 
 /**
  * Curated allowlist of repos to feature, in display order.

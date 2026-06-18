@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils";
 import { FolderGit2, Star, ArrowUpRight } from "lucide-react";
 import type { Repo } from "@/lib/github";
+import type { ContributionCalendar } from "@/lib/github-contributions";
+import { ContributionHeatmap } from "@/components/ContributionHeatmap";
 
 /** Accent colors cycled per card, mirroring the site's blue/green/purple/orange palette. */
 const accents = [
@@ -36,7 +38,13 @@ function formatUpdated(iso: string): string {
   });
 }
 
-export function OpenSourceSection({ repos }: { repos: Repo[] }) {
+export function OpenSourceSection({
+  repos,
+  contributions,
+}: {
+  repos: Repo[];
+  contributions?: ContributionCalendar;
+}) {
   if (repos.length === 0) return null;
 
   return (
@@ -102,6 +110,12 @@ export function OpenSourceSection({ repos }: { repos: Repo[] }) {
             );
           })}
         </div>
+
+        {contributions && (
+          <div className="max-w-4xl mx-auto">
+            <ContributionHeatmap calendar={contributions} />
+          </div>
+        )}
       </div>
     </section>
   );

@@ -55,4 +55,23 @@ describe("OpenSourceSection", () => {
     const { container } = render(<OpenSourceSection repos={[]} />);
     expect(container).toBeEmptyDOMElement();
   });
+
+  it("renders the contribution heatmap only when contributions are provided", () => {
+    const { rerender } = render(<OpenSourceSection repos={repos} />);
+    expect(screen.queryByText("Contribution activity")).not.toBeInTheDocument();
+
+    rerender(
+      <OpenSourceSection
+        repos={repos}
+        contributions={{
+          totalContributions: 42,
+          weeks: [[{ date: "2026-06-14", count: 3, level: 1 }]],
+        }}
+      />
+    );
+    expect(screen.getByText("Contribution activity")).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: /42 contributions in the last year/i })
+    ).toBeInTheDocument();
+  });
 });
