@@ -6,5 +6,6 @@ export { TechnicalCapabilities } from "./TechnicalCapabilities";
 export { ProblemSolving } from "./ProblemSolving";
 export { ExperienceSection } from "./ExperienceSection";
 export { ProjectsSection } from "./ProjectsSection";
+export { OpenSourceSection } from "./OpenSourceSection";
 export { EducationSection } from "./EducationSection";
 export { ContactSection } from "./ContactSection";

@@ -7,6 +7,10 @@ describe("Navigation", () => {
     render(<Navigation />);
     expect(screen.getByText("Jerry Holland")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "#projects");
+    expect(screen.getByRole("link", { name: "Open Source" })).toHaveAttribute(
+      "href",
+      "#open-source"
+    );
   });
 
   it("opens and closes the mobile menu", () => {
