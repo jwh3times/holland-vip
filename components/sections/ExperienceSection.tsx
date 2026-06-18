@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 type ColorKey = keyof typeof colorMap;
 
 interface Experience {
@@ -89,10 +91,14 @@ export function ExperienceSection() {
               return (
                 <div
                   key={exp.company}
-                  className={`relative ${index < experiences.length - 1 ? "mb-12" : ""} ml-20`}
+                  className={cn("relative ml-20", index < experiences.length - 1 && "mb-12")}
                 >
                   <div
-                    className={`absolute -left-[3.25rem] top-2 w-6 h-6 rounded-full ${colors.dot} border-4 border-white dark:border-slate-900 ring-4 ${colors.ring}`}
+                    className={cn(
+                      "absolute -left-[3.25rem] top-2 w-6 h-6 rounded-full border-4 border-white dark:border-slate-900 ring-4",
+                      colors.dot,
+                      colors.ring
+                    )}
                   ></div>
                   <div className="rounded-2xl p-6 card-bg-white-80 backdrop-blur-sm border border-gray-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300">
                     <div className="flex flex-wrap items-center gap-3 mb-3">
@@ -110,7 +116,7 @@ export function ExperienceSection() {
                     <ul className="space-y-2 text-sm text-muted">
                       {exp.highlights.map((highlight) => (
                         <li key={highlight} className="flex items-start">
-                          <span className={`mr-2 ${colors.bullet}`}>▸</span>
+                          <span className={cn("mr-2", colors.bullet)}>▸</span>
                           <span>{highlight}</span>
                         </li>
                       ))}

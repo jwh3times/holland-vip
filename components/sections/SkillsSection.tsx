@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 const skillCategories = [
   {
     title: "Languages & Frameworks",
@@ -57,7 +59,7 @@ export function SkillsSection() {
         <div className="max-w-6xl mx-auto space-y-12">
           {skillCategories.map((category) => (
             <div key={category.title}>
-              <h3 className={`text-xl font-semibold mb-4 text-center ${category.colorClass}`}>
+              <h3 className={cn("text-xl font-semibold mb-4 text-center", category.colorClass)}>
                 {category.title}
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">

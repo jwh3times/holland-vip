@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
       "Senior Software Engineer with 12+ years of experience in full-stack development, cloud architecture, and system optimization.",
     images: [
       {
-        url: "/og-image.svg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Jerry Holland - Senior Software Engineer",
@@ -48,7 +49,7 @@ export const metadata: Metadata = {
     title: "Jerry Holland | Senior Software Engineer",
     description:
       "Senior Software Engineer with 12+ years of experience in full-stack development, cloud architecture, and system optimization.",
-    images: ["/og-image.svg"],
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -86,11 +87,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className="antialiased">
         {/* Cloudflare Web Analytics */}
-        <script
-          defer
+        <Script
           src="https://static.cloudflareinsights.com/beacon.min.js"
+          strategy="afterInteractive"
           data-cf-beacon='{"token": "3a0baab3867e43ca98f5c11091fe22af"}'
-        ></script>
+        />
 
         {/* Skip to main content link for accessibility */}
         <a

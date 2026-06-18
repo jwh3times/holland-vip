@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 const capabilities = [
   {
     title: "Architecture & Design",
@@ -59,13 +61,13 @@ export function TechnicalCapabilities() {
               key={capability.title}
               className="rounded-2xl p-6 card-bg-white border border-gray-200 dark:border-slate-700 shadow-lg transition-colors duration-300"
             >
-              <h3 className={`text-2xl font-bold ${capability.colorClass} mb-4`}>
+              <h3 className={cn("text-2xl font-bold mb-4", capability.colorClass)}>
                 {capability.title}
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
                 {capability.items.map((item) => (
                   <div key={item} className="flex items-start">
-                    <span className={`mr-2 ${capability.bulletColor} text-xl`}>•</span>
+                    <span className={cn("mr-2 text-xl", capability.bulletColor)}>•</span>
                     <span className="text-label">{item}</span>
                   </div>
                 ))}

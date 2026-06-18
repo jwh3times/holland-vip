@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 type ColorKey = keyof typeof colorMap;
 
 interface CareerHighlight {
@@ -132,9 +134,15 @@ export function AboutSection() {
               return (
                 <div
                   key={highlight.title}
-                  className={`rounded-2xl p-6 border ${colors.border} ${colors.bg} transition-colors duration-300`}
+                  className={cn(
+                    "rounded-2xl p-6 border transition-colors duration-300",
+                    colors.border,
+                    colors.bg
+                  )}
                 >
-                  <div className={`text-3xl font-bold ${colors.text} mb-2`}>{highlight.value}</div>
+                  <div className={cn("text-3xl font-bold mb-2", colors.text)}>
+                    {highlight.value}
+                  </div>
                   <div className="text-sm font-semibold text-label mb-1">{highlight.title}</div>
                   <div className="text-xs text-muted">{highlight.description}</div>
                 </div>
@@ -153,13 +161,19 @@ export function AboutSection() {
                 return (
                   <div
                     key={achievement.title}
-                    className={`rounded-2xl p-6 border ${colors.border} ${colors.bg} transition-colors duration-300`}
+                    className={cn(
+                      "rounded-2xl p-6 border transition-colors duration-300",
+                      colors.border,
+                      colors.bg
+                    )}
                   >
-                    <h4 className={`text-xl font-bold ${colors.text} mb-3`}>{achievement.title}</h4>
+                    <h4 className={cn("text-xl font-bold mb-3", colors.text)}>
+                      {achievement.title}
+                    </h4>
                     <ul className="space-y-2 text-muted">
                       {achievement.items.map((item) => (
                         <li key={item} className="flex items-start">
-                          <span className={`mr-2 ${colors.bullet}`}>▸</span>
+                          <span className={cn("mr-2", colors.bullet)}>▸</span>
                           <span>{item}</span>
                         </li>
                       ))}

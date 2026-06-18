@@ -1,38 +1,33 @@
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
-import {
-  IconClipboardCopy,
-  IconFileBroken,
-  IconSignature,
-  IconTableColumn,
-} from "@tabler/icons-react";
+import { ClipboardCopy, FileX, Signature, Columns3 } from "lucide-react";
 
 const projects = [
   {
     title: "Enterprise SaaS Platform Modernization",
     description:
       "Led modernization initiative for legacy enterprise application serving Fortune 500 clients. Migrated from monolithic architecture to containerized microservices on Kubernetes, implemented modern authentication flows, and redesigned data storage architecture. Achieved zero-downtime deployment across multiple customer environments.",
-    icon: <IconClipboardCopy className="h-5 w-5" />,
+    icon: <ClipboardCopy className="h-5 w-5" />,
     className: "md:col-span-2",
   },
   {
     title: "Interactive Data Visualization Framework",
     description:
       "Developed sophisticated charting and annotation system for time-series data analysis. Built custom drawing tools, context capture functionality, and client-side image storage using IndexedDB. Enabled users to annotate trends, capture insights, and share analysis across teams.",
-    icon: <IconFileBroken className="h-5 w-5" />,
+    icon: <FileX className="h-5 w-5" />,
     className: "md:col-span-1",
   },
   {
     title: "High-Performance Data Calculation Engine",
     description:
       "Architected real-time calculation engine processing streaming data with user-defined formulas. Designed intuitive UI for formula configuration, tag mapping, and validation. Implemented multi-threaded execution pipeline ensuring sub-second calculation results.",
-    icon: <IconSignature className="h-5 w-5" />,
+    icon: <Signature className="h-5 w-5" />,
     className: "md:col-span-1",
   },
   {
     title: "Third-Party System Integration Platform",
     description:
       "Built flexible integration layer connecting multiple enterprise systems via REST APIs. Implemented data synchronization, transformation pipelines, and error recovery mechanisms. Streamlined workflows by automating data exchange between systems.",
-    icon: <IconTableColumn className="h-5 w-5" />,
+    icon: <Columns3 className="h-5 w-5" />,
     className: "md:col-span-2",
   },
 ];

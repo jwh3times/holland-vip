@@ -27,8 +27,8 @@ function BentoGridItem({
   description,
   icon,
   ref,
-}: {
-  className?: string;
+  ...props
+}: Omit<React.HTMLAttributes<HTMLDivElement>, "title"> & {
   title?: string | React.ReactNode;
   description?: string | React.ReactNode;
   icon?: React.ReactNode;
@@ -41,6 +41,7 @@ function BentoGridItem({
         "row-span-1 rounded-3xl group/bento hover:shadow-2xl transition-all duration-300 shadow-lg/60 dark:shadow-none p-6 bento-card-bg border border-white/70 dark:border-slate-700/60 backdrop-blur-md min-h-[20rem] flex flex-col",
         className
       )}
+      {...props}
     >
       <div className="group-hover/bento:translate-x-1 transition duration-300 text-body flex-grow flex flex-col gap-4">
         {icon && (

@@ -1,0 +1,57 @@
+name: Smoke Test (production)
+
+# CI in this repo is a pre-deploy gate; Cloudflare Pages builds/deploys from the
+# repo directly, so nothing here verifies the *live* site. This job hits the
+# deployed URL to catch outages or regressions after they ship.
+on:
+  schedule:
+    # Daily at 07:23 UTC (off the hour to dodge cron congestion). Scheduled runs
+    # execute on the default branch.
+    - cron: "23 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Production smoke check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Homepage responds and renders expected content
+        run: |
+          set -euo pipefail
+          url="https://holland.vip/"
+
+          echo "GET $url"
+          status=$(curl -sS -L --retry 3 --retry-delay 5 -o body.html -w '%{http_code}' "$url")
+          echo "HTTP $status"
+          if [ "$status" != "200" ]; then
+            echo "::error::Expected HTTP 200 from $url, got $status"
+            exit 1
+          fi
+
+          if ! grep -q "Jerry Holland" body.html; then
+            echo "::error::Homepage did not contain expected content 'Jerry Holland'"
+            exit 1
+          fi
+          echo "Homepage status + content OK"
+
+      - name: Security headers are present
+        run: |
+          set -euo pipefail
+          url="https://holland.vip/"
+          headers=$(curl -sS -L -D - -o /dev/null "$url" | tr -d '\r')
+          echo "$headers"
+
+          require_header() {
+            if ! printf '%s\n' "$headers" | grep -iq "^$1:"; then
+              echo "::error::Missing expected response header: $1"
+              exit 1
+            fi
+          }
+          require_header "content-security-policy"
+          require_header "strict-transport-security"
+          require_header "x-content-type-options"
+          require_header "x-frame-options"
+          echo "Security headers OK"

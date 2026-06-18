@@ -1,0 +1,42 @@
+name: CodeQL
+
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly baseline scan (Mondays 04:27 UTC). Scheduled runs analyze the
+    # default branch, refreshing the baseline that PR scans diff against.
+    - cron: "27 4 * * 1"
+
+# Cancel superseded PR runs; let scheduled/baseline runs finish.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze (JS/TS)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      # No build step: JavaScript/TypeScript is extracted directly, so autobuild
+      # is unnecessary for this static export.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript-typescript"
