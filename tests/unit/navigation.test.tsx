@@ -6,7 +6,7 @@ describe("Navigation", () => {
   it("renders the brand and desktop nav links", () => {
     render(<Navigation />);
     expect(screen.getByText("Jerry Holland")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "#projects");
+    expect(screen.getByRole("link", { name: "Work" })).toHaveAttribute("href", "#projects");
     expect(screen.getByRole("link", { name: "Open Source" })).toHaveAttribute(
       "href",
       "#open-source"
