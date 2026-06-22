@@ -69,7 +69,7 @@ jobs:
       # Test the exact artifact the build job produced; the webServer in
       # playwright.config.ts serves it via `npx serve out` when CI is set.
       - name: Download static build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: static-site
           path: out
