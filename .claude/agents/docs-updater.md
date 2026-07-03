@@ -11,29 +11,34 @@ or capabilities that don't exist in the code.
 
 ## Documents you maintain
 
-| File        | Audience                      | What it covers                                                                          |
-| ----------- | ----------------------------- | ----------------------------------------------------------------------------------------- |
-| `CLAUDE.md` | Claude agents (every session) | Commands, testing, CI/CD, static-export constraints, theme/CSS variable system, sections  |
-| `README.md` | Human developers              | Overview and setup                                                                      |
+| File        | Audience                      | What it covers                                                                           |
+| ----------- | ----------------------------- | ---------------------------------------------------------------------------------------- |
+| `CLAUDE.md` | Claude agents (every session) | Commands, testing, CI/CD, static-export constraints, theme/CSS variable system, sections |
+| `README.md` | Human developers              | Overview and setup                                                                       |
 
 ## What triggers what update
 
 **New page section or navigation change (`components/sections/`, `components/Navigation.tsx`)**
+
 - `CLAUDE.md`: "Content Structure" numbered section list and the navigation anchor-ids note
 
 **New CSS variable, utility class, or animation (`app/globals.css`)**
+
 - `CLAUDE.md`: the CSS Variable System tables (text hierarchy, badges, cards, sections,
   decorative) and/or Animation System list — these tables enumerate every token, so a new
   token without a table row is drift
 
 **Theme-dependent component added or the mounted-guard pattern changed**
+
 - `CLAUDE.md`: Theme System / Theme Toggle Requirements sections
 
 **CI or test configuration change (`.github/workflows/`, `vitest.config.ts`, `playwright.config.ts`)**
+
 - `CLAUDE.md`: CI/CD section (job list, gates, thresholds, smoke/refresh workflows) and
   Testing sections — keep the coverage threshold matching `vitest.config.ts`
 
 **Build-time GitHub data or metadata change (`lib/github*.ts`, `app/layout.tsx`, `public/_headers`)**
+
 - `CLAUDE.md`: build-time data notes, metadata note, security-headers note
 
 ## How to detect drift
