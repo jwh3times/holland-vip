@@ -17,11 +17,13 @@ components/
 │   ├── ProblemSolving.tsx   # Problem solving highlight
 │   ├── ExperienceSection.tsx # Work experience timeline
 │   ├── ProjectsSection.tsx  # Projects bento grid
+│   ├── OpenSourceSection.tsx # Featured GitHub repos + contribution heatmap
 │   ├── EducationSection.tsx # Education & certifications
 │   ├── ContactSection.tsx   # Contact information
 │   └── index.ts             # Section exports
 ├── icons/                    # Custom icon components
 │   └── SocialIcons.tsx      # GitHub, LinkedIn icons
+├── ContributionHeatmap.tsx  # GitHub contribution calendar (used by OpenSourceSection)
 ├── Navigation.tsx           # Header navigation with mobile menu
 ├── Footer.tsx               # Site footer with social links
 ├── mode-toggle.tsx          # Dark/light theme switcher
@@ -40,7 +42,7 @@ Interactive grid layout for showcasing featured projects and capabilities.
 
 - Responsive masonry-style layout
 - Animated hover effects
-- Icon support with Tabler Icons
+- Icon support with Lucide React
 - Customizable grid spans
 - Dark/light theme support
 
@@ -148,6 +150,7 @@ Modular page sections for the portfolio:
 | `ProblemSolving.tsx`        | Problem-solving approach highlight           |
 | `ExperienceSection.tsx`     | Work experience timeline                     |
 | `ProjectsSection.tsx`       | Projects showcase using BentoGrid            |
+| `OpenSourceSection.tsx`     | Featured GitHub repos + contribution heatmap |
 | `EducationSection.tsx`      | Education and certifications                 |
 | `ContactSection.tsx`        | Contact information and links                |
 
@@ -243,7 +246,6 @@ Components follow consistent patterns:
 ## 📦 Dependencies
 
 - **Radix UI** - Accessible component primitives
-- **Lucide React** - Icon library
-- **Tabler Icons** - Additional icon set
+- **Lucide React** - Icon library (the site's single icon set)
 - **next-themes** - Theme management
 - **class-variance-authority** - Variant styling utility

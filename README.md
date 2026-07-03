@@ -8,7 +8,7 @@ Professional portfolio website for Jerry Holland showcasing over a decade of sof
 - **UI Library**: React 19.2+
 - **Styling**: Tailwind CSS v4 (CSS-first config, no `tailwind.config.ts`)
 - **Language**: TypeScript 6.0+
-- **Icons**: Tabler Icons, Lucide React
+- **Icons**: Lucide React
 - **Theme**: next-themes (dark/light mode support)
 - **UI Components**: Radix UI primitives, class-variance-authority
 - **Testing**: Vitest + Testing Library (unit) and Playwright (E2E)
@@ -157,10 +157,12 @@ holland-vip/
 │   │   ├── ProblemSolving.tsx
 │   │   ├── ExperienceSection.tsx
 │   │   ├── ProjectsSection.tsx
+│   │   ├── OpenSourceSection.tsx  # GitHub repos + contribution heatmap
 │   │   ├── EducationSection.tsx
 │   │   └── ContactSection.tsx
 │   ├── icons/               # Custom icon components
 │   │   └── SocialIcons.tsx  # Social media icons
+│   ├── ContributionHeatmap.tsx  # GitHub contribution calendar (used by OpenSourceSection)
 │   ├── Navigation.tsx       # Header navigation with mobile menu
 │   ├── Footer.tsx           # Site footer
 │   ├── mode-toggle.tsx      # Dark/light mode switcher
@@ -188,7 +190,8 @@ holland-vip/
 │   ├── workflows/
 │   │   ├── ci.yml                  # CI: build/lint/format + unit coverage + E2E
 │   │   ├── dependency-review.yml   # Fails PRs on high-severity vuln deps
-│   │   └── smoke.yml               # Daily smoke check against the live site
+│   │   ├── smoke.yml               # Daily smoke check against the live site
+│   │   └── refresh.yml             # Weekly Cloudflare rebuild (fresh GitHub data)
 │   ├── dependabot.yml              # npm + GitHub Actions update schedule
 │   └── copilot-instructions.md
 ├── playwright.config.ts     # Playwright (E2E) configuration
@@ -244,6 +247,13 @@ The site implements security best practices:
 Security headers live in `public/_headers` (served by Cloudflare Pages) — this is
 the **single source of truth**. `next.config.ts` intentionally has no `headers()`
 block, since it is ignored by a static export.
+
+## 🤝 Contributing
+
+Bug reports, accessibility fixes, and small improvements are welcome — see
+[CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and local checks. By
+participating you agree to the [Code of Conduct](CODE_OF_CONDUCT.md). Report
+vulnerabilities privately per [SECURITY.md](SECURITY.md).
 
 ## 📄 License
 
