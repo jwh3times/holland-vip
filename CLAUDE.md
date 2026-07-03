@@ -56,7 +56,7 @@ Test files are in [tests/](tests/) covering homepage, accessibility, SEO, theme 
 
 ### Testing Build Output
 
-After `npm run build`, the `/out` directory contains the complete static site. There is no production preview server — `next start` does not serve the static export. Use a local HTTP server (e.g., `npx serve out`) to preview the built output.
+After `npm run build`, the `/out` directory contains the complete static site. There is no production preview server — `next start` does not serve the static export. Use `npm run preview` (an alias for `npx serve out`) to preview the built output.
 
 ## CI/CD
 
@@ -65,6 +65,7 @@ After `npm run build`, the `/out` directory contains the complete static site. T
 - **Code scanning — CodeQL (default setup)** — enabled via GitHub's **default setup** (repo _Settings → Code security_), which scans JS/TS + Actions on PRs to `main` and weekly; findings surface in the Security tab. There is intentionally **no `codeql.yml`** in the repo: an advanced CodeQL workflow cannot upload results while default setup is enabled (it fails with _"analyses from advanced configurations cannot be processed when the default setup is enabled"_). Manage CodeQL from the Security settings, not a workflow file.
 - **Deployment — Cloudflare Pages** — Cloudflare builds and deploys directly from the GitHub repo on every push to `main` (build command `npm run build`, output dir `out`). There is **no deploy workflow in this repo** — deployment is configured in the Cloudflare dashboard, not GitHub Actions. CI is a parallel quality gate, not a deploy gate.
 - **Post-deploy smoke — [.github/workflows/smoke.yml](.github/workflows/smoke.yml)** — daily cron (+ manual `workflow_dispatch`) curls the live `https://holland.vip`, asserting HTTP 200, expected content, and the security headers. This is the only check that exercises the _deployed_ site rather than the pre-deploy build.
+- **Data refresh — [.github/workflows/refresh.yml](.github/workflows/refresh.yml)** — weekly cron (Mondays 08:00 UTC, + manual `workflow_dispatch`) POSTs the Cloudflare Pages deploy hook (`CLOUDFLARE_DEPLOY_HOOK_URL` secret) to trigger a rebuild, refreshing the build-time GitHub repo/contribution data baked into `OpenSourceSection`. The run fails with an error if the secret is unset or the hook returns a non-2xx status.
 - **Node version** — pinned in [.nvmrc](.nvmrc) (single source of truth). CI reads it via `node-version-file`; Cloudflare Pages reads `.nvmrc` automatically. Bump Node by editing that one file.
 
 ## Architecture
@@ -237,12 +238,15 @@ Sections (in render order):
 5. **Problem-Solving Highlights** — challenge/solution/impact case studies (`ProblemSolving`)
 6. **Experience** — timeline of past roles (`ExperienceSection`)
 7. **Projects** — BentoGrid component (`ProjectsSection`)
-8. **Education** — NCSU degree info with logo (`EducationSection`)
-9. **Contact** — email link (`ContactSection`)
+8. **Open Source** — featured GitHub repos + contribution heatmap (`OpenSourceSection`, rendering `ContributionHeatmap`)
+9. **Education** — NCSU degree info with logo (`EducationSection`)
+10. **Contact** — email link (`ContactSection`)
 
 Each section component lives in [components/sections/](components/sections/) and is re-exported from the index barrel.
 
-**Navigation anchor IDs:** Sections use `id` attributes that match the nav links: `#about`, `#skills`, `#experience`, `#projects`, `#contact`. When adding a new navigable section, add it to the `navLinks` array in [components/Navigation.tsx](components/Navigation.tsx).
+**Build-time GitHub data:** `app/page.tsx` fetches `getFeaturedRepos()` ([lib/github.ts](lib/github.ts)) and `getContributions()` ([lib/github-contributions.ts](lib/github-contributions.ts)) at build time for `OpenSourceSection`; the route is pinned `dynamic = "force-static"` so the contributions POST doesn't opt it out of static export. Neither call throws — they degrade to empty data. The weekly [refresh.yml](.github/workflows/refresh.yml) workflow exists to keep this baked-in data fresh (see CI/CD).
+
+**Navigation anchor IDs:** Sections use `id` attributes that match the nav links: `#about`, `#skills`, `#experience`, `#projects`, `#open-source`, `#contact`. When adding a new navigable section, add it to the `navLinks` array in [components/Navigation.tsx](components/Navigation.tsx).
 
 **Site metadata:** Update [app/layout.tsx](app/layout.tsx) `Metadata` export
 

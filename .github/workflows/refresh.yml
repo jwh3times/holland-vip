@@ -13,8 +13,7 @@ name: Refresh build (repo data)
 # The hook URL is a write trigger, so it's kept as a secret (not a plain var).
 on:
   schedule:
-    # Weekly, Mondays at 08:17 UTC (off the hour to dodge cron congestion). Scheduled
-    # runs execute on the default branch.
+    # Weekly, Mondays at 08:00 UTC. Scheduled runs execute on the default branch.
     - cron: "00 8 * * 1"
   workflow_dispatch:
 
