@@ -295,3 +295,11 @@ if (!mounted)
 - Run `npm run format` before commits
 - Maintain TypeScript strict mode compliance
 - Unit-test coverage is gated at 80% in CI — new components generally need a test in `tests/unit/`
+
+## Agents & docs automation
+
+The `docs-updater` subagent (`.claude/agents/docs-updater.md`) keeps CLAUDE.md and README.md in
+sync with the code. Docs freshness is auto-checked at the end of every response turn by a read-only
+Stop hook in `.claude/settings.json` (single pre-approved git command + Read/Grep/Glob — it never
+edits files). When it detects drift it blocks the stop with specifics and the main session invokes
+`docs-updater` to fix exactly that drift.
