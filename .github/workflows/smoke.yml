@@ -17,17 +17,30 @@ jobs:
   smoke:
     name: Production smoke check
     runs-on: ubuntu-latest
+    # holland.vip is behind Cloudflare, which blocks datacenter/bot traffic with a
+    # 403 (GitHub-hosted runners live on Azure IPs). Each curl sends a secret header
+    # that a Cloudflare WAF custom rule allowlists (Skip), so this check — and only
+    # this check — can reach the live site. Set SMOKE_TOKEN in the repo secrets and a
+    # matching "skip when http.request.headers[\"x-smoke-check\"] eq <token>" WAF rule.
+    env:
+      SMOKE_TOKEN: ${{ secrets.SMOKE_TOKEN }}
     steps:
       - name: Homepage responds and renders expected content
         run: |
           set -euo pipefail
           url="https://holland.vip/"
 
+          if [ -z "$SMOKE_TOKEN" ]; then
+            echo "::warning::SMOKE_TOKEN secret is empty — Cloudflare will 403 this datacenter request. Add the secret and matching WAF skip rule."
+          fi
+
           echo "GET $url"
-          status=$(curl -sS -L --retry 3 --retry-delay 5 -o body.html -w '%{http_code}' "$url")
+          status=$(curl -sS -L --retry 3 --retry-delay 5 \
+            -H "X-Smoke-Check: $SMOKE_TOKEN" \
+            -o body.html -w '%{http_code}' "$url")
           echo "HTTP $status"
           if [ "$status" != "200" ]; then
-            echo "::error::Expected HTTP 200 from $url, got $status"
+            echo "::error::Expected HTTP 200 from $url, got $status (a 403 usually means the Cloudflare WAF bypass header/rule is missing or out of sync with SMOKE_TOKEN)"
             exit 1
           fi
 
@@ -41,7 +54,7 @@ jobs:
         run: |
           set -euo pipefail
           url="https://holland.vip/"
-          headers=$(curl -sS -L -D - -o /dev/null "$url" | tr -d '\r')
+          headers=$(curl -sS -L -H "X-Smoke-Check: $SMOKE_TOKEN" -D - -o /dev/null "$url" | tr -d '\r')
           echo "$headers"
 
           require_header() {
