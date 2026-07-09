@@ -120,6 +120,14 @@ command `npm run build`, output directory `out`).
 > Cloudflare Pages dashboard, not GitHub Actions. The GitHub Actions CI is a
 > parallel quality gate (lint, format, unit coverage, E2E) — it does **not** deploy.
 
+### Versioning and Releases
+
+Every merge to `main` creates a standard SemVer tag and GitHub Release in
+`v<major>.<minor>.<build>` format. The workflow reads `package.json` `version` as
+the requested release line, auto-increments the build number from existing tags
+in the same major/minor line, and preserves `x.y.0` when a new major/minor line
+has no existing `v<x>.<y>.*` tags.
+
 Because the build is a portable static export, it can also be hosted on any other
 static provider:
 
@@ -191,7 +199,8 @@ holland-vip/
 │   │   ├── ci.yml                  # CI: build/lint/format + unit coverage + E2E
 │   │   ├── dependency-review.yml   # Fails PRs on high-severity vuln deps
 │   │   ├── smoke.yml               # Daily smoke check against the live site
-│   │   └── refresh.yml             # Weekly Cloudflare rebuild (fresh GitHub data)
+│   │   ├── refresh.yml             # Weekly Cloudflare rebuild (fresh GitHub data)
+│   │   └── version.yml             # Tags and releases merges to main
 │   ├── dependabot.yml              # npm + GitHub Actions update schedule
 │   └── copilot-instructions.md
 ├── playwright.config.ts     # Playwright (E2E) configuration
