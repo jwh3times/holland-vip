@@ -580,11 +580,12 @@ git commit -m "chore: remove docs-freshness Stop hook (superseded by /ship)"
 
 ---
 
-### Task 7: Update `CLAUDE.md` and run the final fast-check gate
+### Task 7: Update `CLAUDE.md` + `README.md` and run the final fast-check gate
 
 **Files:**
 
 - Modify: `CLAUDE.md` (the "Agents & docs automation" section; the `version.yml` and `ci.yml` CI/CD bullets)
+- Modify: `README.md` (CI job wording at lines ~15, ~199, ~244 — now four jobs incl. the `changelog` guard; the "Versioning and Releases" section — add the CHANGELOG top-version guard + `/ship` workflow). Both files are owned by `docs-updater`; dispatch it scoped to the branch diff to reconcile both, rather than hand-editing README prose.
 
 **Interfaces:**
 
