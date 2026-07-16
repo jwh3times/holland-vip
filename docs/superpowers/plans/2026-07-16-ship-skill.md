@@ -227,36 +227,36 @@ git commit -m "docs: add CHANGELOG with backfilled v1.1.x history"
 Append this job to `.github/workflows/ci.yml` (keep 2-space indentation; it is a sibling of `build`, `test`, `unit`):
 
 ```yaml
-  changelog:
-    name: Changelog Version
-    runs-on: ubuntu-latest
-    # PR-only: on push to main, version.yml mints the tag and next-version would advance
-    # past the changelog's top entry, so the guard must not run there. Dependabot PRs don't
-    # touch the changelog; version.yml still tags them, so exempt the bot.
-    if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+changelog:
+  name: Changelog Version
+  runs-on: ubuntu-latest
+  # PR-only: on push to main, version.yml mints the tag and next-version would advance
+  # past the changelog's top entry, so the guard must not run there. Dependabot PRs don't
+  # touch the changelog; version.yml still tags them, so exempt the bot.
+  if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0 # full tags, needed to compute the next build number
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v7
+      with:
+        fetch-depth: 0 # full tags, needed to compute the next build number
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version-file: ".nvmrc"
+    - name: Setup Node.js
+      uses: actions/setup-node@v7
+      with:
+        node-version-file: ".nvmrc"
 
-      - name: Verify CHANGELOG top version matches the version this merge will mint
-        run: |
-          expected=$(node scripts/next-version.mjs)
-          top=$(grep -m1 -E '^## \[[0-9]+\.[0-9]+\.[0-9]+\]' CHANGELOG.md \
-            | sed -E 's/^## \[([0-9.]+)\].*/\1/')
-          echo "Expected (next-version): $expected"
-          echo "CHANGELOG top released:  $top"
-          if [ "$expected" != "$top" ]; then
-            echo "::error::CHANGELOG top version '$top' does not match the version this merge will mint ('$expected'). Run /ship to update CHANGELOG.md."
-            exit 1
-          fi
+    - name: Verify CHANGELOG top version matches the version this merge will mint
+      run: |
+        expected=$(node scripts/next-version.mjs)
+        top=$(grep -m1 -E '^## \[[0-9]+\.[0-9]+\.[0-9]+\]' CHANGELOG.md \
+          | sed -E 's/^## \[([0-9.]+)\].*/\1/')
+        echo "Expected (next-version): $expected"
+        echo "CHANGELOG top released:  $top"
+        if [ "$expected" != "$top" ]; then
+          echo "::error::CHANGELOG top version '$top' does not match the version this merge will mint ('$expected'). Run /ship to update CHANGELOG.md."
+          exit 1
+        fi
 ```
 
 - [ ] **Step 2: Simulate the job locally (both branches)**
@@ -301,44 +301,44 @@ git commit -m "ci: add changelog version guard job"
 In `.github/workflows/version.yml`, after the `actions/checkout@v7` step (which already sets `fetch-depth: 0`), insert a Node setup step, then replace the entire `Compute next version, push tag, and create release` step body. The final steps block reads:
 
 ```yaml
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0 # full history + tags, needed to compute the next build number
+- uses: actions/checkout@v7
+  with:
+    fetch-depth: 0 # full history + tags, needed to compute the next build number
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version-file: ".nvmrc"
+- name: Setup Node.js
+  uses: actions/setup-node@v7
+  with:
+    node-version-file: ".nvmrc"
 
-      - name: Compute next version, push tag, and create release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          # Single source of truth — same script the /ship skill and the CI changelog guard use.
-          version=$(node scripts/next-version.mjs)
-          tag="v${version}"
+- name: Compute next version, push tag, and create release
+  env:
+    GH_TOKEN: ${{ github.token }}
+  run: |
+    # Single source of truth — same script the /ship skill and the CI changelog guard use.
+    version=$(node scripts/next-version.mjs)
+    tag="v${version}"
 
-          if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
-            echo "::error::Computed tag '$tag' already exists."
-            exit 1
-          fi
+    if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
+      echo "::error::Computed tag '$tag' already exists."
+      exit 1
+    fi
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a "$tag" -m "Release ${tag}"
-          git push origin "refs/tags/${tag}"
+    git config user.name "github-actions[bot]"
+    git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    git tag -a "$tag" -m "Release ${tag}"
+    git push origin "refs/tags/${tag}"
 
-          gh release create "$tag" \
-            --verify-tag \
-            --title "$tag" \
-            --notes "Automated release for ${tag} from ${GITHUB_SHA}."
+    gh release create "$tag" \
+      --verify-tag \
+      --title "$tag" \
+      --notes "Automated release for ${tag} from ${GITHUB_SHA}."
 
-          {
-            echo "### Release created: \`${tag}\`"
-            echo ""
-            echo "- Version: \`${version}\`"
-            echo "- Commit: \`${GITHUB_SHA}\`"
-          } >> "$GITHUB_STEP_SUMMARY"
+    {
+      echo "### Release created: \`${tag}\`"
+      echo ""
+      echo "- Version: \`${version}\`"
+      echo "- Commit: \`${GITHUB_SHA}\`"
+    } >> "$GITHUB_STEP_SUMMARY"
 ```
 
 Note: the `package.json` SemVer validation that used to live inline now lives in `next-version.mjs` (it exits non-zero with `::error::…` on a malformed version), so the workflow still fails loudly on a bad version.

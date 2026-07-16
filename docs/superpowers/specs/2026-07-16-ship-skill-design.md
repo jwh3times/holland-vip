@@ -71,7 +71,7 @@ Only touch to the release pipeline. Replace the inline `jq`/`sed`/`git` compute 
   uses `fetch-depth: 0`, so tags are present).
 - `next=$(node scripts/next-version.mjs)` → `tag="v${next}"`.
 - Keep the existing "tag already exists" guard, `git tag -a` / `git push`, `gh release
-  create`, and the `$GITHUB_STEP_SUMMARY` block (derive its fields from `next`/`tag`).
+create`, and the `$GITHUB_STEP_SUMMARY` block (derive its fields from `next`/`tag`).
 
 Net effect on releases: byte-identical tag output, logic lives in one place. Risk is
 bounded — the port is 1:1, and the new CI guard (deliverable 4) would flag any mismatch on
@@ -114,7 +114,7 @@ Adapted from guardiantracker to this stack. Announce at start:
 
 1. **Preconditions — stop if any fail:** not on `main` (offer `git checkout -b agent/<topic>`);
    clean working tree (`git status --porcelain` — ask before committing anything); `gh auth
-   status` succeeds. Fetch tags (`git fetch --tags -q origin`).
+status` succeeds. Fetch tags (`git fetch --tags -q origin`).
 2. **Backfill** any tag with no matching `## [x.y.z]` section (factual, from `git show`).
 3. **Compute target version:** `node scripts/next-version.mjs` — the single source of truth;
    never hand-compute.
@@ -132,7 +132,7 @@ Adapted from guardiantracker to this stack. Announce at start:
 7. **Commit** docs + changelog: `git commit -m "docs: update docs and changelog for v<version>"`.
 8. **Push and open/update PR:** `git push -u origin <branch>`; if a PR exists
    (`gh pr list --head <branch> --state open ...`) `gh pr edit`, else `gh pr create --base
-   main` with body derived from the changelog section. Do not open a second PR.
+main` with body derived from the changelog section. Do not open a second PR.
 9. **Report:** PR URL, the version this merge will mint, anything backfill/checks surfaced.
    State plainly that tests run in CI, not locally.
 
