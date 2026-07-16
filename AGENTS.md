@@ -87,6 +87,10 @@ a static export.
 - The unit job runs `npm run test:unit:coverage` and fails if coverage drops
   below the 80% thresholds.
 - The Playwright job runs the Chromium-engine projects only.
+- The changelog job (PR-only, skipped for Dependabot) fails the PR if the top
+  `## [x.y.z]` version in `CHANGELOG.md` doesn't match the version that merging
+  the PR will actually mint. Run `/ship` to write that entry; it computes the
+  version with `scripts/next-version.mjs` rather than guessing.
 - `.github/workflows/dependency-review.yml` fails PRs with high-severity
   dependency vulnerabilities.
 - CodeQL default setup is enabled in GitHub repository settings. There is
@@ -95,7 +99,8 @@ a static export.
   Release on every merge to `main` in `v<major>.<minor>.<build>` format, for
   example `v1.0.3`. The build number auto-increments within the matching
   major/minor line, and `x.y.0` is preserved for a new major/minor line with no
-  existing tags.
+  existing tags. The version is computed by `scripts/next-version.mjs`, the
+  single source of truth shared with the CI changelog guard and `/ship`.
 - Cloudflare Pages handles deployment directly from the GitHub repository. There
   is no deploy workflow in this repo.
 - `.github/workflows/smoke.yml` runs daily and manually against
@@ -346,7 +351,11 @@ weekly refresh workflow triggers a rebuild so this static data stays current.
 Keep `AGENTS.md`, `CLAUDE.md`, and `README.md` consistent when making changes
 that affect architecture, commands, deployment, testing, or project conventions.
 
-The existing Claude docs automation lives under `.claude/`. It checks
-`CLAUDE.md` and `README.md` freshness with a read-only stop hook and can update
-those files when drift is detected. This automation does not maintain
-`AGENTS.md`, so update this file explicitly when agent-facing guidance changes.
+The existing Claude docs automation lives under `.claude/`. The `/ship` skill
+(`.claude/skills/ship/SKILL.md`) refreshes `CLAUDE.md` and `README.md` when a
+branch is ready for a PR, by invoking the `docs-updater` subagent scoped to the
+branch's diff. It runs once per ship, not on every stop — there is no longer a
+docs-freshness stop hook. `/ship` also writes the `CHANGELOG.md` entry for the
+version the merge will mint. `docs-updater` maintains this file too, but only
+when `/ship` runs — so if you are changing agent-facing guidance outside that
+flow, update `AGENTS.md` explicitly rather than assuming it will be caught.

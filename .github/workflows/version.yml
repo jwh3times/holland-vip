@@ -41,42 +41,19 @@ jobs:
         with:
           fetch-depth: 0 # full history + tags, needed to compute the next build number
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: ".nvmrc"
+
       - name: Compute next version, push tag, and create release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          version=$(jq -r .version package.json)
-          if [[ ! "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
-            echo "::error::package.json version '$version' must be plain <major>.<minor>.<build> SemVer."
-            exit 1
-          fi
+          # Single source of truth — same script the /ship skill and the CI changelog guard use.
+          version=$(node scripts/next-version.mjs)
+          tag="v${version}"
 
-          major="${BASH_REMATCH[1]}"
-          minor="${BASH_REMATCH[2]}"
-          requested_build="${BASH_REMATCH[3]}"
-          release_line="${major}.${minor}"
-
-          last_build=$(
-            git tag --list "v${release_line}.*" \
-              | sed -E "s/^v${major}\.${minor}\.//" \
-              | grep -E '^[0-9]+$' \
-              | sort -n \
-              | tail -1 \
-              || true
-          )
-
-          if [[ -z "$last_build" ]]; then
-            build="$requested_build"
-          else
-            next_build=$((last_build + 1))
-            if (( requested_build > next_build )); then
-              build="$requested_build"
-            else
-              build="$next_build"
-            fi
-          fi
-
-          tag="v${release_line}.${build}"
           if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
             echo "::error::Computed tag '$tag' already exists."
             exit 1
@@ -95,8 +72,6 @@ jobs:
           {
             echo "### Release created: \`${tag}\`"
             echo ""
-            echo "- Package version: \`${version}\`"
-            echo "- Release line: \`${release_line}\`"
-            echo "- Build number: \`${build}\`"
+            echo "- Version: \`${version}\`"
             echo "- Commit: \`${GITHUB_SHA}\`"
           } >> "$GITHUB_STEP_SUMMARY"

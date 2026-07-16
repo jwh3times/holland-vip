@@ -12,7 +12,7 @@ Professional portfolio website for Jerry Holland showcasing over a decade of sof
 - **Theme**: next-themes (dark/light mode support)
 - **UI Components**: Radix UI primitives, class-variance-authority
 - **Testing**: Vitest + Testing Library (unit) and Playwright (E2E)
-- **CI/CD**: GitHub Actions (lint, format check, unit coverage, E2E)
+- **CI/CD**: GitHub Actions (lint, format check, unit coverage, E2E, changelog-version guard)
 - **Deployment**: Static Export (SSG) → Cloudflare Pages
 
 ## ✨ Features
@@ -126,7 +126,16 @@ Every merge to `main` creates a standard SemVer tag and GitHub Release in
 `v<major>.<minor>.<build>` format. The workflow reads `package.json` `version` as
 the requested release line, auto-increments the build number from existing tags
 in the same major/minor line, and preserves `x.y.0` when a new major/minor line
-has no existing `v<x>.<y>.*` tags.
+has no existing `v<x>.<y>.*` tags. The next version is computed by
+`scripts/next-version.mjs`, a single source of truth shared with the CI changelog
+guard and the `/ship` skill.
+
+Release history is documented in [CHANGELOG.md](CHANGELOG.md) (Keep a Changelog
+format). Its top entry must name the version that the next merge to `main` will
+mint — a `changelog` job in CI (PR-only, skipped for Dependabot) fails the PR if
+the top `## [x.y.z]` version doesn't match `scripts/next-version.mjs`'s output.
+The `.claude/skills/ship/SKILL.md` skill writes that entry for the branch and
+opens or updates the PR.
 
 Because the build is a portable static export, it can also be hosted on any other
 static provider:
@@ -177,6 +186,9 @@ holland-vip/
 │   └── theme-provider.tsx   # Theme context provider
 ├── lib/                     # Utility functions
 │   └── utils.ts             # Helper functions (cn, etc.)
+├── scripts/                 # Standalone Node scripts (not part of the Next.js build)
+│   ├── next-version.mjs     # Computes the next release version (major.minor.build)
+│   └── seed-contributions.mjs  # Seeds the GitHub contributions fallback JSON
 ├── tests/                   # Tests
 │   ├── homepage.spec.ts     # Playwright E2E — homepage
 │   ├── theme.spec.ts        # Playwright E2E — theme switching
@@ -196,13 +208,18 @@ holland-vip/
 │   └── _headers             # Security headers (served by Cloudflare Pages)
 ├── .github/
 │   ├── workflows/
-│   │   ├── ci.yml                  # CI: build/lint/format + unit coverage + E2E
+│   │   ├── ci.yml                  # CI: build/lint/format + unit coverage + E2E + changelog guard
 │   │   ├── dependency-review.yml   # Fails PRs on high-severity vuln deps
 │   │   ├── smoke.yml               # Daily smoke check against the live site
 │   │   ├── refresh.yml             # Weekly Cloudflare rebuild (fresh GitHub data)
 │   │   └── version.yml             # Tags and releases merges to main
 │   ├── dependabot.yml              # npm + GitHub Actions update schedule
 │   └── copilot-instructions.md
+├── .claude/
+│   └── skills/
+│       └── ship/
+│           └── SKILL.md            # `/ship` skill: docs refresh, changelog entry, fast checks, PR
+├── CHANGELOG.md             # Keep a Changelog release history
 ├── playwright.config.ts     # Playwright (E2E) configuration
 ├── vitest.config.ts         # Vitest (unit) configuration + coverage thresholds
 └── .nvmrc                   # Pinned Node version (single source of truth)
@@ -241,7 +258,7 @@ The site uses CSS custom properties for theming:
 - **TypeScript**: Full type safety across the project (`strict: true`)
 - **Vitest + Testing Library**: Unit/component tests with V8 coverage gated at 80% in CI
 - **Playwright**: E2E tests across multiple browsers (Chrome, Firefox, Safari) — chromium-only in CI
-- **GitHub Actions**: Automated CI pipeline (build, lint, format check, unit coverage, E2E)
+- **GitHub Actions**: Automated CI pipeline (build, lint, format check, unit coverage, E2E, changelog-version guard)
 
 ## 🔒 Security
 

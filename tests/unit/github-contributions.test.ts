@@ -64,7 +64,9 @@ describe("toCalendar", () => {
 describe("getContributions", () => {
   it("returns mapped live data when a token is set and the fetch succeeds", async () => {
     process.env.GITHUB_TOKEN = "secret-token";
-    const fetchMock = vi.fn(async () => okResponse());
+    const fetchMock = vi.fn<(url: string, init: RequestInit) => Promise<Response>>(async () =>
+      okResponse()
+    );
     vi.stubGlobal("fetch", fetchMock);
 
     const cal = await getContributions();
@@ -72,7 +74,7 @@ describe("getContributions", () => {
     expect(cal.totalContributions).toBe(12);
     expect(cal.weeks[0][1].level).toBe(4);
     // Posts to the GraphQL endpoint with a Bearer token.
-    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe("https://api.github.com/graphql");
     expect((init.headers as Record<string, string>).Authorization).toBe("Bearer secret-token");
   });
