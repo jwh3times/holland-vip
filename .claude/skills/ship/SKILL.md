@@ -39,10 +39,13 @@ git tag -l "v*" --sort=-v:refname | head -8
 ```
 
 Any `v<major>.<minor>.<build>` tag with **no** matching `## [x.y.z]` section is a released version
-with no entry — in practice a merged Dependabot PR, which the CI guard exempts. Backfill it now:
-read what that tag changed (`git show --stat <tag>`, and the `package.json` diff for dependency
-bumps) and add a dated section in the right position. Keep it factual — name the packages and
-versions. Ignore the legacy 4-part `v1.0.0.x` tags (pre-SemVer).
+with no entry. Two things produce these: merged Dependabot PRs (which the CI guard exempts), and
+PRs authored in the GitHub web UI, which have no local checkout and so cannot run `/ship` at all.
+Both are normal — backfill is how the changelog stays whole, not an exception path.
+
+Backfill each one now: read what that tag changed (`git show --stat <tag>`, and the `package.json`
+diff for dependency bumps) and add a dated section in the right position. Keep it factual — name
+the packages and versions. Ignore the legacy 4-part `v1.0.0.x` tags (pre-SemVer).
 
 ### 3. Compute the target version
 
@@ -58,11 +61,14 @@ This prints a bare version (e.g. `1.1.5`) — no `v` prefix. It is the single so
 Invoke the `docs-updater` subagent, scoped to **this branch's diff only** — not a full audit:
 
 ```bash
-git diff $(git merge-base main HEAD)..HEAD --stat
+git diff $(git merge-base origin/main HEAD)..HEAD --stat
 ```
 
-Tell it exactly what changed and let it update the docs it owns (`CLAUDE.md`, `README.md`). It does
-**not** own `CHANGELOG.md` — **you** write that in step 5, so tell it to leave `CHANGELOG.md` alone.
+Use `origin/main`, not `main` — a clone that only fetched the feature branch has no local `main`.
+
+Tell it exactly what changed and let it update the docs it owns (`CLAUDE.md`, `README.md`,
+`AGENTS.md`). It does **not** own `CHANGELOG.md` — **you** write that in step 5, so tell it to
+leave `CHANGELOG.md` alone.
 
 ### 5. Write the CHANGELOG entry
 
@@ -110,9 +116,13 @@ and report — do not push.
 ### 7. Commit the docs and changelog
 
 ```bash
-git add -A
+git add CHANGELOG.md CLAUDE.md README.md AGENTS.md
 git commit -m "docs: update docs and changelog for v<version>"
 ```
+
+Stage the paths you actually touched rather than `git add -A`, so an untracked file that appeared
+since step 1 can't ride along. If `docs-updater` legitimately touched something else, add it
+explicitly.
 
 ### 8. Push and open or update the PR
 

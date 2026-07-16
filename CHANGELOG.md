@@ -66,6 +66,11 @@ No unreleased changes.
 
 ## [1.1.0] - 2026-07-09
 
+### Added
+
+- `AGENTS.md`: agent-facing guidance (commands, CI/CD, conventions, constraints) for coding
+  agents that don't read `CLAUDE.md`.
+
 ### Changed
 
 - Adopted the three-part `v<major>.<minor>.<build>` SemVer release scheme in

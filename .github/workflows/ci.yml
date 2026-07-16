@@ -125,7 +125,9 @@ jobs:
     # PR-only: on push to main, version.yml mints the tag and next-version would advance
     # past the changelog's top entry, so the guard must not run there. Dependabot PRs don't
     # touch the changelog; version.yml still tags them, so exempt the bot.
-    if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+    # Key off the PR author, not github.actor: actor is whoever triggered THIS run, so a
+    # human pushing a fixup to a Dependabot branch would re-arm the guard on `synchronize`.
+    if: github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
 
     steps:
       - name: Checkout repository
@@ -146,6 +148,6 @@ jobs:
           echo "Expected (next-version): $expected"
           echo "CHANGELOG top released:  $top"
           if [ "$expected" != "$top" ]; then
-            echo "::error::CHANGELOG top version '$top' does not match the version this merge will mint ('$expected'). Run /ship to update CHANGELOG.md."
+            echo "::error::CHANGELOG top version '$top' does not match the version this merge will mint ('$expected'). Run /ship to update CHANGELOG.md, or, with no local checkout, add a '## [$expected] - $(date -u +%F)' section above '## [$top]' by hand."
             exit 1
           fi

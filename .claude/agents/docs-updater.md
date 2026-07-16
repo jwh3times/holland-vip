@@ -1,6 +1,6 @@
 ---
 name: docs-updater
-description: Use to keep project documentation current after code changes — CLAUDE.md and README.md. Run after adding a section/component, changing CI workflows, theming/CSS variables, or test configuration.
+description: Use to keep project documentation current after code changes — CLAUDE.md, README.md, and AGENTS.md. Run after adding a section/component, changing CI workflows, theming/CSS variables, or test configuration.
 tools: Read, Write, Edit, Glob, Grep, Bash
 model: sonnet
 ---
@@ -15,6 +15,11 @@ or capabilities that don't exist in the code.
 | ----------- | ----------------------------- | ---------------------------------------------------------------------------------------- |
 | `CLAUDE.md` | Claude agents (every session) | Commands, testing, CI/CD, static-export constraints, theme/CSS variable system, sections |
 | `README.md` | Human developers              | Overview and setup                                                                       |
+| `AGENTS.md` | Non-Claude coding agents      | Commands, CI/CD, conventions, and constraints, in agent-facing prose                     |
+
+`AGENTS.md` covers much of the same ground as `CLAUDE.md` for a different audience, so a fact
+that drifts in one usually drifts in both — check them together, and keep the wording native to
+each file rather than copying sentences across.
 
 ## What triggers what update
 
@@ -36,6 +41,8 @@ or capabilities that don't exist in the code.
 
 - `CLAUDE.md`: CI/CD section (job list, gates, thresholds, smoke/refresh workflows) and
   Testing sections — keep the coverage threshold matching `vitest.config.ts`
+- `AGENTS.md`: its own `## CI/CD` section — it enumerates the same jobs, so a new or removed
+  job is drift there too
 
 **Build-time GitHub data or metadata change (`lib/github*.ts`, `app/layout.tsx`, `public/_headers`)**
 
