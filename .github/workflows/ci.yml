@@ -118,3 +118,34 @@ jobs:
           name: coverage-report
           path: coverage/
           retention-days: 7
+
+  changelog:
+    name: Changelog Version
+    runs-on: ubuntu-latest
+    # PR-only: on push to main, version.yml mints the tag and next-version would advance
+    # past the changelog's top entry, so the guard must not run there. Dependabot PRs don't
+    # touch the changelog; version.yml still tags them, so exempt the bot.
+    if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # full tags, needed to compute the next build number
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Verify CHANGELOG top version matches the version this merge will mint
+        run: |
+          expected=$(node scripts/next-version.mjs)
+          top=$(grep -m1 -E '^## \[[0-9]+\.[0-9]+\.[0-9]+\]' CHANGELOG.md \
+            | sed -E 's/^## \[([0-9.]+)\].*/\1/')
+          echo "Expected (next-version): $expected"
+          echo "CHANGELOG top released:  $top"
+          if [ "$expected" != "$top" ]; then
+            echo "::error::CHANGELOG top version '$top' does not match the version this merge will mint ('$expected'). Run /ship to update CHANGELOG.md."
+            exit 1
+          fi
