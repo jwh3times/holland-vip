@@ -29,6 +29,12 @@ No unreleased changes.
 - `.github/workflows/version.yml` now computes the release version via `scripts/next-version.mjs`
   instead of inline shell, so the tag workflow and the changelog guard share one implementation.
 
+### Fixed
+
+- An unsound cast in `tests/unit/github-contributions.test.ts` that made `npx tsc --noEmit` fail
+  (`TS2352`). No CI job type-checks test files, so it went unnoticed until `/ship` began gating on
+  `tsc`.
+
 ### Removed
 
 - The `Stop` hook in `.claude/settings.json` that ran a docs-freshness agent on every stop; docs
