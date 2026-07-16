@@ -97,8 +97,10 @@ _top_ released version (deliverable 4).
 
 On PRs to `main`:
 
-- `if: github.actor != 'dependabot[bot]'` — bot PRs don't touch the changelog and
-  `version.yml` still tags them; this exemption is what makes bot merges safe.
+- `if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'` — PR-only
+  (on push to `main`, `version.yml` mints the tag and `next-version` would advance past the
+  changelog top, so the guard must not run there); bot PRs don't touch the changelog and
+  `version.yml` still tags them, so the exemption keeps bot merges safe.
 - Checkout `fetch-depth: 0`, `actions/setup-node` with `node-version-file: .nvmrc`.
 - `expected=$(node scripts/next-version.mjs)`.
 - `top=$(grep -m1 -E '^## \[[0-9]+\.[0-9]+\.[0-9]+\]' CHANGELOG.md | sed -E 's/^## \[([0-9.]+)\].*/\1/')`
