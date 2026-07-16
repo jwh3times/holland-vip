@@ -28,17 +28,21 @@ No unreleased changes.
 
 - `.github/workflows/version.yml` now computes the release version via `scripts/next-version.mjs`
   instead of inline shell, so the tag workflow and the changelog guard share one implementation.
+- The `docs-updater` agent now maintains `AGENTS.md` in addition to `CLAUDE.md` and `README.md`,
+  so agent-facing guidance no longer drifts unnoticed.
 
 ### Fixed
 
 - An unsound cast in `tests/unit/github-contributions.test.ts` that made `npx tsc --noEmit` fail
   (`TS2352`). No CI job type-checks test files, so it went unnoticed until `/ship` began gating on
   `tsc`.
+- `.prettierignore` now excludes `.superpowers/` agent scratch. Prettier doesn't read nested
+  `.gitignore` files, so `npm run format:check` failed on untracked working files.
 
 ### Removed
 
 - The `Stop` hook in `.claude/settings.json` that ran a docs-freshness agent on every stop; docs
-  are now refreshed by `/ship`.
+  are now refreshed once per `/ship`, when a branch is ready for review, rather than on every turn.
 
 ## [1.1.4] - 2026-07-15
 

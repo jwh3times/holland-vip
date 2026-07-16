@@ -299,10 +299,10 @@ if (!mounted)
 
 ## Agents & docs automation
 
-The `docs-updater` subagent (`.claude/agents/docs-updater.md`) keeps CLAUDE.md and README.md in
-sync with the code. It is invoked by the [`/ship` skill](.claude/skills/ship/SKILL.md) — scoped to
-the current branch's diff, not a full audit — when a branch is ready for a PR. There is no longer a
-docs-freshness `Stop` hook; docs refresh only happens when `/ship` runs.
+The `docs-updater` subagent (`.claude/agents/docs-updater.md`) keeps CLAUDE.md, README.md, and
+AGENTS.md in sync with the code. It is invoked by the [`/ship` skill](.claude/skills/ship/SKILL.md)
+— scoped to the current branch's diff, not a full audit — when a branch is ready for a PR. There is
+no longer a docs-freshness `Stop` hook; docs refresh only happens when `/ship` runs.
 
 `/ship` also writes the [CHANGELOG.md](CHANGELOG.md) entry for the version the merge will mint
 (computed by [scripts/next-version.mjs](scripts/next-version.mjs)), runs the fast checks
