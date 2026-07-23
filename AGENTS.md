@@ -82,8 +82,8 @@ a static export.
 ## CI/CD
 
 - `.github/workflows/ci.yml` runs on push and PR to `main`.
-- The CI build job runs `npm run lint`, `npm run format:check`, and
-  `npm run build`.
+- The CI build job runs `npm run lint`, `npm run format:check`,
+  `node scripts/sync-agents.mjs --check`, and `npm run build`.
 - The unit job runs `npm run test:unit:coverage` and fails if coverage drops
   below the 80% thresholds.
 - The Playwright job runs the Chromium-engine projects only.
@@ -91,6 +91,12 @@ a static export.
   `## [x.y.z]` version in `CHANGELOG.md` doesn't match the version that merging
   the PR will actually mint. Run `/ship` to write that entry; it computes the
   version with `scripts/next-version.mjs` rather than guessing.
+- `.github/workflows/sync-agents.yml` runs on same-repo pull requests. It
+  regenerates the Codex agent artifacts from their `.claude/` sources and
+  auto-commits any drift back to the branch. It needs the `SYNC_PAT` repo
+  secret and is skipped for fork PRs and when the secret is unset — see
+  "Keeping Codex artifacts in sync" below for the artifact mapping and the
+  secret-free `--check` gate that also runs in the build job.
 - `.github/workflows/dependency-review.yml` fails PRs with high-severity
   dependency vulnerabilities.
 - CodeQL default setup is enabled in GitHub repository settings. There is
@@ -367,5 +373,8 @@ Codex reads skills from `.agents/skills/` and subagents from `.codex/agents/*.to
 carries a `GENERATED — do not edit` banner). Edit the source under `.claude/skills/` or
 `.claude/agents/`, then run `npm run sync:agents` to regenerate. `node scripts/sync-agents.mjs
 --check` verifies the artifacts match their sources without writing; CI runs this check on every
-push/PR and fails the build if the artifacts are stale. On pull requests a workflow additionally
-regenerates and commits any drift automatically (once the `SYNC_PAT` secret is set).
+push/PR (including fork PRs, since it needs no secret) and fails the build if the artifacts are
+stale. On same-repo pull requests only, a separate workflow additionally regenerates and commits
+any drift automatically once the `SYNC_PAT` secret is set; it is skipped for fork PRs, which get a
+read-only token. `.prettierignore` excludes `.agents/` and `.codex/` — the generator, not Prettier,
+owns their formatting.

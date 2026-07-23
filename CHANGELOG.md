@@ -12,6 +12,56 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.11] - 2026-07-23
+
+### Added
+
+- Codex CLI support: skills and subagents are now generated from the canonical `.claude/` sources
+  by `scripts/sync-agents.mjs` (`npm run sync:agents`), producing `.agents/skills/**` (a verbatim
+  mirror of `.claude/skills/**`) and `.codex/agents/*.toml` (a transform of `.claude/agents/*.md`,
+  with `sandbox_mode` derived from the `tools:` list and `model` omitted). Edit only the `.claude/`
+  sources — every generated file carries a `GENERATED — do not edit` banner.
+- `.github/workflows/sync-agents.yml`: on pull requests, regenerates the Codex artifacts and
+  auto-commits any drift back to the branch (requires the `SYNC_PAT` secret; skips forks;
+  self-terminating).
+- A secret-free `node scripts/sync-agents.mjs --check` step in the `ci.yml` `build` job that fails
+  the build on stale Codex artifacts, so drift is caught even before the auto-commit secret is set.
+
+### Changed
+
+- `.prettierignore` now excludes the generated `.agents/` and `.codex/` directories.
+
+## [1.1.10] - 2026-07-22
+
+### Changed
+
+- Bumped the transitive `fast-uri` dependency from 3.1.2 to 3.1.4 (lockfile only).
+
+## [1.1.9] - 2026-07-22
+
+### Changed
+
+- Bumped `next` and `@next/eslint-plugin-next` to 16.2.11, `react` and `react-dom` to 19.2.8, and
+  `@vitejs/plugin-react` to 6.0.4.
+
+## [1.1.8] - 2026-07-21
+
+### Changed
+
+- Bumped `prettier` from 3.9.5 to 3.9.6.
+
+## [1.1.7] - 2026-07-21
+
+### Changed
+
+- Bumped `@testing-library/jest-dom` from 6.9.1 to 7.0.0.
+
+## [1.1.6] - 2026-07-17
+
+### Changed
+
+- Bumped `lucide-react` to 1.25.0 and `@tailwindcss/postcss` to 4.3.3.
+
 ## [1.1.5] - 2026-07-16
 
 ### Added
