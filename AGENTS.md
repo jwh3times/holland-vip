@@ -365,6 +365,7 @@ flow, update `AGENTS.md` explicitly rather than assuming it will be caught.
 Codex reads skills from `.agents/skills/` and subagents from `.codex/agents/*.toml`, but these are
 **generated** from the canonical Claude sources under `.claude/` — do not edit them by hand (each
 carries a `GENERATED — do not edit` banner). Edit the source under `.claude/skills/` or
-`.claude/agents/`, then run `npm run sync:agents` to regenerate. On pull requests a workflow
-regenerates and commits any drift automatically. `node scripts/sync-agents.mjs --check` verifies the
-artifacts match their sources without writing.
+`.claude/agents/`, then run `npm run sync:agents` to regenerate. `node scripts/sync-agents.mjs
+--check` verifies the artifacts match their sources without writing; CI runs this check on every
+push/PR and fails the build if the artifacts are stale. On pull requests a workflow additionally
+regenerates and commits any drift automatically (once the `SYNC_PAT` secret is set).

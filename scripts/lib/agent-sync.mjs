@@ -34,7 +34,7 @@ export function parseFrontmatter(md) {
   const data = {};
   for (const line of rawFrontmatter.split("\n")) {
     if (!line.trim()) continue;
-    const kv = /^([A-Za-z0-9_-]+):\s?(.*)$/.exec(line);
+    const kv = /^([A-Za-z0-9_-]+):\s*(.*)$/.exec(line);
     if (!kv) {
       throw new Error(`unsupported frontmatter line: ${JSON.stringify(line)}`);
     }
@@ -175,6 +175,8 @@ function computeOutputs(paths) {
 /** True if on-disk bytes already match, ignoring CRLF for text outputs. */
 function matches(current, output) {
   if (!output.text) return current.equals(output.bytes);
+  // Text outputs are LF; .gitattributes (eol=lf) enforces LF in the working tree too,
+  // so normalizing CRLF here keeps --check stable on Windows checkouts.
   return current.toString("utf8").replace(/\r\n/g, "\n") === output.bytes.toString("utf8");
 }
 
