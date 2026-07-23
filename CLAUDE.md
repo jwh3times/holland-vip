@@ -304,6 +304,23 @@ AGENTS.md in sync with the code. It is invoked by the [`/ship` skill](.claude/sk
 — scoped to the current branch's diff, not a full audit — when a branch is ready for a PR. There is
 no longer a docs-freshness `Stop` hook; docs refresh only happens when `/ship` runs.
 
+### Codex artifact sync
+
+Claude Code and OpenAI Codex CLI share the same skills and subagents but read them from different
+paths and (for subagents) different formats. The `.claude/` tree is the **single source of truth**;
+[scripts/sync-agents.mjs](scripts/sync-agents.mjs) derives the Codex artifacts from it:
+
+- `.claude/skills/<name>/**` → `.agents/skills/<name>/**` — verbatim mirror plus a `GENERATED` banner.
+- `.claude/agents/<name>.md` → `.codex/agents/<name>.toml` — frontmatter → TOML; `sandbox_mode` is
+  derived from the `tools:` list (`workspace-write` if it includes `Write`/`Edit`, else `read-only`);
+  `model` is omitted so Codex uses its default.
+
+Edit **only** the `.claude/` sources — never the generated `.agents/`/`.codex/` files (each carries a
+`GENERATED — do not edit` banner). Regenerate with `npm run sync:agents`; verify with
+`node scripts/sync-agents.mjs --check`. On every PR the
+[sync-agents.yml](.github/workflows/sync-agents.yml) workflow regenerates and commits any drift back
+to the branch (requires the `SYNC_PAT` repo secret).
+
 `/ship` also writes the [CHANGELOG.md](CHANGELOG.md) entry for the version the merge will mint
 (computed by [scripts/next-version.mjs](scripts/next-version.mjs)), runs the fast checks
 (`npm run format:check`, `npm run lint`, `npx tsc --noEmit`), and opens or updates the PR.

@@ -359,3 +359,12 @@ docs-freshness stop hook. `/ship` also writes the `CHANGELOG.md` entry for the
 version the merge will mint. `docs-updater` maintains this file too, but only
 when `/ship` runs — so if you are changing agent-facing guidance outside that
 flow, update `AGENTS.md` explicitly rather than assuming it will be caught.
+
+## Keeping Codex artifacts in sync
+
+Codex reads skills from `.agents/skills/` and subagents from `.codex/agents/*.toml`, but these are
+**generated** from the canonical Claude sources under `.claude/` — do not edit them by hand (each
+carries a `GENERATED — do not edit` banner). Edit the source under `.claude/skills/` or
+`.claude/agents/`, then run `npm run sync:agents` to regenerate. On pull requests a workflow
+regenerates and commits any drift automatically. `node scripts/sync-agents.mjs --check` verifies the
+artifacts match their sources without writing.
