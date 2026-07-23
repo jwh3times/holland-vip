@@ -60,7 +60,8 @@ After `npm run build`, the `/out` directory contains the complete static site. T
 
 ## CI/CD
 
-- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with four jobs: the `build` job runs `npm run lint`, `npm run format:check`, then `npm run build` (and uploads the `out/` artifact); the `unit` job runs `npm run test:unit:coverage` and **fails if coverage drops below the 80% thresholds** in `vitest.config.ts`; the `test` job (needs `build`) installs chromium and runs Playwright against the Chromium-engine projects (`chromium` + `Mobile Chrome`); the `changelog` job (PR-only, skipped for `dependabot[bot]`) fails the PR if the top `## [x.y.z]` version in [CHANGELOG.md](CHANGELOG.md) doesn't match the version `node scripts/next-version.mjs` computes — i.e. the version that merging this PR will actually mint. **A PR will fail CI if formatting drifts — run `npm run format` before committing.**
+- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with four jobs: the `build` job runs `npm run lint`, `npm run format:check`, `node scripts/sync-agents.mjs --check`, then `npm run build` (and uploads the `out/` artifact); the `unit` job runs `npm run test:unit:coverage` and **fails if coverage drops below the 80% thresholds** in `vitest.config.ts`; the `test` job (needs `build`) installs chromium and runs Playwright against the Chromium-engine projects (`chromium` + `Mobile Chrome`); the `changelog` job (PR-only, skipped for `dependabot[bot]`) fails the PR if the top `## [x.y.z]` version in [CHANGELOG.md](CHANGELOG.md) doesn't match the version `node scripts/next-version.mjs` computes — i.e. the version that merging this PR will actually mint. **A PR will fail CI if formatting drifts — run `npm run format` before committing.**
+- **Codex artifact sync — [.github/workflows/sync-agents.yml](.github/workflows/sync-agents.yml)** — on same-repo pull requests, regenerates the Codex agent artifacts from their `.claude/` sources and auto-commits any drift back to the branch; requires the `SYNC_PAT` repo secret (no-ops if unset) and is skipped for fork PRs. This runs alongside — not instead of — the `build` job's secret-free `sync-agents.mjs --check` gate above; see [Codex artifact sync](#codex-artifact-sync) below for how the artifacts are derived.
 - **Dependency review — [.github/workflows/dependency-review.yml](.github/workflows/dependency-review.yml)** — on PRs to `main`, fails on high-severity dependency vulnerabilities.
 - **Code scanning — CodeQL (default setup)** — enabled via GitHub's **default setup** (repo _Settings → Code security_), which scans JS/TS + Actions on PRs to `main` and weekly; findings surface in the Security tab. There is intentionally **no `codeql.yml`** in the repo: an advanced CodeQL workflow cannot upload results while default setup is enabled (it fails with _"analyses from advanced configurations cannot be processed when the default setup is enabled"_). Manage CodeQL from the Security settings, not a workflow file.
 - **Versioning — [.github/workflows/version.yml](.github/workflows/version.yml)** — on every merge (push) to `main`, creates a standard SemVer tag and GitHub Release in `v<major>.<minor>.<build>` format (for example, `v1.0.3`). The version is computed by [scripts/next-version.mjs](scripts/next-version.mjs) — the single source of truth, shared with the CI `changelog` guard and the `/ship` skill. It reads `package.json` `version` as the requested `major.minor.build` release line, auto-increments the build number from existing tags in that major/minor line, and preserves `x.y.0` when a new major/minor line has no existing `v<x>.<y>.*` tags.
@@ -308,3 +309,24 @@ no longer a docs-freshness `Stop` hook; docs refresh only happens when `/ship` r
 (computed by [scripts/next-version.mjs](scripts/next-version.mjs)), runs the fast checks
 (`npm run format:check`, `npm run lint`, `npx tsc --noEmit`), and opens or updates the PR.
 `docs-updater` does **not** own `CHANGELOG.md` — `/ship` does.
+
+### Codex artifact sync
+
+Claude Code and OpenAI Codex CLI share the same skills and subagents but read them from different
+paths and (for subagents) different formats. The `.claude/` tree is the **single source of truth**;
+[scripts/sync-agents.mjs](scripts/sync-agents.mjs) derives the Codex artifacts from it:
+
+- `.claude/skills/<name>/**` → `.agents/skills/<name>/**` — verbatim mirror plus a `GENERATED` banner.
+- `.claude/agents/<name>.md` → `.codex/agents/<name>.toml` — frontmatter → TOML; `sandbox_mode` is
+  derived from the `tools:` list (`workspace-write` if it includes `Write`/`Edit`, else `read-only`);
+  `model` is omitted so Codex uses its default.
+
+Edit **only** the `.claude/` sources — never the generated `.agents/`/`.codex/` files (each carries a
+`GENERATED — do not edit` banner). Regenerate with `npm run sync:agents`; verify with
+`node scripts/sync-agents.mjs --check`. CI runs that same `--check` in the `build` job on every
+push/PR (see below) and fails the build if committed artifacts are stale — this needs no secret and
+runs on fork PRs too. On same-repo PRs the
+[sync-agents.yml](.github/workflows/sync-agents.yml) workflow additionally regenerates and commits
+any drift back to the branch once the `SYNC_PAT` repo secret is set; it is skipped for fork PRs
+(their `GITHUB_TOKEN` can't push). `.prettierignore` excludes `.agents/`/`.codex/` since the
+generator, not Prettier, owns their formatting.

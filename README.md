@@ -188,7 +188,10 @@ holland-vip/
 │   └── utils.ts             # Helper functions (cn, etc.)
 ├── scripts/                 # Standalone Node scripts (not part of the Next.js build)
 │   ├── next-version.mjs     # Computes the next release version (major.minor.build)
-│   └── seed-contributions.mjs  # Seeds the GitHub contributions fallback JSON
+│   ├── seed-contributions.mjs  # Seeds the GitHub contributions fallback JSON
+│   ├── sync-agents.mjs      # Regenerates .agents/.codex Codex artifacts from .claude/ sources
+│   └── lib/
+│       └── agent-sync.mjs   # Transform + orchestration logic used by sync-agents.mjs
 ├── tests/                   # Tests
 │   ├── homepage.spec.ts     # Playwright E2E — homepage
 │   ├── theme.spec.ts        # Playwright E2E — theme switching
@@ -208,10 +211,11 @@ holland-vip/
 │   └── _headers             # Security headers (served by Cloudflare Pages)
 ├── .github/
 │   ├── workflows/
-│   │   ├── ci.yml                  # CI: build/lint/format + unit coverage + E2E + changelog guard
+│   │   ├── ci.yml                  # CI: build/lint/format + Codex-sync check + unit coverage + E2E + changelog guard
 │   │   ├── dependency-review.yml   # Fails PRs on high-severity vuln deps
 │   │   ├── smoke.yml               # Daily smoke check against the live site
 │   │   ├── refresh.yml             # Weekly Cloudflare rebuild (fresh GitHub data)
+│   │   ├── sync-agents.yml         # PR-only: auto-commits regenerated Codex artifact drift
 │   │   └── version.yml             # Tags and releases merges to main
 │   ├── dependabot.yml              # npm + GitHub Actions update schedule
 │   └── copilot-instructions.md
@@ -219,6 +223,8 @@ holland-vip/
 │   └── skills/
 │       └── ship/
 │           └── SKILL.md            # `/ship` skill: docs refresh, changelog entry, fast checks, PR
+├── .agents/                 # GENERATED from .claude/skills/ — do not edit (see scripts/sync-agents.mjs)
+├── .codex/                  # GENERATED from .claude/agents/ — do not edit (see scripts/sync-agents.mjs)
 ├── CHANGELOG.md             # Keep a Changelog release history
 ├── playwright.config.ts     # Playwright (E2E) configuration
 ├── vitest.config.ts         # Vitest (unit) configuration + coverage thresholds

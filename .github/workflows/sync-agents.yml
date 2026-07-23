@@ -1,0 +1,67 @@
+name: Sync Codex Agents
+
+# Regenerate the Codex agent artifacts (.agents/skills, .codex/agents) from
+# their canonical .claude/ sources and commit any drift back to the PR branch.
+# The .claude/ tree is the single source of truth; see
+# docs/superpowers/specs/2026-07-22-codex-agent-sync-design.md.
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: sync-agents-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Regenerate Codex artifacts
+    runs-on: ubuntu-latest
+    # Fork PRs get a read-only token and cannot push; skip them (solo repo).
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    env:
+      # Secrets cannot be referenced in `if:` directly, so surface presence here.
+      HAS_PAT: ${{ secrets.SYNC_PAT != '' }}
+    steps:
+      - name: Skip note when unconfigured
+        if: env.HAS_PAT != 'true'
+        run: echo "SYNC_PAT secret is not set — skipping auto-sync. Add it to enable."
+
+      - name: Checkout PR branch
+        if: env.HAS_PAT == 'true'
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.SYNC_PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        if: env.HAS_PAT == 'true'
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install dependencies
+        if: env.HAS_PAT == 'true'
+        run: npm ci
+
+      - name: Regenerate Codex artifacts
+        if: env.HAS_PAT == 'true'
+        run: node scripts/sync-agents.mjs
+
+      - name: Commit and push drift
+        if: env.HAS_PAT == 'true'
+        run: |
+          if [ -n "$(git status --porcelain .agents .codex)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .agents .codex
+            git commit -m "chore: sync codex agent artifacts"
+            git push
+          else
+            echo "Codex agent artifacts already in sync."
+          fi
