@@ -12,6 +12,11 @@ dist/
 # Test coverage
 coverage/
 
+# Generated agent artifacts — produced by scripts/sync-agents.mjs from the
+# .claude/ sources. Prettier owns the sources; the generator owns these.
+.agents/
+.codex/
+
 # Agent scratch — untracked working files, not project source. Prettier does not read
 # nested .gitignore files, so without this /ship's format:check fails on them.
 .superpowers/
