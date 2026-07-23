@@ -304,6 +304,11 @@ AGENTS.md in sync with the code. It is invoked by the [`/ship` skill](.claude/sk
 — scoped to the current branch's diff, not a full audit — when a branch is ready for a PR. There is
 no longer a docs-freshness `Stop` hook; docs refresh only happens when `/ship` runs.
 
+`/ship` also writes the [CHANGELOG.md](CHANGELOG.md) entry for the version the merge will mint
+(computed by [scripts/next-version.mjs](scripts/next-version.mjs)), runs the fast checks
+(`npm run format:check`, `npm run lint`, `npx tsc --noEmit`), and opens or updates the PR.
+`docs-updater` does **not** own `CHANGELOG.md` — `/ship` does.
+
 ### Codex artifact sync
 
 Claude Code and OpenAI Codex CLI share the same skills and subagents but read them from different
@@ -320,8 +325,3 @@ Edit **only** the `.claude/` sources — never the generated `.agents/`/`.codex/
 `node scripts/sync-agents.mjs --check`. On every PR the
 [sync-agents.yml](.github/workflows/sync-agents.yml) workflow regenerates and commits any drift back
 to the branch (requires the `SYNC_PAT` repo secret).
-
-`/ship` also writes the [CHANGELOG.md](CHANGELOG.md) entry for the version the merge will mint
-(computed by [scripts/next-version.mjs](scripts/next-version.mjs)), runs the fast checks
-(`npm run format:check`, `npm run lint`, `npx tsc --noEmit`), and opens or updates the PR.
-`docs-updater` does **not** own `CHANGELOG.md` — `/ship` does.
