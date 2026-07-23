@@ -1,12 +1,20 @@
 // @vitest-environment node
-import { describe, it, expect } from "vitest";
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync } from "node:fs";
+import { describe, it, expect, afterEach } from "vitest";
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { syncAll } from "../../scripts/lib/agent-sync.mjs";
 
+const createdRoots: string[] = [];
+
+afterEach(() => {
+  for (const root of createdRoots) rmSync(root, { recursive: true, force: true });
+  createdRoots.length = 0;
+});
+
 function makeFixture() {
   const root = mkdtempSync(join(tmpdir(), "agent-sync-"));
+  createdRoots.push(root);
   const paths = {
     repoRoot: root,
     claudeSkills: join(root, ".claude", "skills"),
@@ -51,6 +59,7 @@ describe("syncAll", () => {
     writeFileSync(join(paths.codexAgents, "helper.toml"), "tampered\n");
     const check = syncAll({ paths, check: true });
     expect(check.changed).toContain(join(paths.codexAgents, "helper.toml"));
+    expect(readFileSync(join(paths.codexAgents, "helper.toml"), "utf8")).toBe("tampered\n");
   });
 
   it("flags then removes extraneous output files", () => {
@@ -59,7 +68,20 @@ describe("syncAll", () => {
     const orphan = join(paths.codexAgents, "orphan.toml");
     writeFileSync(orphan, "old\n");
     expect(syncAll({ paths, check: true }).stale).toContain(orphan);
+    expect(existsSync(orphan)).toBe(true); // check mode must not delete
     syncAll({ paths }); // write mode prunes it
     expect(existsSync(orphan)).toBe(false);
+  });
+
+  it("copies non-SKILL.md skill assets verbatim and detects tampering", () => {
+    const paths = makeFixture();
+    writeFileSync(join(paths.claudeSkills, "demo", "reference.md"), "ref body\n");
+    syncAll({ paths });
+
+    const copied = join(paths.codexSkills, "demo", "reference.md");
+    expect(readFileSync(copied)).toEqual(Buffer.from("ref body\n")); // byte-for-byte, no banner
+
+    writeFileSync(copied, "tampered\n");
+    expect(syncAll({ paths, check: true }).changed).toContain(copied);
   });
 });
