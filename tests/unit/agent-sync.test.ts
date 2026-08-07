@@ -83,11 +83,11 @@ describe("agentMarkdownToToml", () => {
 
 describe("injectSkillBanner", () => {
   it("adds the banner as line 2, keeping --- on line 1", () => {
-    const out = injectSkillBanner("---\nname: ship\n---\n\nBody\n", ".claude/skills/ship/SKILL.md");
+    const out = injectSkillBanner("---\nname: ship\n---\n\nBody\n", ".agents/skills/ship/SKILL.md");
     const lines = out.split("\n");
     expect(lines[0]).toBe("---");
     expect(lines[1]).toBe(
-      "# GENERATED — do not edit. Source: .claude/skills/ship/SKILL.md. Regenerate: npm run sync:agents"
+      "# GENERATED — do not edit. Source: .agents/skills/ship/SKILL.md. Regenerate: npm run sync:agents"
     );
     expect(lines[2]).toBe("name: ship");
   });

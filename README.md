@@ -134,7 +134,7 @@ Release history is documented in [CHANGELOG.md](CHANGELOG.md) (Keep a Changelog
 format). Its top entry must name the version that the next merge to `main` will
 mint — a `changelog` job in CI (PR-only, skipped for Dependabot) fails the PR if
 the top `## [x.y.z]` version doesn't match `scripts/next-version.mjs`'s output.
-The `.claude/skills/ship/SKILL.md` skill writes that entry for the branch and
+The `.agents/skills/ship/SKILL.md` skill writes that entry for the branch and
 opens or updates the PR.
 
 Because the build is a portable static export, it can also be hosted on any other
@@ -189,7 +189,7 @@ holland-vip/
 ├── scripts/                 # Standalone Node scripts (not part of the Next.js build)
 │   ├── next-version.mjs     # Computes the next release version (major.minor.build)
 │   ├── seed-contributions.mjs  # Seeds the GitHub contributions fallback JSON
-│   ├── sync-agents.mjs      # Regenerates .agents/.codex Codex artifacts from .claude/ sources
+│   ├── sync-agents.mjs      # Regenerates .claude/skills + .codex from their authored sources
 │   └── lib/
 │       └── agent-sync.mjs   # Transform + orchestration logic used by sync-agents.mjs
 ├── tests/                   # Tests
@@ -211,19 +211,22 @@ holland-vip/
 │   └── _headers             # Security headers (served by Cloudflare Pages)
 ├── .github/
 │   ├── workflows/
-│   │   ├── ci.yml                  # CI: build/lint/format + Codex-sync check + unit coverage + E2E + changelog guard
+│   │   ├── ci.yml                  # CI: build/lint/format + agent-sync check + unit coverage + E2E + changelog guard
 │   │   ├── dependency-review.yml   # Fails PRs on high-severity vuln deps
 │   │   ├── smoke.yml               # Daily smoke check against the live site
 │   │   ├── refresh.yml             # Weekly Cloudflare rebuild (fresh GitHub data)
-│   │   ├── sync-agents.yml         # PR-only: auto-commits regenerated Codex artifact drift
+│   │   ├── sync-agents.yml         # PR-only: auto-commits regenerated agent artifact drift
 │   │   └── version.yml             # Tags and releases merges to main
 │   ├── dependabot.yml              # npm + GitHub Actions update schedule
 │   └── copilot-instructions.md
-├── .claude/
-│   └── skills/
+├── .agents/
+│   └── skills/              # AUTHORED skills (installer target; see skills-lock.json)
 │       └── ship/
 │           └── SKILL.md            # `/ship` skill: docs refresh, changelog entry, fast checks, PR
-├── .agents/                 # GENERATED from .claude/skills/ — do not edit (see scripts/sync-agents.mjs)
+├── skills-lock.json         # Provenance + content hashes for installed third-party skills
+├── .claude/
+│   ├── agents/              # AUTHORED subagents (docs-updater)
+│   └── skills/              # GENERATED from .agents/skills/ — do not edit (see scripts/sync-agents.mjs)
 ├── .codex/                  # GENERATED from .claude/agents/ — do not edit (see scripts/sync-agents.mjs)
 ├── CHANGELOG.md             # Keep a Changelog release history
 ├── playwright.config.ts     # Playwright (E2E) configuration

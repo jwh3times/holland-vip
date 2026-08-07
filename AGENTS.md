@@ -92,11 +92,11 @@ a static export.
   the PR will actually mint. Run `/ship` to write that entry; it computes the
   version with `scripts/next-version.mjs` rather than guessing.
 - `.github/workflows/sync-agents.yml` runs on same-repo pull requests. It
-  regenerates the Codex agent artifacts from their `.claude/` sources and
-  auto-commits any drift back to the branch. It needs the `SYNC_PAT` repo
-  secret and is skipped for fork PRs and when the secret is unset — see
-  "Keeping Codex artifacts in sync" below for the artifact mapping and the
-  secret-free `--check` gate that also runs in the build job.
+  regenerates the agent artifacts from their authored sources and auto-commits
+  any drift back to the branch. It needs the `SYNC_PAT` repo secret and is
+  skipped for fork PRs and when the secret is unset — see "Keeping agent
+  artifacts in sync" below for the artifact mapping and the secret-free
+  `--check` gate that also runs in the build job.
 - `.github/workflows/dependency-review.yml` fails PRs with high-severity
   dependency vulnerabilities.
 - CodeQL default setup is enabled in GitHub repository settings. There is
@@ -358,7 +358,7 @@ Keep `AGENTS.md`, `CLAUDE.md`, and `README.md` consistent when making changes
 that affect architecture, commands, deployment, testing, or project conventions.
 
 The existing Claude docs automation lives under `.claude/`. The `/ship` skill
-(`.claude/skills/ship/SKILL.md`) refreshes `CLAUDE.md` and `README.md` when a
+(`.agents/skills/ship/SKILL.md`) refreshes `CLAUDE.md` and `README.md` when a
 branch is ready for a PR, by invoking the `docs-updater` subagent scoped to the
 branch's diff. It runs once per ship, not on every stop — there is no longer a
 docs-freshness stop hook. `/ship` also writes the `CHANGELOG.md` entry for the
@@ -366,15 +366,41 @@ version the merge will mint. `docs-updater` maintains this file too, but only
 when `/ship` runs — so if you are changing agent-facing guidance outside that
 flow, update `AGENTS.md` explicitly rather than assuming it will be caught.
 
-## Keeping Codex artifacts in sync
+## Keeping agent artifacts in sync
 
-Codex reads skills from `.agents/skills/` and subagents from `.codex/agents/*.toml`, but these are
-**generated** from the canonical Claude sources under `.claude/` — do not edit them by hand (each
-carries a `GENERATED — do not edit` banner). Edit the source under `.claude/skills/` or
-`.claude/agents/`, then run `npm run sync:agents` to regenerate. `node scripts/sync-agents.mjs
---check` verifies the artifacts match their sources without writing; CI runs this check on every
-push/PR (including fork PRs, since it needs no secret) and fails the build if the artifacts are
-stale. On same-repo pull requests only, a separate workflow additionally regenerates and commits
-any drift automatically once the `SYNC_PAT` secret is set; it is skipped for fork PRs, which get a
-read-only token. `.prettierignore` excludes `.agents/` and `.codex/` — the generator, not Prettier,
-owns their formatting.
+Skills and subagents are authored in **different** trees, and each generates its counterpart:
+
+- **Skills** are authored in `.agents/skills/<name>/**` (where the skill installer writes them; see
+  `skills-lock.json`). `.claude/skills/<name>/**` is the **generated** mirror Claude Code reads —
+  the entire directory, not just `SKILL.md`, so references, `scripts/*.sh`, and `agents/*.yaml` are
+  drift-checked too.
+- **Subagents** are authored in `.claude/agents/<name>.md`. `.codex/agents/<name>.toml` is the
+  **generated** artifact Codex reads.
+
+Do not edit generated files by hand (each carries a `GENERATED — do not edit` banner). Edit the
+authored side, then run `npm run sync:agents` to regenerate. `node scripts/sync-agents.mjs --check`
+verifies the artifacts match their sources without writing; CI runs this check on every push/PR
+(including fork PRs, since it needs no secret) and fails the build if the artifacts are stale. On
+same-repo pull requests only, a separate workflow additionally regenerates and commits any drift
+automatically once the `SYNC_PAT` secret is set; it is skipped for fork PRs, which get a read-only
+token.
+
+`.prettierignore` excludes `.claude/skills/` and `.codex/` — the generator, not Prettier, owns their
+formatting. Prettier does format the authored `.agents/skills/` sources, so run `npm run format`
+**before** `npm run sync:agents`; regenerating first just mirrors unformatted content and drifts
+again on the next format pass.
+
+Never swap the generated `.claude/skills/` tree for symlinks into `.agents/`. This repo is developed
+on Windows with `core.symlinks=false`, so Git follows them and commits duplicated file content
+rather than links, and `listDirs()` in `scripts/lib/agent-sync.mjs` skips symlinked entries — which
+would make every mirrored file look extraneous and get pruned.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

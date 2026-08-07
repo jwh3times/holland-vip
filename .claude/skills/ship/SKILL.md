@@ -1,4 +1,5 @@
 ---
+# GENERATED — do not edit. Source: .agents/skills/ship/SKILL.md. Regenerate: npm run sync:agents
 name: ship
 description: Ship the current branch — refresh docs, write the CHANGELOG entry for the version this merge will mint, run fast checks, push, and open or update the PR. Use when a feature branch is ready for review, or when the user says "ship it", "open a PR", or "push this".
 ---
