@@ -17,15 +17,15 @@ function makeFixture() {
   createdRoots.push(root);
   const paths = {
     repoRoot: root,
+    skillSources: join(root, ".agents", "skills"),
     claudeSkills: join(root, ".claude", "skills"),
     claudeAgents: join(root, ".claude", "agents"),
-    codexSkills: join(root, ".agents", "skills"),
     codexAgents: join(root, ".codex", "agents"),
   };
-  mkdirSync(join(paths.claudeSkills, "demo"), { recursive: true });
+  mkdirSync(join(paths.skillSources, "demo"), { recursive: true });
   mkdirSync(paths.claudeAgents, { recursive: true });
   writeFileSync(
-    join(paths.claudeSkills, "demo", "SKILL.md"),
+    join(paths.skillSources, "demo", "SKILL.md"),
     "---\nname: demo\ndescription: Demo skill.\n---\n\nDo the thing.\n"
   );
   writeFileSync(
@@ -41,8 +41,9 @@ describe("syncAll", () => {
     const first = syncAll({ paths });
     expect(first.changed.length).toBe(2);
 
-    const skill = readFileSync(join(paths.codexSkills, "demo", "SKILL.md"), "utf8");
+    const skill = readFileSync(join(paths.claudeSkills, "demo", "SKILL.md"), "utf8");
     expect(skill.split("\n")[1]).toContain("GENERATED — do not edit");
+    expect(skill.split("\n")[1]).toContain(".agents/skills/demo/SKILL.md");
 
     const toml = readFileSync(join(paths.codexAgents, "helper.toml"), "utf8");
     expect(toml).toContain('name = "helper"');
@@ -73,12 +74,32 @@ describe("syncAll", () => {
     expect(existsSync(orphan)).toBe(false);
   });
 
+  it("prunes a mirrored skill once its source directory is gone", () => {
+    const paths = makeFixture();
+    syncAll({ paths });
+    const mirrored = join(paths.claudeSkills, "demo", "SKILL.md");
+    expect(existsSync(mirrored)).toBe(true);
+
+    rmSync(join(paths.skillSources, "demo"), { recursive: true });
+    expect(syncAll({ paths, check: true }).stale).toContain(mirrored);
+    expect(existsSync(mirrored)).toBe(true); // check mode must not delete
+    syncAll({ paths });
+    expect(existsSync(mirrored)).toBe(false);
+  });
+
   it("copies non-SKILL.md skill assets verbatim and detects tampering", () => {
     const paths = makeFixture();
-    writeFileSync(join(paths.claudeSkills, "demo", "reference.md"), "ref body\n");
+    mkdirSync(join(paths.skillSources, "demo", "agents"), { recursive: true });
+    writeFileSync(join(paths.skillSources, "demo", "reference.md"), "ref body\n");
+    writeFileSync(join(paths.skillSources, "demo", "agents", "openai.yaml"), "name: demo\n");
     syncAll({ paths });
 
-    const copied = join(paths.codexSkills, "demo", "reference.md");
+    // The whole skill directory is drift-controlled, not just SKILL.md.
+    expect(readFileSync(join(paths.claudeSkills, "demo", "agents", "openai.yaml"), "utf8")).toBe(
+      "name: demo\n"
+    );
+
+    const copied = join(paths.claudeSkills, "demo", "reference.md");
     expect(readFileSync(copied)).toEqual(Buffer.from("ref body\n")); // byte-for-byte, no banner
 
     writeFileSync(copied, "tampered\n");

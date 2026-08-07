@@ -1,8 +1,8 @@
-name: Sync Codex Agents
+name: Sync Agent Artifacts
 
-# Regenerate the Codex agent artifacts (.agents/skills, .codex/agents) from
-# their canonical .claude/ sources and commit any drift back to the PR branch.
-# The .claude/ tree is the single source of truth; see
+# Regenerate the derived agent artifacts and commit any drift back to the PR
+# branch. Skills are authored in .agents/skills and generate .claude/skills;
+# subagents are authored in .claude/agents and generate .codex/agents. See
 # docs/superpowers/specs/2026-07-22-codex-agent-sync-design.md.
 
 on:
@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   sync:
-    name: Regenerate Codex artifacts
+    name: Regenerate agent artifacts
     runs-on: ubuntu-latest
     # Fork PRs get a read-only token and cannot push; skip them (solo repo).
     if: github.event.pull_request.head.repo.full_name == github.repository
@@ -49,19 +49,19 @@ jobs:
         if: env.HAS_PAT == 'true'
         run: npm ci
 
-      - name: Regenerate Codex artifacts
+      - name: Regenerate agent artifacts
         if: env.HAS_PAT == 'true'
         run: node scripts/sync-agents.mjs
 
       - name: Commit and push drift
         if: env.HAS_PAT == 'true'
         run: |
-          if [ -n "$(git status --porcelain .agents .codex)" ]; then
+          if [ -n "$(git status --porcelain .claude/skills .codex)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add .agents .codex
-            git commit -m "chore: sync codex agent artifacts"
+            git add .claude/skills .codex
+            git commit -m "chore: sync generated agent artifacts"
             git push
           else
-            echo "Codex agent artifacts already in sync."
+            echo "Generated agent artifacts already in sync."
           fi

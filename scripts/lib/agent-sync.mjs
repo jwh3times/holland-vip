@@ -1,10 +1,17 @@
-// Transforms + orchestration for keeping Codex agent artifacts in sync with
-// their canonical .claude/ sources. See
+// Transforms + orchestration for keeping the per-harness agent artifacts in
+// sync with their canonical sources. See
 // docs/superpowers/specs/2026-07-22-codex-agent-sync-design.md.
 //
-// The .claude/ tree is the single source of truth. This module derives:
-//   .agents/skills/<name>/**   — verbatim mirror of .claude/skills/<name>/**
-//   .codex/agents/<name>.toml  — transform of .claude/agents/<name>.md
+// Two trees are hand-authored, and each derives one generated tree:
+//   .agents/skills/<name>/**   (source) → .claude/skills/<name>/**  (generated)
+//   .claude/agents/<name>.md   (source) → .codex/agents/<name>.toml (generated)
+//
+// Skills are authored under .agents/ because that is where the skill installer
+// writes them (see skills-lock.json); the whole skill directory is mirrored, so
+// references, scripts, and agents/*.yaml are drift-checked alongside SKILL.md.
+// Subagents keep the opposite direction: .claude/agents/*.md is the authored
+// form and Codex TOML is derived from it.
+//
 // Output is deterministic (LF line endings, no timestamps) so regeneration
 // never churns and --check is stable across platforms.
 
@@ -93,8 +100,8 @@ export function agentMarkdownToToml(md, sourceRelPath) {
 
 /**
  * Inject the generated-file banner as a YAML comment on the second line of a
- * skill's SKILL.md frontmatter, keeping `---` on line 1 so Codex still parses
- * the frontmatter. Files without frontmatter are returned unchanged (LF).
+ * skill's SKILL.md frontmatter, keeping `---` on line 1 so the consuming harness
+ * still parses the frontmatter. Files without frontmatter are returned unchanged (LF).
  */
 export function injectSkillBanner(skillMd, sourceRelPath) {
   const normalized = skillMd.replace(/\r\n/g, "\n");
@@ -112,9 +119,13 @@ const REPO_ROOT = fileURLToPath(new URL("../..", import.meta.url))
 
 export const DEFAULT_PATHS = {
   repoRoot: REPO_ROOT,
+  /** Authored skills — the single source of truth for skill content. */
+  skillSources: join(REPO_ROOT, ".agents", "skills"),
+  /** Generated skill mirror consumed by Claude Code. */
   claudeSkills: join(REPO_ROOT, ".claude", "skills"),
+  /** Authored subagents. */
   claudeAgents: join(REPO_ROOT, ".claude", "agents"),
-  codexSkills: join(REPO_ROOT, ".agents", "skills"),
+  /** Generated subagent artifacts consumed by Codex. */
   codexAgents: join(REPO_ROOT, ".codex", "agents"),
 };
 
@@ -147,11 +158,11 @@ function toPosixRel(root, abs) {
 function computeOutputs(paths) {
   const outputs = [];
 
-  for (const name of listDirs(paths.claudeSkills)) {
-    const srcDir = join(paths.claudeSkills, name);
+  for (const name of listDirs(paths.skillSources)) {
+    const srcDir = join(paths.skillSources, name);
     for (const rel of listFiles(srcDir)) {
       const src = join(srcDir, rel);
-      const dest = join(paths.codexSkills, name, rel);
+      const dest = join(paths.claudeSkills, name, rel);
       if (rel === "SKILL.md") {
         const text = injectSkillBanner(readFileSync(src, "utf8"), toPosixRel(paths.repoRoot, src));
         outputs.push({ dest, bytes: Buffer.from(text, "utf8"), text: true });
@@ -181,15 +192,15 @@ function matches(current, output) {
 }
 
 /**
- * Regenerate (or, with { check: true }, verify) all Codex artifacts from the
- * .claude/ sources. Returns { changed, stale } absolute-path lists. In check
+ * Regenerate (or, with { check: true }, verify) every generated artifact from
+ * its authored source. Returns { changed, stale } absolute-path lists. In check
  * mode nothing is written or deleted.
  */
 export function syncAll({ paths = DEFAULT_PATHS, check = false } = {}) {
   const outputs = computeOutputs(paths);
   const desired = new Set(outputs.map((o) => o.dest));
 
-  const existing = [paths.codexSkills, paths.codexAgents].flatMap((root) =>
+  const existing = [paths.claudeSkills, paths.codexAgents].flatMap((root) =>
     listFiles(root).map((rel) => join(root, rel))
   );
   const stale = existing.filter((f) => !desired.has(f));

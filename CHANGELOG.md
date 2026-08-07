@@ -12,6 +12,35 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.21] - 2026-08-07
+
+### Added
+
+- 25 third-party skills from `mattpocock/skills` under `.agents/skills/`, with provenance and
+  content hashes recorded in `skills-lock.json`.
+
+### Changed
+
+- **Inverted the skill sync direction.** `.agents/skills/<name>/**` is now the authored source and
+  `.claude/skills/<name>/**` is the generated mirror (previously the reverse). This matches where
+  the skill installer writes, so installing or updating a skill is a one-way operation instead of
+  a manual copy. Subagents are unchanged: `.claude/agents/<name>.md` still generates
+  `.codex/agents/<name>.toml`.
+- Moved the `ship` skill's authored source to `.agents/skills/ship/SKILL.md` so all skills follow
+  one model.
+- `.prettierignore` now excludes `.claude/skills/` instead of `.agents/`, so Prettier formats the
+  authored skill sources and leaves the generated mirror to `scripts/sync-agents.mjs`.
+- `sync-agents.yml` stages `.claude/skills`/`.codex` rather than `.agents`/`.codex`; without this
+  the auto-sync workflow would have silently stopped committing drift.
+
+### Notes
+
+- The whole skill directory is drift-controlled — references, `scripts/*.sh`, and
+  `agents/openai.yaml` — not just `SKILL.md`.
+- The generated mirror must not be replaced with symlinks into `.agents/`: this repo is developed
+  on Windows with `core.symlinks=false`, so Git commits duplicated content instead of links, and
+  the generator skips symlinked directories and would prune the mirror as extraneous.
+
 ## [1.1.20] - 2026-08-07
 
 ### Security

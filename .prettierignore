@@ -12,9 +12,10 @@ dist/
 # Test coverage
 coverage/
 
-# Generated agent artifacts — produced by scripts/sync-agents.mjs from the
-# .claude/ sources. Prettier owns the sources; the generator owns these.
-.agents/
+# Generated agent artifacts — produced by scripts/sync-agents.mjs. Prettier owns
+# the authored sources (.agents/skills/**, .claude/agents/**); the generator owns
+# these mirrors, so formatting them would just fight the next regeneration.
+.claude/skills/
 .codex/
 
 # Agent scratch — untracked working files, not project source. Prettier does not read

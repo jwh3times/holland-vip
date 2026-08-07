@@ -38,7 +38,7 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
-      - name: Verify Codex artifacts are in sync
+      - name: Verify generated agent artifacts are in sync
         run: node scripts/sync-agents.mjs --check
 
       - name: Build project
