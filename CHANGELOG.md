@@ -12,6 +12,22 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.20] - 2026-08-07
+
+### Security
+
+- Resolved all open Dependabot alerts by refreshing transitive lockfile entries: `postcss`
+  8.5.15 → 8.5.26 (GHSA-r28c-9q8g-f849 path traversal, GHSA-fxqj-rqcc-2cmp incomplete fix) and
+  `brace-expansion` 1.1.15 → 1.1.18 / 5.0.6 → 5.0.9 (GHSA-3jxr-9vmj-r5cp ReDoS, plus
+  GHSA-mh99-v99m-4gvg and GHSA-rgw5-rvv9-x895 surfaced by `npm audit`). `npm audit` now reports
+  0 vulnerabilities.
+
+### Changed
+
+- Synced `package-lock.json` with the declared `package.json` ranges, which had drifted:
+  `next` 16.2.9 → 16.3.0, `eslint` 10.5.0 → 10.8.0, `typescript-eslint` 8.61.1 → 8.65.0,
+  `@tailwindcss/postcss` 4.3.1 → 4.3.3, `@vitejs/plugin-react` 6.0.2 → 6.0.5.
+
 ## [1.1.11] - 2026-07-23
 
 ### Added
