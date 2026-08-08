@@ -12,6 +12,17 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.22] - 2026-08-08
+
+### Added
+
+- `docs/agents/` config consumed by the `mattpocock/skills` engineering skills (triage,
+  to-tickets, to-spec, domain-modeling, etc.): `issue-tracker.md` (GitHub Issues via `gh`, with
+  wayfinding operations), `triage-labels.md` (the five canonical triage-role labels, kept at
+  their defaults), and `domain.md` (single-context `CONTEXT.md`/`docs/adr/` consumption rules —
+  neither exists yet and is created lazily by `domain-modeling` when needed).
+- `## Agent skills` section in `AGENTS.md` pointing to the new `docs/agents/*.md` files.
+
 ## [1.1.21] - 2026-08-07
 
 ### Added
