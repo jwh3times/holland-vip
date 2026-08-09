@@ -4,26 +4,7 @@ import type { Repo } from "@/lib/github";
 import type { ContributionCalendar } from "@/lib/github-contributions";
 import { ContributionHeatmap } from "@/components/ContributionHeatmap";
 import { Section, type SectionSurfaceProps } from "@/components/ui/section";
-
-/** Accent colors cycled per card, mirroring the site's blue/green/purple/orange palette. */
-const accents = [
-  {
-    icon: "bg-blue-500/10 text-blue-600 ring-blue-500/20 dark:bg-blue-500/15 dark:text-blue-300 dark:ring-blue-500/25",
-    dot: "bg-blue-500",
-  },
-  {
-    icon: "bg-green-500/10 text-green-700 ring-green-500/20 dark:bg-green-500/15 dark:text-green-300 dark:ring-green-500/25",
-    dot: "bg-green-500",
-  },
-  {
-    icon: "bg-purple-500/10 text-purple-600 ring-purple-500/20 dark:bg-purple-500/15 dark:text-purple-300 dark:ring-purple-500/25",
-    dot: "bg-purple-500",
-  },
-  {
-    icon: "bg-orange-500/10 text-orange-700 ring-orange-500/20 dark:bg-orange-500/15 dark:text-orange-300 dark:ring-orange-500/25",
-    dot: "bg-orange-500",
-  },
-] as const;
+import { accent, accentAt } from "@/lib/accent";
 
 /**
  * Formats a last-pushed ISO timestamp to a stable "Mon YYYY" label.
@@ -61,7 +42,7 @@ export function OpenSourceSection({
     >
       <div className="grid gap-6 sm:grid-cols-2 max-w-4xl mx-auto">
         {repos.map((repo, index) => {
-          const accent = accents[index % accents.length];
+          const tokens = accent[accentAt(index)];
           return (
             <a
               key={repo.name}
@@ -74,7 +55,7 @@ export function OpenSourceSection({
                 <div
                   className={cn(
                     "inline-flex h-11 w-11 items-center justify-center rounded-2xl ring-1 flex-shrink-0",
-                    accent.icon
+                    tokens.iconChip
                   )}
                 >
                   <FolderGit2 className="h-5 w-5" />
@@ -96,7 +77,7 @@ export function OpenSourceSection({
                 {repo.language && (
                   <span className="inline-flex items-center gap-1.5">
                     <span
-                      className={cn("h-2.5 w-2.5 rounded-full", accent.dot)}
+                      className={cn("h-2.5 w-2.5 rounded-full", tokens.dot)}
                       aria-hidden="true"
                     />
                     {repo.language}

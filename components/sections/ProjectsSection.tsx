@@ -1,4 +1,5 @@
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
+import { Badge } from "@/components/ui/badge";
 import { Section, type SectionSurfaceProps } from "@/components/ui/section";
 import { ClipboardCopy, FileX, Signature, Columns3, Lock } from "lucide-react";
 
@@ -47,10 +48,10 @@ export function ProjectsSection({ surface }: SectionSurfaceProps) {
       }
     >
       <div className="flex justify-center mb-12">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-badge-orange dark:bg-orange-900/40">
+        <Badge accent="orange">
           <Lock className="h-3.5 w-3.5" aria-hidden="true" />
           Confidential
-        </span>
+        </Badge>
       </div>
       <BentoGrid className="max-w-4xl mx-auto">
         {projects.map((project) => (

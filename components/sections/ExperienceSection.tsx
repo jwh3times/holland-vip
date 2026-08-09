@@ -1,7 +1,8 @@
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { Section, type SectionSurfaceProps } from "@/components/ui/section";
+import { accent, type Accent } from "@/lib/accent";
 import { cn } from "@/lib/utils";
-
-type ColorKey = keyof typeof colorMap;
 
 interface Experience {
   title: string;
@@ -9,7 +10,7 @@ interface Experience {
   period: string;
   location: string;
   isCurrent: boolean;
-  colorClass: ColorKey;
+  accent: Accent;
   highlights: string[];
 }
 
@@ -20,7 +21,7 @@ const experiences: Experience[] = [
     period: "Nov 2025 - Present",
     location: "Raleigh, NC (Remote)",
     isCurrent: true,
-    colorClass: "blue",
+    accent: "blue",
     highlights: [
       "Tech-leading full-stack development of greenfield ledger/register functionality for SoftPro's Sky platform — register balancing for real-estate transaction files, built as a new microservice on AKS with an Angular front end and integrated with the existing Select backend for file data",
       "Leading the team's AI-in-development initiative — building custom AI agents, maintaining shared Copilot instructions, and authoring reusable prompt files to standardize and accelerate the dev workflow",
@@ -33,7 +34,7 @@ const experiences: Experience[] = [
     period: "Jun 2024 - Nov 2025",
     location: "Raleigh, NC",
     isCurrent: false,
-    colorClass: "purple",
+    accent: "purple",
     highlights: [
       "Architecting cloud-hosted web applications using .NET, AWS, Azure with EKS/AKS, RDS, RabbitMQ, and S3/Azure Blob storage",
       "Developing REST APIs with multi-threaded data processing and real-time account management",
@@ -46,7 +47,7 @@ const experiences: Experience[] = [
     period: "Aug 2017 - Apr 2024",
     location: "Cary, NC",
     isCurrent: false,
-    colorClass: "green",
+    accent: "green",
     highlights: [
       "Engineered high-performance data infrastructure with 64-bit architecture upgrade enabling limitless storage capacity",
       "Achieved 11% database query performance improvement and 7% Java execution efficiency gains",
@@ -59,7 +60,7 @@ const experiences: Experience[] = [
     period: "Jun 2013 - Aug 2017",
     location: "Raleigh, NC",
     isCurrent: false,
-    colorClass: "orange",
+    accent: "orange",
     highlights: [
       "Developed firmware and UI/UX for embedded systems leading to global product line success",
       "Designed PID control algorithms for hydraulic, pneumatic, and motor-driven systems",
@@ -67,29 +68,6 @@ const experiences: Experience[] = [
     ],
   },
 ];
-
-const colorMap = {
-  blue: {
-    dot: "bg-blue-500",
-    ring: "ring-blue-500/20",
-    bullet: "text-blue-500",
-  },
-  purple: {
-    dot: "bg-purple-500",
-    ring: "ring-purple-500/20",
-    bullet: "text-purple-500",
-  },
-  green: {
-    dot: "bg-green-500",
-    ring: "ring-green-500/20",
-    bullet: "text-green-500",
-  },
-  orange: {
-    dot: "bg-orange-500",
-    ring: "ring-orange-500/20",
-    bullet: "text-orange-500",
-  },
-};
 
 export function ExperienceSection({ surface }: SectionSurfaceProps) {
   return (
@@ -101,7 +79,7 @@ export function ExperienceSection({ surface }: SectionSurfaceProps) {
           <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-[linear-gradient(to_bottom,var(--color-blue-500),var(--color-purple-500),var(--color-green-500),var(--color-orange-500))]"></div>
 
           {experiences.map((exp, index) => {
-            const colors = colorMap[exp.colorClass];
+            const colors = accent[exp.accent];
             return (
               <div
                 key={exp.company}
@@ -114,14 +92,10 @@ export function ExperienceSection({ surface }: SectionSurfaceProps) {
                     colors.ring
                   )}
                 ></div>
-                <div className="rounded-2xl p-6 card-bg-white-80 backdrop-blur-sm border border-gray-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300">
+                <Card className="card-bg-white-80 backdrop-blur-sm shadow-none hover:shadow-xl">
                   <div className="flex flex-wrap items-center gap-3 mb-3">
                     <h3 className="text-xl font-bold text-heading">{exp.title}</h3>
-                    {exp.isCurrent && (
-                      <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-badge-blue rounded-full text-xs font-semibold">
-                        Current
-                      </span>
-                    )}
+                    {exp.isCurrent && <Badge accent="blue">Current</Badge>}
                   </div>
                   <div className="text-base font-semibold text-label mb-2">{exp.company}</div>
                   <div className="text-sm text-muted mb-4">
@@ -135,7 +109,7 @@ export function ExperienceSection({ surface }: SectionSurfaceProps) {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </Card>
               </div>
             );
           })}
