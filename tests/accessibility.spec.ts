@@ -11,22 +11,39 @@ test.describe("Accessibility", () => {
     await page.goto("/");
   });
 
-  test("should have a skip to content link", async ({ page }) => {
+  // These assert what the skip link *does*, not which utility classes it carries.
+  // Class-name assertions passed as long as the string was present, even if the
+  // styles never applied.
+  test("skip link is rendered but visually collapsed until focused", async ({ page }) => {
     const skipLink = page.locator('a[href="#main-content"]');
     await expect(skipLink).toBeAttached();
 
-    // Skip link should be visually hidden but accessible
-    await expect(skipLink).toHaveClass(/sr-only/);
+    const collapsed = await skipLink.boundingBox();
+    expect(collapsed, "skip link should occupy a box, however small").not.toBeNull();
+    expect(collapsed!.width).toBeLessThanOrEqual(2);
+    expect(collapsed!.height).toBeLessThanOrEqual(2);
   });
 
-  test("skip link should become visible on focus", async ({ page }) => {
+  test("skip link becomes visible and targets main content on focus", async ({ page }) => {
     const skipLink = page.locator('a[href="#main-content"]');
+    const collapsed = await skipLink.boundingBox();
 
-    // Focus the skip link
     await skipLink.focus();
+    await expect(skipLink).toBeFocused();
 
-    // Should become visible when focused
-    await expect(skipLink).toHaveClass(/focus:not-sr-only/);
+    const focused = await skipLink.boundingBox();
+    expect(focused!.width).toBeGreaterThan(collapsed!.width);
+    expect(focused!.height).toBeGreaterThan(collapsed!.height);
+    await expect(skipLink).toBeVisible();
+    await expect(skipLink).toHaveText(/skip to main content/i);
+
+    // And it points at a target that exists.
+    await expect(page.locator("#main-content")).toHaveCount(1);
+  });
+
+  test("skip link is the first thing keyboard focus reaches", async ({ page }) => {
+    await page.keyboard.press("Tab");
+    await expect(page.locator('a[href="#main-content"]')).toBeFocused();
   });
 
   test("should have proper heading hierarchy", async ({ page }) => {

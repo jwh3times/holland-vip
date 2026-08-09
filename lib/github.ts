@@ -29,8 +29,40 @@ export interface Repo {
   url: string;
 }
 
-/** Committed snapshot used when the live GitHub fetch is unavailable. */
-const fallbackRepos = fallbackData as Repo[];
+/**
+ * Validates a committed snapshot against {@link Repo}.
+ *
+ * The snapshot is a repo asset, hand-edited or written by a script, and it used
+ * to be an unchecked `as Repo[]` cast — so a malformed one would have surfaced
+ * as broken markup rather than an error. Exported so a test can assert the
+ * committed file still parses; see `tests/unit/github-fallback.test.ts`.
+ *
+ * Returns `null` rather than throwing: this feeds the degradation path, which
+ * must never break the build.
+ */
+export function parseRepos(data: unknown): Repo[] | null {
+  if (!Array.isArray(data) || data.length === 0) return null;
+  const ok = data.every(
+    (r: unknown) =>
+      typeof r === "object" &&
+      r !== null &&
+      typeof (r as Repo).name === "string" &&
+      (typeof (r as Repo).description === "string" || (r as Repo).description === null) &&
+      (typeof (r as Repo).language === "string" || (r as Repo).language === null) &&
+      typeof (r as Repo).stars === "number" &&
+      typeof (r as Repo).pushedAt === "string" &&
+      typeof (r as Repo).url === "string"
+  );
+  return ok ? (data as Repo[]) : null;
+}
+
+/**
+ * Committed snapshot used when the live GitHub fetch is unavailable.
+ *
+ * If the snapshot itself is malformed the section renders empty rather than
+ * with garbage — `app/page.tsx` drops `OpenSourceSection` on an empty list.
+ */
+const fallbackRepos: Repo[] = parseRepos(fallbackData) ?? [];
 
 /** The subset of GitHub's `/repos/{owner}/{repo}` payload we consume. */
 interface GitHubRepoResponse {
