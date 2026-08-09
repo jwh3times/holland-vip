@@ -205,10 +205,11 @@ Apply as Tailwind classes: `<div className="animate-fadeInUp">...</div>`
 
 1. Create component in appropriate directory (`/components/ui/` for reusable primitives, `/components/sections/` for page sections)
 2. Export from [components/sections/index.ts](components/sections/index.ts) if adding a new section
-3. Use `"use client"` directive if component needs client-side interactivity
-4. Always use `cn()` from `@/lib/utils` for className composition
-5. Use semantic color classes from CSS variables (never hardcode colors)
-6. Add `transition-colors duration-300` for smooth theme transitions
+3. If the section has copy (headings, body text, list items, labels), add a typed module to [content/](content/) and import from it — don't write prose directly in the component's JSX or in a local const
+4. Use `"use client"` directive if component needs client-side interactivity
+5. Always use `cn()` from `@/lib/utils` for className composition
+6. Use semantic color classes from CSS variables (never hardcode colors)
+7. Add `transition-colors duration-300` for smooth theme transitions
 
 ### Styling Conventions
 
@@ -229,7 +230,33 @@ Apply as Tailwind classes: `<div className="animate-fadeInUp">...</div>`
 
 ### Content Structure
 
-**Single-page application:** All content in [app/page.tsx](app/page.tsx)
+**Single-page application:** All content composed in [app/page.tsx](app/page.tsx)
+
+**Content lives in [content/](content/), not in section components.** Ten typed modules hold what
+the site _says_; section components import from them and render — they own no prose. The `@/*`
+alias covers `content/`, so imports read `import { hero } from "@/content/hero"`.
+
+| Module                                                   | Section(s)              | Exports                                                                                                                                                                                             |
+| -------------------------------------------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [content/hero.ts](content/hero.ts)                       | `HeroSection`           | `hero` (greeting, name, tagline, blurb, `ctas[{label,href}]`)                                                                                                                                       |
+| [content/about.ts](content/about.ts)                     | `AboutSection`          | `bio` (biography paragraphs), `careerHighlights`, `technicalAchievements`, `exploringTags`, `exploringHeading`, `achievementsHeading`, plus `CareerHighlight`/`TechnicalAchievement`/`ExploringTag` |
+| [content/skills.ts](content/skills.ts)                   | `SkillsSection`         | `skillCategories`, `SkillCategory`                                                                                                                                                                  |
+| [content/capabilities.ts](content/capabilities.ts)       | `TechnicalCapabilities` | `capabilities`, `Capability`                                                                                                                                                                        |
+| [content/problem-solving.ts](content/problem-solving.ts) | `ProblemSolving`        | `challenges`, `Challenge`, and `challengeRows` (the Challenge/Solution/Impact rows, each with icon + `bgColor`)                                                                                     |
+| [content/experience.ts](content/experience.ts)           | `ExperienceSection`     | `experiences`, `Experience`                                                                                                                                                                         |
+| [content/projects.ts](content/projects.ts)               | `ProjectsSection`       | `projects`, `Project`, `ProjectIcon`, `projectsSubtitle`, `confidentialLabel`                                                                                                                       |
+| [content/education.ts](content/education.ts)             | `EducationSection`      | `education` (school, logoSrc, logoAlt, location, graduated, degrees, highlights), `Degree`, `Highlight`                                                                                             |
+| [content/contact.ts](content/contact.ts)                 | `ContactSection`        | `contact` (subtitle, ctaLabel) — the email address itself stays in [lib/site-config.ts](lib/site-config.ts)                                                                                         |
+| [content/open-source.ts](content/open-source.ts)         | `OpenSourceSection`     | `openSource` (subtitle) — the repo list itself is still fetched at build time by `lib/github.ts`                                                                                                    |
+
+`ProjectsSection` is the one place content still needs a presentation-side lookup: content names an
+icon with a `ProjectIcon` key (`"clipboard" | "file" | "signature" | "columns"`), and the section
+maps that key to a Lucide component so no JSX lives in a content array; grid span is `"one" | "two"`,
+mapped to `md:col-span-*`. Accent keys (`Accent` from [lib/accent.ts](lib/accent.ts)) are carried on
+the content records themselves (e.g. `careerHighlights[].accent`), not looked up in the component.
+
+A resume edit — new role, new bullet, new badge — is a one-file change in `content/`; it never
+touches a section component.
 
 Sections (in render order):
 
@@ -252,9 +279,9 @@ Each section component lives in [components/sections/](components/sections/) and
 
 **Site metadata:** Update [app/layout.tsx](app/layout.tsx) `Metadata` export
 
-**Contact info:** Email `jerry@holland.vip` is hardcoded in [app/page.tsx](app/page.tsx) and tested in Playwright specs
+**Contact info:** Email `jerry@holland.vip` lives in `siteConfig.email` in [lib/site-config.ts](lib/site-config.ts) (consumed by `HeroSection`/`Footer` for socials and by `ContactSection`'s `mailto:` link) and is tested in Playwright specs
 
-**Social links:** GitHub (`https://github.com/jwh3times`) and LinkedIn (`https://www.linkedin.com/in/jerryhollandiii`) in [components/sections/HeroSection.tsx](components/sections/HeroSection.tsx) and footer
+**Social links:** GitHub (`https://github.com/jwh3times`) and LinkedIn (`https://www.linkedin.com/in/jerryhollandiii`) are defined in `socialLinks` in [lib/site-config.ts](lib/site-config.ts) and rendered by [components/sections/HeroSection.tsx](components/sections/HeroSection.tsx) and the footer
 
 ## Important Constraints
 
