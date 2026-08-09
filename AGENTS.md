@@ -219,10 +219,6 @@ Special styling:
 Animations are defined in `app/globals.css` and used as utility classes:
 
 - `animate-fadeInUp`
-- `animate-fadeIn`
-- `animate-slideInLeft`
-- `animate-slideInRight`
-- `animate-scaleIn`
 
 ## Code Patterns
 

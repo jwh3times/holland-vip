@@ -194,10 +194,6 @@ import { Button } from "@/components/ui/button";
 Custom animations defined in [app/globals.css](app/globals.css):
 
 - `animate-fadeInUp` - 0.6s fade + translate up
-- `animate-fadeIn` - 0.8s opacity fade
-- `animate-slideInLeft` - 0.6s slide from left
-- `animate-slideInRight` - 0.6s slide from right
-- `animate-scaleIn` - 0.5s scale + opacity
 
 Apply as Tailwind classes: `<div className="animate-fadeInUp">...</div>`
 
