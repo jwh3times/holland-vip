@@ -113,6 +113,61 @@ Wave 1 of the architecture review tracked in [#93](https://github.com/jwh3times/
   `next` 16.2.9 → 16.3.0, `eslint` 10.5.0 → 10.8.0, `typescript-eslint` 8.61.1 → 8.65.0,
   `@tailwindcss/postcss` 4.3.1 → 4.3.3, `@vitejs/plugin-react` 6.0.2 → 6.0.5.
 
+## [1.1.19] - 2026-08-07
+
+### Changed
+
+- Dependency bumps: `next` and `@next/eslint-plugin-next` 16.2.12 → 16.3.0,
+  `@testing-library/user-event` 14.6.1 → 14.6.3.
+
+## [1.1.18] - 2026-08-05
+
+### Changed
+
+- Dependency bump (transitive, lockfile only): `fast-uri` 3.1.4 → 3.1.5.
+
+## [1.1.17] - 2026-08-03
+
+### Changed
+
+- Dependency bumps: `@playwright/test` 1.62.0 → 1.62.1, `@types/react` 19.2.17 → 19.2.18,
+  `@vitejs/plugin-react` 6.0.4 → 6.0.5.
+
+## [1.1.16] - 2026-07-30
+
+### Changed
+
+- Dependency bump: `lucide-react` 1.27.0 → 1.28.0.
+
+## [1.1.15] - 2026-07-29
+
+### Changed
+
+- Dependency bumps: `@types/node` 26.1.1 → 26.1.2, `eslint` 10.7.0 → 10.8.0,
+  `globals` 17.7.0 → 17.8.0, `jsdom` 30.0.0 → 30.0.1.
+
+## [1.1.14] - 2026-07-27
+
+### Changed
+
+- Dependency bump (major): `jsdom` 29.1.1 → 30.0.0.
+
+## [1.1.13] - 2026-07-27
+
+### Changed
+
+- Dependency bumps: `next` and `@next/eslint-plugin-next` 16.2.11 → 16.2.12,
+  `@playwright/test` 1.61.1 → 1.62.0, `@radix-ui/react-slot` 1.3.1 → 1.3.3,
+  `lucide-react` 1.26.0 → 1.27.0.
+
+## [1.1.12] - 2026-07-23
+
+### Changed
+
+- Dependency bumps: `@eslint-react/eslint-plugin` 5.13.1 → 5.18.0, `eslint` 10.6.0 → 10.7.0,
+  `typescript-eslint` 8.63.0 → 8.65.0, `lucide-react` 1.25.0 → 1.26.0,
+  `@radix-ui/react-slot` 1.3.0 → 1.3.1.
+
 ## [1.1.11] - 2026-07-23
 
 ### Added
