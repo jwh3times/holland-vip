@@ -1,19 +1,20 @@
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { Section, type SectionSurfaceProps } from "@/components/ui/section";
+import { accent, type Accent } from "@/lib/accent";
 import { cn } from "@/lib/utils";
 import { yearsOfExperience } from "@/lib/site-config";
-
-type ColorKey = keyof typeof colorMap;
 
 interface CareerHighlight {
   value: string;
   title: string;
   description: string;
-  colorClass: ColorKey;
+  accent: Accent;
 }
 
 interface TechnicalAchievement {
   title: string;
-  colorClass: ColorKey;
+  accent: Accent;
   items: string[];
 }
 
@@ -22,32 +23,32 @@ const careerHighlights: CareerHighlight[] = [
     value: "15%",
     title: "Developer Productivity Increase",
     description: "Through CI/CD pipeline automation and improved deployment processes",
-    colorClass: "blue",
+    accent: "blue",
   },
   {
     value: "11%",
     title: "Query Performance Improvement",
     description: "Database optimization reducing execution times across the platform",
-    colorClass: "green",
+    accent: "green",
   },
   {
     value: "7%",
     title: "Execution Efficiency Gain",
     description: "Java application modernization to latest LTS version",
-    colorClass: "purple",
+    accent: "purple",
   },
   {
     value: "83%",
     title: "Failure Rate Reduction",
     description: "Li-Ion battery failures reduced from 30% to 5% through design optimization",
-    colorClass: "orange",
+    accent: "orange",
   },
 ];
 
 const technicalAchievements: TechnicalAchievement[] = [
   {
     title: "Enterprise Cloud Platform Migration",
-    colorClass: "blue",
+    accent: "blue",
     items: [
       "Architected and executed cloud infrastructure migration for multi-tenant SaaS platform",
       "Implemented dual authentication provider system with seamless failover",
@@ -56,7 +57,7 @@ const technicalAchievements: TechnicalAchievement[] = [
   },
   {
     title: "Database Performance Optimization",
-    colorClass: "green",
+    accent: "green",
     items: [
       "Identified and resolved critical query bottlenecks in high-traffic application",
       "Optimized complex SQL queries handling 50K+ records with sub-second response times",
@@ -65,7 +66,7 @@ const technicalAchievements: TechnicalAchievement[] = [
   },
   {
     title: "Real-Time Data Pipeline Architecture",
-    colorClass: "purple",
+    accent: "purple",
     items: [
       "Built distributed data collection system processing 100K+ data points per minute",
       "Implemented robust error handling and retry logic for industrial data sources",
@@ -75,42 +76,12 @@ const technicalAchievements: TechnicalAchievement[] = [
 ];
 
 // A few things I'm currently digging into — edit this list freely.
-const exploringTags = [
-  {
-    label: "Agentic AI dev workflows",
-    className: "bg-blue-100 dark:bg-blue-900/40 text-badge-blue",
-  },
-  { label: "Kubernetes / AKS", className: "bg-purple-100 dark:bg-purple-900/40 text-badge-purple" },
-  { label: "Next.js & RSC", className: "bg-green-100 dark:bg-green-900/40 text-badge-green" },
-  { label: "Go", className: "bg-orange-100 dark:bg-orange-900/40 text-badge-orange" },
+const exploringTags: { label: string; accent: Accent }[] = [
+  { label: "Agentic AI dev workflows", accent: "blue" },
+  { label: "Kubernetes / AKS", accent: "purple" },
+  { label: "Next.js & RSC", accent: "green" },
+  { label: "Go", accent: "orange" },
 ];
-
-const colorMap = {
-  blue: {
-    border: "border-blue-200 dark:border-slate-700",
-    bg: "card-bg-blue",
-    text: "text-blue-600 dark:text-blue-400",
-    bullet: "text-blue-500",
-  },
-  green: {
-    border: "border-green-200 dark:border-slate-700",
-    bg: "card-bg-green",
-    text: "text-green-600 dark:text-green-400",
-    bullet: "text-green-500",
-  },
-  purple: {
-    border: "border-purple-200 dark:border-slate-700",
-    bg: "card-bg-purple",
-    text: "text-purple-600 dark:text-purple-400",
-    bullet: "text-purple-500",
-  },
-  orange: {
-    border: "border-orange-200 dark:border-slate-700",
-    bg: "card-bg-orange",
-    text: "text-orange-600 dark:text-orange-400",
-    bullet: "text-orange-500",
-  },
-};
 
 export function AboutSection({ surface }: SectionSurfaceProps) {
   return (
@@ -144,12 +115,9 @@ export function AboutSection({ surface }: SectionSurfaceProps) {
             <p className="text-sm font-semibold text-label mb-3">Currently exploring</p>
             <div className="flex flex-wrap justify-center gap-2">
               {exploringTags.map((tag) => (
-                <span
-                  key={tag.label}
-                  className={cn("px-3 py-1 rounded-full text-xs font-semibold", tag.className)}
-                >
+                <Badge key={tag.label} accent={tag.accent}>
                   {tag.label}
-                </span>
+                </Badge>
               ))}
             </div>
           </div>
@@ -157,23 +125,15 @@ export function AboutSection({ surface }: SectionSurfaceProps) {
 
         {/* Career Highlights */}
         <div className="grid md:grid-cols-2 gap-6 mt-12">
-          {careerHighlights.map((highlight) => {
-            const colors = colorMap[highlight.colorClass];
-            return (
-              <div
-                key={highlight.title}
-                className={cn(
-                  "rounded-2xl p-6 border transition-colors duration-300",
-                  colors.border,
-                  colors.bg
-                )}
-              >
-                <div className={cn("text-3xl font-bold mb-2", colors.text)}>{highlight.value}</div>
-                <div className="text-sm font-semibold text-label mb-1">{highlight.title}</div>
-                <div className="text-xs text-muted">{highlight.description}</div>
+          {careerHighlights.map((highlight) => (
+            <Card key={highlight.title} accent={highlight.accent}>
+              <div className={cn("text-3xl font-bold mb-2", accent[highlight.accent].text)}>
+                {highlight.value}
               </div>
-            );
-          })}
+              <div className="text-sm font-semibold text-label mb-1">{highlight.title}</div>
+              <div className="text-xs text-muted">{highlight.description}</div>
+            </Card>
+          ))}
         </div>
 
         {/* Recent Technical Achievements */}
@@ -182,29 +142,21 @@ export function AboutSection({ surface }: SectionSurfaceProps) {
             Recent Technical Achievements
           </h3>
           <div className="space-y-6">
-            {technicalAchievements.map((achievement) => {
-              const colors = colorMap[achievement.colorClass];
-              return (
-                <div
-                  key={achievement.title}
-                  className={cn(
-                    "rounded-2xl p-6 border transition-colors duration-300",
-                    colors.border,
-                    colors.bg
-                  )}
-                >
-                  <h4 className={cn("text-xl font-bold mb-3", colors.text)}>{achievement.title}</h4>
-                  <ul className="space-y-2 text-muted">
-                    {achievement.items.map((item) => (
-                      <li key={item} className="flex items-start">
-                        <span className={cn("mr-2", colors.bullet)}>▸</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              );
-            })}
+            {technicalAchievements.map((achievement) => (
+              <Card key={achievement.title} accent={achievement.accent}>
+                <h4 className={cn("text-xl font-bold mb-3", accent[achievement.accent].text)}>
+                  {achievement.title}
+                </h4>
+                <ul className="space-y-2 text-muted">
+                  {achievement.items.map((item) => (
+                    <li key={item} className="flex items-start">
+                      <span className={cn("mr-2", accent[achievement.accent].bullet)}>▸</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            ))}
           </div>
         </div>
       </div>

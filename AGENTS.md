@@ -178,6 +178,17 @@ Do not render theme-dependent UI until the component is mounted.
 
 ### CSS Variables And Utilities
 
+The four accent colors (blue/green/purple/orange) are unified in one token table,
+`lib/accent.ts`: `ACCENTS` / `type Accent`, `accent: Record<Accent, AccentTokens>`
+(`text`, `bullet`, `dot`, `ring`, `border`, `cardBg`, `badge`, `iconChip`), and
+`accentAt(index)` for lists with no inherent accent. Name an `Accent` and render
+it through `<Badge accent>` (`components/ui/badge.tsx`) or `<Card accent>`
+(`components/ui/card.tsx`) instead of hand-writing the pill/card class strings
+below — those are the supported components for an accent-colored badge or card.
+The utilities below are what the table's `cardBg`/`badge` tokens resolve to and
+remain the source of truth for theming; read them directly only for tokens with
+no dedicated component (`text`, `dot`, `ring`, `bullet`).
+
 Text hierarchy:
 
 - `--heading-text` / `.text-heading`
@@ -275,6 +286,8 @@ Do:
   `.section-surface-contrast` alternation. A section takes a `{ surface }:
 SectionSurfaceProps` prop and forwards it — it never decides its own surface.
 - Use theme transitions where color changes across light and dark modes.
+- Name an `Accent` from `lib/accent.ts` and render accent-colored badges/cards
+  through `<Badge accent>` / `<Card accent>`.
 
 Do not:
 
@@ -282,6 +295,9 @@ Do not:
 - Add a Tailwind config file.
 - Concatenate `className` strings manually.
 - Use `suppressHydrationWarning` outside the root `<html>` element.
+- Hand-write accent pill/card class strings (e.g.
+  `bg-blue-100 dark:bg-blue-900/40 …`) — read them from the `accent` table via
+  `<Badge>`/`<Card>` instead.
 
 ## Content Structure
 

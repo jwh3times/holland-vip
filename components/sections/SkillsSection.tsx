@@ -1,10 +1,17 @@
 import { Section, type SectionSurfaceProps } from "@/components/ui/section";
+import { accent, type Accent } from "@/lib/accent";
 import { cn } from "@/lib/utils";
 
-const skillCategories = [
+interface SkillCategory {
+  title: string;
+  accent: Accent;
+  skills: string[];
+}
+
+const skillCategories: SkillCategory[] = [
   {
     title: "Languages & Frameworks",
-    colorClass: "text-blue-600 dark:text-blue-400",
+    accent: "blue",
     skills: [
       "Java",
       "C#",
@@ -19,17 +26,17 @@ const skillCategories = [
   },
   {
     title: "Cloud & DevOps",
-    colorClass: "text-purple-600 dark:text-purple-400",
+    accent: "purple",
     skills: ["AWS", "Azure", "Kubernetes", "Docker", "Jenkins", "GitLab CI/CD", "Git"],
   },
   {
     title: "Databases & Messaging",
-    colorClass: "text-green-700 dark:text-green-400",
+    accent: "green",
     skills: ["PostgreSQL", "SQL Server", "Redis", "RabbitMQ", "Geode"],
   },
   {
     title: "Architecture & Design",
-    colorClass: "text-orange-700 dark:text-orange-400",
+    accent: "orange",
     skills: [
       "REST APIs",
       "Microservices",
@@ -55,7 +62,9 @@ export function SkillsSection({ surface }: SectionSurfaceProps) {
       <div className="max-w-6xl mx-auto space-y-12">
         {skillCategories.map((category) => (
           <div key={category.title}>
-            <h3 className={cn("text-xl font-semibold mb-4 text-center", category.colorClass)}>
+            <h3
+              className={cn("text-xl font-semibold mb-4 text-center", accent[category.accent].text)}
+            >
               {category.title}
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">

@@ -12,6 +12,41 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.25] - 2026-08-09
+
+Wave 3 of the architecture review tracked in [#93](https://github.com/jwh3times/holland-vip/issues/93),
+part one: the accent seam ([#89](https://github.com/jwh3times/holland-vip/issues/89)).
+
+### Added
+
+- `lib/accent.ts` — the site's accent palette as one union and one token table. `Accent` is
+  `blue | green | purple | orange`; `accent[key]` yields `text`, `bullet`, `dot`, `ring`, `border`,
+  `cardBg`, `badge`, and `iconChip`. `accentAt(index)` cycles for lists with no inherent accent.
+- `components/ui/badge.tsx` — the pill badge, replacing five hand-written copies of the same class
+  string that had drifted into two token orderings, one of them baked into content data.
+- `components/ui/card.tsx` — the card shell, replacing five near-copies that had drifted on padding
+  and on `transition-all` vs `transition-colors`. Takes an optional `accent` for tinted cards,
+  `padding` (`md` / `lg`), and `interactive` for the hover lift.
+- `tests/unit/accent.test.tsx` — 12 cases, including a guard that each accent's tokens actually name
+  that accent, which catches a copy-paste slip like `green.dot = "bg-blue-500"`.
+
+### Changed
+
+- Content records across the section modules carry `accent: Accent` instead of `colorClass`,
+  `bulletColor`, or inline Tailwind strings. The two local types both named `ColorKey` — which meant
+  different things in `AboutSection` and `ExperienceSection` — are gone, as is `OpenSourceSection`'s
+  index-cycled `accents` array. Adding a fifth accent is now one edit instead of seven.
+- Green and orange heading text settles on the 700 shade. Both 600 and 700 were already in use
+  (`SkillsSection` had 700; `AboutSection` and `TechnicalCapabilities` had 600), and 700 is the one
+  that clears WCAG AA for normal-size text on the light surfaces. Blue and purple stay at 600.
+- `README.md`'s `lib/` tree now lists the modules that are actually there rather than only
+  `utils.ts`.
+
+### Notes
+
+- `ContributionHeatmap`'s level scale is deliberately left alone — it maps contribution intensity
+  0–4, which is not accent identity.
+
 ## [1.1.24] - 2026-08-09
 
 Wave 2 of the architecture review tracked in [#93](https://github.com/jwh3times/holland-vip/issues/93):

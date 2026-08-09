@@ -7,7 +7,9 @@ Reusable React components for the Holland.VIP portfolio website.
 ```text
 components/
 ├── ui/                       # UI primitives and building blocks
+│   ├── badge.tsx            # The site's pill badge (accent-aware)
 │   ├── bento-grid.tsx       # Feature showcase grid component
+│   ├── card.tsx             # The site's card shell (accent-aware)
 │   ├── cta.tsx              # The site's call-to-action module
 │   └── section.tsx          # The page-section shell (rhythm, container, h2, surface)
 ├── sections/                 # Page section components
@@ -35,6 +37,25 @@ components/
 
 ### UI Components (`/ui`)
 
+#### `badge.tsx`
+
+The site's pill badge. Replaces five hand-written copies of the same pill class
+string that had drifted into two token orderings and one variant baked into
+content data.
+
+**Props:** `children`, `accent?` (`lib/accent.ts`'s `Accent`, default `"blue"`),
+`className?`.
+
+`accent` picks the background/text pair from the accent token table; everything
+else about the pill (shape, size, weight) is fixed. `className` is for layout
+only.
+
+**Usage:**
+
+```tsx
+<Badge accent="purple">Kubernetes / AKS</Badge>
+```
+
 #### `bento-grid.tsx`
 
 Interactive grid layout for showcasing featured projects and capabilities.
@@ -58,6 +79,28 @@ Interactive grid layout for showcasing featured projects and capabilities.
     className="md:col-span-2"
   />
 </BentoGrid>
+```
+
+#### `card.tsx`
+
+The site's card shell. Replaces five near-identical copies of
+`rounded-2xl p-{6|8} card-bg-white border border-gray-200 dark:border-slate-700 shadow-lg …`
+that had drifted on padding and on `transition-all` vs `transition-colors`.
+
+**Props:** `children`, `accent?` (`lib/accent.ts`'s `Accent`), `padding?`
+(`"md"` p-6, default, or `"lg"` p-8), `interactive?` (adds the hover lift, off
+by default), `className?`.
+
+With no `accent`, the card uses the neutral `card-bg-white` surface; with an
+`accent`, it uses that accent's tinted `cardBg` + `border` from the accent
+table instead.
+
+**Usage:**
+
+```tsx
+<Card accent="green" padding="lg" interactive>
+  ...
+</Card>
 ```
 
 #### `cta.tsx`
@@ -274,6 +317,9 @@ export function MyComponent({ title, description, className }: MyComponentProps)
 Components follow consistent patterns:
 
 - **Text colors**: Use CSS variables (`text-heading`, `text-body`, `text-muted`)
+- **Accent colors**: blue/green/purple/orange, from the single token table in
+  `lib/accent.ts` — consume via `<Badge accent>` / `<Card accent>`, not
+  hand-written class strings
 - **Spacing**: Tailwind scale (4, 8, 12, 16, 20, 24px)
 - **Borders**: `rounded-lg` (8px) or `rounded-xl` (12px)
 - **Shadows**: `shadow-sm`, `shadow-md`, `shadow-xl`

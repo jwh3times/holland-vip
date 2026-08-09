@@ -117,6 +117,8 @@ if (!mounted) return <PlaceholderButton />; // Match server HTML
 
 ### CSS Variable System
 
+The four accent colors (blue/green/purple/orange) are unified in a single token table, [lib/accent.ts](lib/accent.ts): `ACCENTS` / `type Accent`, `accent: Record<Accent, AccentTokens>` (`text`, `bullet`, `dot`, `ring`, `border`, `cardBg`, `badge`, `iconChip`), and `accentAt(index)` for lists with no inherent accent. Components should name an `Accent` and render it through [`<Badge accent>`](components/ui/badge.tsx) or [`<Card accent>`](components/ui/card.tsx) rather than hand-writing the pill/card class strings below — those two components are the supported way to render an accent-colored badge or card. The CSS classes in this section are what the table's `cardBg`/`badge` tokens resolve to and remain the source of truth for theming; read them directly only for tokens with no dedicated component (`text`, `dot`, `ring`, `bullet`).
+
 **Text Hierarchy:**
 
 - `--heading-text` / `.text-heading` - Main headings
@@ -216,12 +218,14 @@ Apply as Tailwind classes: `<div className="animate-fadeInUp">...</div>`
 - Use `cn()` for conditional classes: `cn("base", condition && "extra")`
 - Render page sections through [`<Section>`](components/ui/section.tsx) — it owns the `py-20` rhythm, the container, the `h2`, and the `.section-surface`/`.section-surface-contrast` alternation; a section takes `{ surface }: SectionSurfaceProps` and forwards it rather than picking its own surface
 - Add theme transitions: `transition-colors duration-300`
+- Name an `Accent` from [lib/accent.ts](lib/accent.ts) and render accent-colored badges/cards through [`<Badge accent>`](components/ui/badge.tsx) / [`<Card accent>`](components/ui/card.tsx)
 
 **DON'T:**
 
 - Don't use inline hex/rgb colors - all colors are CSS variables
 - Don't concatenate className strings - use `cn()` helper
 - Don't use `suppressHydrationWarning` except on `<html>` tag in layout
+- Don't hand-write accent pill/card class strings (e.g. `bg-blue-100 dark:bg-blue-900/40 …`) — read them from the `accent` table via `<Badge>`/`<Card>` instead
 
 ### Content Structure
 

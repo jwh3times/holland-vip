@@ -1,12 +1,14 @@
 import Image from "next/image";
 
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { Section, type SectionSurfaceProps } from "@/components/ui/section";
 
 export function EducationSection({ surface }: SectionSurfaceProps) {
   return (
     <Section id="education" title="Education" surface={surface}>
       <div className="max-w-4xl mx-auto">
-        <div className="rounded-2xl p-8 card-bg-white border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+        <Card padding="lg" interactive>
           <div className="flex items-start gap-6">
             {/* University Logo/Icon */}
             <div className="flex-shrink-0">
@@ -52,20 +54,14 @@ export function EducationSection({ surface }: SectionSurfaceProps) {
               {/* Highlights */}
               <div className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700">
                 <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-badge-blue rounded-full text-xs font-semibold">
-                    Embedded Systems
-                  </span>
-                  <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/40 text-badge-purple rounded-full text-xs font-semibold">
-                    Software Development
-                  </span>
-                  <span className="px-3 py-1 bg-green-100 dark:bg-green-900/40 text-badge-green rounded-full text-xs font-semibold">
-                    Led Senior Design Project
-                  </span>
+                  <Badge accent="blue">Embedded Systems</Badge>
+                  <Badge accent="purple">Software Development</Badge>
+                  <Badge accent="green">Led Senior Design Project</Badge>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
     </Section>
   );
