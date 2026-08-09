@@ -270,7 +270,10 @@ Do:
 
 - Use semantic utilities such as `text-heading`, `text-label`, `text-muted`, and
   `card-bg-blue`.
-- Use `.section-surface` and `.section-surface-contrast` to alternate sections.
+- Render page sections through `<Section>` (`components/ui/section.tsx`). It owns
+  the vertical rhythm, the container, the `h2`, and the `.section-surface` /
+  `.section-surface-contrast` alternation. A section takes a `{ surface }:
+SectionSurfaceProps` prop and forwards it — it never decides its own surface.
 - Use theme transitions where color changes across light and dark modes.
 
 Do not:
@@ -298,19 +301,24 @@ Sections render in this order:
 10. Contact (`ContactSection`)
 
 Section components live in `components/sections/` and are re-exported from the
-section index barrel.
+section index barrel. Every section except Hero renders through the shared
+`<Section>` shell. `app/page.tsx` builds an ordered `bodySections` list (key +
+render function) and derives each section's surface from its position with
+`surfaceAt(index)` — a section never picks `.section-surface` vs
+`.section-surface-contrast` for itself. `OpenSourceSection`'s empty-repos check
+runs in `app/page.tsx` before that list is built, so a section that doesn't
+render can't shift the alternation for the sections after it.
 
-Navigation anchor IDs must match links in `components/Navigation.tsx`:
-
-- `#about`
-- `#skills`
-- `#experience`
-- `#projects`
-- `#open-source`
-- `#contact`
-
-When adding a navigable section, update the `navLinks` array in
-`components/Navigation.tsx`.
+Anchor ids are typed in `components/ui/section.tsx`: `SECTION_IDS` is every
+anchorable id (`about`, `skills`, `experience`, `projects`, `open-source`,
+`education`, `contact`), and `NAV_SECTION_IDS` is the subset reachable from the
+nav — `education` is intentionally anchorable but not navigable, so it is in
+`SECTION_IDS` but not `NAV_SECTION_IDS`. `components/Navigation.tsx` derives its
+links by mapping `NAV_SECTION_IDS` through a `navLabels: Record<NavSectionId,
+string>`, so a label for an id that doesn't exist (or a missing label) fails to
+compile. To add a navigable section: add the id to `SECTION_IDS` (and
+`NAV_SECTION_IDS` if it should appear in the nav), then add its label to
+`navLabels`.
 
 Site metadata lives in the `Metadata` export in `app/layout.tsx`.
 
