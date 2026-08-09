@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 function SkillBadge({ skill }: { skill: string }) {
   return (
     <div className="rounded-xl p-4 text-center shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl card-bg-white-transparent ring-1 ring-inset ring-gray-200/70 dark:ring-blue-500/40">
-      <p className="text-sm font-semibold text-badge">{skill}</p>
+      <p className="text-sm font-semibold text-heading">{skill}</p>
     </div>
   );
 }

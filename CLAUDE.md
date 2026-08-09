@@ -143,6 +143,8 @@ The four accent colors (blue/green/purple/orange) are unified in a single token 
 - `--card-orange` / `.card-bg-orange` - Orange tinted cards
 - `--card-white` / `.card-bg-white` - White/dark cards
 - `--card-white-transparent` / `.card-bg-white-transparent` - Semi-transparent cards
+- `--card-white-80` / `.card-bg-white-80` - 80%-opacity cards (the experience timeline)
+- `--bento-gradient` / `.bento-card-bg` - Gradient fill for bento grid cards
 
 **Section Backgrounds:**
 

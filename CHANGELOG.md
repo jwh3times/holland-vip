@@ -12,6 +12,40 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.27] - 2026-08-09
+
+Wave 3 of the architecture review tracked in [#93](https://github.com/jwh3times/holland-vip/issues/93),
+part three and the last of the wave: the `globals.css` interface
+([#90](https://github.com/jwh3times/holland-vip/issues/90)).
+
+### Added
+
+- `tests/unit/globals-css.test.ts` — a guard on the `globals.css` interface. It fails the build on
+  a utility class with no caller, an `@keyframes` block no animation references, a CSS variable
+  nothing reads, a class undocumented in `CLAUDE.md` or `AGENTS.md`, or two text tokens with
+  identical values in both themes. This replaces the by-hand audit that found the original dead
+  classes.
+
+### Removed
+
+- `.text-badge` / `--badge-text` and `.text-subheading` / `--subheading-text`. Both were
+  byte-identical to `--heading-text` in light and dark, so they were exact aliases of
+  `.text-heading` and offered callers three names for one colour. Their two call sites now use
+  `.text-heading` directly — no visual change.
+
+### Changed
+
+- `CLAUDE.md` and `AGENTS.md` now document `.bento-card-bg` and `.card-bg-white-80`, the last two
+  utility classes missing from the files agents are told to read.
+
+### Notes
+
+- The remaining single-caller classes stay. `card-bg-*` and `text-badge-*` have one reference each
+  because that reference is `lib/accent.ts`, and `section-surface` / `section-surface-contrast`
+  because theirs is `components/ui/section.tsx` — one consumer because the consumer is the seam.
+  `hero-section`, `glass`, `gradient-text-blue`, and `bento-card-bg` express theme-aware gradients,
+  `backdrop-filter`, and `background-clip: text`, which utility classes can't replace.
+
 ## [1.1.26] - 2026-08-09
 
 Wave 3 of the architecture review tracked in [#93](https://github.com/jwh3times/holland-vip/issues/93),

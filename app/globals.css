@@ -26,8 +26,6 @@
       rgba(255, 255, 255, 0.9)
     );
     --heading-text: 222 47% 11%;
-    --badge-text: 222 47% 11%; /* Dark text for badges/pills in light mode */
-    --subheading-text: 222 47% 11%; /* Dark text for subtitles/subheadings in light mode */
     --body-text: 75 85% 6%; /* Body text - dark gray-600 equivalent */
     --label-text: 222 47% 11%; /* Labels/semibold text - dark gray-700 equivalent */
     --muted-text: 218 11% 40%; /* Muted/secondary text - darkened for WCAG AA on light surfaces */
@@ -58,8 +56,6 @@
       rgba(2, 6, 24, 0.7)
     );
     --heading-text: 210 40% 98%;
-    --badge-text: 210 40% 98%; /* Light text for badges/pills in dark mode */
-    --subheading-text: 210 40% 98%; /* Light text for subtitles/subheadings in dark mode */
     --body-text: 218 11% 65%; /* Body text - light gray-400 equivalent */
     --label-text: 215 20% 65%; /* Labels/semibold text - light gray-300 equivalent */
     --muted-text: 218 11% 65%; /* Muted/secondary text - gray-400 equivalent */
@@ -94,14 +90,6 @@
 @layer utilities {
   .text-heading {
     color: hsl(var(--heading-text));
-  }
-
-  .text-badge {
-    color: hsl(var(--badge-text));
-  }
-
-  .text-subheading {
-    color: hsl(var(--subheading-text));
   }
 
   .text-body {

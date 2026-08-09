@@ -14,7 +14,7 @@ export function HeroSection() {
           <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fadeInUp text-heading">
             {hero.greeting} <span className="gradient-text">{hero.name}</span>
           </h1>
-          <p className="text-2xl md:text-3xl text-subheading mb-6 animate-fadeInUp font-semibold">
+          <p className="text-2xl md:text-3xl text-heading mb-6 animate-fadeInUp font-semibold">
             {hero.tagline}
           </p>
           <p className="text-lg md:text-xl text-muted max-w-3xl mx-auto mb-10 animate-fadeInUp leading-relaxed">
