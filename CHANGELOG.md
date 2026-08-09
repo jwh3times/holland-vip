@@ -12,6 +12,46 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.29] - 2026-08-09
+
+Closes [#92](https://github.com/jwh3times/holland-vip/issues/92), the last finding from the
+architecture review tracked in [#93](https://github.com/jwh3times/holland-vip/issues/93).
+
+### Changed
+
+- **The unit-coverage gate now measures code where coverage means something, at 95% instead of 80%.**
+  A component whose body is a single JSX expression is one statement to V8, so it reported 100% the
+  moment anything rendered it — `components/ui/section.tsx` scored 4/4 over 118 physical lines.
+  Across the old scope V8 instrumented 180 lines of 2,023 physical (9%), so the headline percentage
+  described almost nothing while reading as a guarantee. `components/sections/**` and the pure-JSX
+  shells (`section`, `card`, `badge`, `bento-grid`) are now excluded, and all four thresholds are
+  95% over the remaining 19 files.
+- The excluded modules are not untested. Their behaviour is asserted through the seams added
+  earlier in the review — surface alternation and the anchor registry in `section.test.tsx`,
+  rendered copy in `sections.test.tsx`, accents in `accent.test.tsx`.
+
+### Added
+
+- Tests for the five branches that were uncovered in the narrowed scope, each asserting what the
+  branch is for rather than merely executing it:
+  - `app/page.tsx` — the empty-repos path drops the Open Source section, and the sections that
+    remain still alternate surfaces. This is the mechanism that stops a missing section re-phasing
+    the ones below it.
+  - `components/mode-toggle.tsx` — the SSR placeholder, reachable only through `renderToString`.
+    Asserts it is inert and announces no theme-dependent label before hydration.
+  - `lib/github.ts` and `lib/github-contributions.ts` — the documented degrade-to-empty arms for a
+    corrupt committed snapshot.
+  - `lib/github-contributions.ts` — an unrecognised `contributionLevel` renders as level 0 rather
+    than `undefined`, which would break the heatmap's class lookup.
+- `@types/react-dom` as a devDependency, needed for `react-dom/server` in the SSR test.
+
+### Notes
+
+- The narrowed scope sits at 100% on all four metrics, five points above the gate. The gate was
+  verified to bite: removing three `lib` test files drops branches to 61% and fails with exit 1 on
+  all four metrics. That same regression would have passed the old 80% gate on statements (81.6%)
+  and lines (84.6%).
+
 ## [1.1.28] - 2026-08-09
 
 The two independent items from [#92](https://github.com/jwh3times/holland-vip/issues/92) — the ones
