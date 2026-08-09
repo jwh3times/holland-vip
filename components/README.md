@@ -8,7 +8,7 @@ Reusable React components for the Holland.VIP portfolio website.
 components/
 ├── ui/                       # UI primitives and building blocks
 │   ├── bento-grid.tsx       # Feature showcase grid component
-│   └── button.tsx           # Reusable button component
+│   └── cta.tsx              # The site's call-to-action module
 ├── sections/                 # Page section components
 │   ├── HeroSection.tsx      # Hero/intro section
 │   ├── AboutSection.tsx     # About me section
@@ -59,32 +59,33 @@ Interactive grid layout for showcasing featured projects and capabilities.
 </BentoGrid>
 ```
 
-#### `button.tsx`
+#### `cta.tsx`
 
-Flexible button component built on Radix UI with multiple variants.
+The site's call-to-action module. Every CTA on the site goes through it.
 
-**Variants:**
+**Variants:** `primary` (filled blue gradient, default) · `secondary` (outlined)
 
-- `default` - Primary blue button
-- `destructive` - Red/danger button
-- `outline` - Border with transparent background
-- `secondary` - Muted gray button
-- `ghost` - Minimal styling, hover effects only
-- `link` - Text link with underline-on-hover
+**Sizes:** `md` (px-8 py-3, default) · `lg` (px-10 py-4)
 
-**Sizes:**
+**The rendered element is derived from the props, not chosen by the caller:**
 
-- `sm` - Small (32px height)
-- `default` - Medium (40px height)
-- `lg` - Large (44px height)
-- `icon` - Square icon button
+| Props               | Renders                                   |
+| ------------------- | ----------------------------------------- |
+| no `href`           | `<button type="button">` (pass `onClick`) |
+| `href` starting `/` | `next/link` `<Link>`                      |
+| any other `href`    | `<a>` (hash anchors, `mailto:`, external) |
+
+External `http(s)` hrefs additionally get `target="_blank"` and
+`rel="noopener noreferrer"`. Focus-visible rings, hover scale, and dark-mode
+colours are handled internally and are not configurable. `className` is merged
+last via `cn()`, so callers can add layout classes without forking the variant.
 
 **Usage:**
 
 ```tsx
-<Button variant="default" size="lg">
-  Click Me
-</Button>
+<Cta href="#projects" size="lg">View My Work</Cta>
+<Cta variant="secondary" href="/">Go Home</Cta>
+<Cta onClick={reset}>Try Again</Cta>
 ```
 
 ### Theme Components
@@ -245,7 +246,5 @@ Components follow consistent patterns:
 
 ## 📦 Dependencies
 
-- **Radix UI** - Accessible component primitives
 - **Lucide React** - Icon library (the site's single icon set)
 - **next-themes** - Theme management
-- **class-variance-authority** - Variant styling utility

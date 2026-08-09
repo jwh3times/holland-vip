@@ -1,3 +1,4 @@
+import { Cta } from "@/components/ui/cta";
 import { siteConfig } from "@/lib/site-config";
 
 export function ContactSection() {
@@ -9,12 +10,7 @@ export function ContactSection() {
           I&apos;m always open to discussing new opportunities, projects, or just having a chat
           about technology.
         </p>
-        <a
-          href={`mailto:${siteConfig.email}`}
-          className="inline-block bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
-        >
-          Send Me an Email
-        </a>
+        <Cta href={`mailto:${siteConfig.email}`}>Send Me an Email</Cta>
       </div>
     </section>
   );

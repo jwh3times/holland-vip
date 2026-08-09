@@ -4,11 +4,16 @@ import * as React from "react";
 import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 // Hydration-safe mount detection without setState-in-effect: returns the
 // server snapshot (false) during SSR + initial hydration, then true on the client.
 const emptySubscribe = () => () => {};
+
+// Shared by the placeholder and the mounted toggle so both render identical
+// server/client markup apart from the icon and the interactive affordances.
+const toggleBase =
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 relative h-10 w-10";
 
 export function ModeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -20,26 +25,21 @@ export function ModeToggle() {
 
   if (!mounted) {
     return (
-      <Button
-        variant="ghost"
-        size="icon"
-        className="relative h-10 w-10"
-        disabled
-        tabIndex={-1}
-        aria-hidden
-      >
+      <button type="button" className={toggleBase} disabled tabIndex={-1} aria-hidden>
         <Sun className="h-5 w-5" />
-      </Button>
+      </button>
     );
   }
 
   const isDark = resolvedTheme === "dark";
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="relative h-10 w-10 rounded-full border border-transparent hover:border-blue-500/40 hover:bg-blue-500/10 dark:hover:bg-blue-500/10"
+    <button
+      type="button"
+      className={cn(
+        toggleBase,
+        "rounded-full border border-transparent hover:border-blue-500/40 hover:bg-blue-500/10 dark:hover:bg-blue-500/10"
+      )}
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={isDark ? "Activate light mode" : "Activate dark mode"}
     >
@@ -48,6 +48,6 @@ export function ModeToggle() {
       ) : (
         <Moon className="h-5 w-5 text-slate-600 transition-transform duration-200" />
       )}
-    </Button>
+    </button>
   );
 }
