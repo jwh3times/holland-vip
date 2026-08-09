@@ -20,8 +20,46 @@ export interface ContributionCalendar {
   weeks: ContributionDay[][];
 }
 
-/** Committed snapshot used when the live GraphQL fetch is unavailable (no/invalid token, offline). */
-const fallbackCalendar = fallbackData as ContributionCalendar;
+/**
+ * Validates a committed snapshot against {@link ContributionCalendar}.
+ *
+ * Replaces an unchecked `as ContributionCalendar` cast over a ~2,000-line JSON
+ * file. Exported so a test can assert the committed file still parses; see
+ * `tests/unit/github-fallback.test.ts`.
+ *
+ * Returns `null` rather than throwing: this feeds the degradation path, which
+ * must never break the build.
+ */
+export function parseCalendar(data: unknown): ContributionCalendar | null {
+  if (typeof data !== "object" || data === null) return null;
+  const candidate = data as ContributionCalendar;
+  if (typeof candidate.totalContributions !== "number") return null;
+  if (!Array.isArray(candidate.weeks)) return null;
+
+  const daysValid = candidate.weeks.every(
+    (week) =>
+      Array.isArray(week) &&
+      week.every(
+        (day: unknown) =>
+          typeof day === "object" &&
+          day !== null &&
+          typeof (day as ContributionDay).date === "string" &&
+          typeof (day as ContributionDay).count === "number" &&
+          [0, 1, 2, 3, 4].includes((day as ContributionDay).level)
+      )
+  );
+  return daysValid ? candidate : null;
+}
+
+/**
+ * Committed snapshot used when the live GraphQL fetch is unavailable (no/invalid
+ * token, offline). A malformed snapshot degrades to an empty calendar rather
+ * than rendering garbage — `OpenSourceSection` omits the heatmap when it's absent.
+ */
+const fallbackCalendar: ContributionCalendar = parseCalendar(fallbackData) ?? {
+  totalContributions: 0,
+  weeks: [],
+};
 
 // The query and level mapping are shared with `scripts/seed-contributions.mjs`,
 // which runs under bare node and so cannot import this module. See that file's

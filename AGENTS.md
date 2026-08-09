@@ -68,6 +68,10 @@ Local Playwright runs cover five projects: Desktop Chrome, Firefox, Safari,
 Mobile Chrome, and Mobile Safari. CI runs only the Chromium-engine projects:
 `chromium` and `Mobile Chrome`.
 
+Select elements by role, test id (`data-testid`), or ARIA attribute, not by
+Tailwind utility classes — a class-name selector still matches once the class
+list is reordered or renamed even if the styling it implies no longer holds.
+
 ### Previewing Build Output
 
 After `npm run build`, preview the static export with:
@@ -404,8 +408,11 @@ query and contribution-level map live in `lib/github-contributions-query.mjs`
 `node` with no build step, can import it too.
 
 These calls never throw during builds. They degrade to the committed fallback
-JSON in `lib/`, not to empty data. The weekly refresh workflow triggers a
-rebuild so this static data stays current.
+JSON in `lib/`, validated by `parseRepos()` (`lib/github.ts`) and
+`parseCalendar()` (`lib/github-contributions.ts`) rather than cast — a
+malformed snapshot degrades further, to an empty list/calendar, instead of
+throwing or rendering garbage. The weekly refresh workflow triggers a rebuild
+so this static data stays current.
 
 ## Important Constraints
 

@@ -12,6 +12,36 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.28] - 2026-08-09
+
+The two independent items from [#92](https://github.com/jwh3times/holland-vip/issues/92) — the ones
+that needed no decision about the coverage threshold.
+
+### Added
+
+- `parseRepos()` in `lib/github.ts` and `parseCalendar()` in `lib/github-contributions.ts`, replacing
+  unchecked `as` casts over the two committed fallback snapshots. Both return `null` rather than
+  throwing, so the degradation path still can't break the build; a malformed snapshot now degrades
+  to empty rather than rendering garbage.
+- `tests/unit/github-fallback.test.ts` — 10 cases asserting the committed snapshots parse, cover
+  every entry in `FEATURED_REPO_SLUGS`, and hold ascending ISO dates across 50–54 weeks.
+- `aria-controls` on the mobile menu toggle, and `id="mobile-menu"` on the panel it opens.
+
+### Changed
+
+- The e2e specs no longer select on Tailwind utility classes. `mobile-navigation.spec.ts` targets
+  `data-testid="desktop-nav"` and `#mobile-menu` instead of `.hidden.md:flex` and
+  `.md:hidden` + `.last()`, and asserts `aria-expanded` flips. `accessibility.spec.ts` asserts the
+  skip link's measured geometry — collapsed to ≤2px, larger and visible on focus — instead of
+  matching class names, and adds a check that it is the first tabbable element.
+
+### Fixed
+
+- The skip-link assertions were vacuous. `toHaveClass(/sr-only/)` matches the substring inside
+  `focus:not-sr-only`, so it passed even when `sr-only` was absent and the link was never hidden.
+  Confirmed by removing `sr-only` from `app/layout.tsx`: the new geometry assertion fails, the old
+  one did not.
+
 ## [1.1.27] - 2026-08-09
 
 Wave 3 of the architecture review tracked in [#93](https://github.com/jwh3times/holland-vip/issues/93),

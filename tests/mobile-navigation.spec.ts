@@ -13,22 +13,28 @@ test.describe("Mobile Navigation", () => {
   });
 
   test("should hide desktop nav links on mobile", async ({ page }) => {
-    // Desktop nav should be hidden
-    const desktopNav = page.locator("nav .hidden.md\\:flex");
-    await expect(desktopNav).toBeHidden();
+    // Selected by test id, not by the Tailwind classes that happen to hide it —
+    // reordering `hidden md:flex` must not change what this test targets.
+    await expect(page.getByTestId("desktop-nav")).toBeHidden();
   });
 
   test("should open mobile menu when hamburger is clicked", async ({ page }) => {
     const menuButton = page.locator('button[aria-label="Open menu"]');
+    await expect(menuButton).toHaveAttribute("aria-expanded", "false");
+    await expect(page.locator("#mobile-menu")).toHaveCount(0);
+
     await menuButton.click();
 
-    // Mobile menu should now be visible
-    const mobileMenu = page.locator("nav .md\\:hidden").last();
+    // The panel the button says it controls is the one that opens.
+    const mobileMenu = page.locator("#mobile-menu");
     await expect(mobileMenu).toBeVisible();
+    await expect(mobileMenu).toHaveCount(1);
 
-    // Close button should now be visible
+    // Close button should now be visible, and report the panel as expanded.
     const closeButton = page.locator('button[aria-label="Close menu"]');
     await expect(closeButton).toBeVisible();
+    await expect(closeButton).toHaveAttribute("aria-expanded", "true");
+    await expect(closeButton).toHaveAttribute("aria-controls", "mobile-menu");
   });
 
   test("should close mobile menu when a link is clicked", async ({ page }) => {
