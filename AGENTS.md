@@ -213,6 +213,8 @@ Card backgrounds:
 - `--card-orange` / `.card-bg-orange`
 - `--card-white` / `.card-bg-white`
 - `--card-white-transparent` / `.card-bg-white-transparent`
+- `--card-white-80` / `.card-bg-white-80`
+- `--bento-gradient` / `.bento-card-bg`
 
 Section backgrounds:
 
