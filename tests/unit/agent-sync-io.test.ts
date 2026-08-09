@@ -105,4 +105,37 @@ describe("syncAll", () => {
     writeFileSync(copied, "tampered\n");
     expect(syncAll({ paths, check: true }).changed).toContain(copied);
   });
+
+  it("copies a binary asset byte-for-byte and stays in sync across runs", () => {
+    const paths = makeFixture();
+    // Bytes that are not valid UTF-8, plus a lone CR and a CRLF pair — a
+    // round-trip through any text/line-ending normalization would corrupt them.
+    const binary = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0xff, 0xfe, 0x0d]);
+    mkdirSync(join(paths.skillSources, "demo", "assets"), { recursive: true });
+    writeFileSync(join(paths.skillSources, "demo", "assets", "logo.png"), binary);
+
+    syncAll({ paths });
+    const copied = join(paths.claudeSkills, "demo", "assets", "logo.png");
+    expect(readFileSync(copied)).toEqual(binary);
+
+    // The non-text comparison path must not report perpetual drift.
+    expect(syncAll({ paths, check: true }).changed).toEqual([]);
+  });
+
+  it("keeps CRLF in a text source out of the generated SKILL.md", () => {
+    const paths = makeFixture();
+    writeFileSync(
+      join(paths.skillSources, "demo", "SKILL.md"),
+      "---\r\nname: demo\r\ndescription: Demo skill.\r\n---\r\n\r\nDo the thing.\r\n"
+    );
+
+    syncAll({ paths });
+    const generated = readFileSync(join(paths.claudeSkills, "demo", "SKILL.md"), "utf8");
+    expect(generated).not.toContain("\r");
+
+    // And a CRLF working-tree copy of the generated file is still "in sync",
+    // so --check doesn't fail on a Windows checkout.
+    writeFileSync(join(paths.claudeSkills, "demo", "SKILL.md"), generated.replace(/\n/g, "\r\n"));
+    expect(syncAll({ paths, check: true }).changed).toEqual([]);
+  });
 });

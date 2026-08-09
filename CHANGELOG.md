@@ -12,6 +12,51 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.23] - 2026-08-09
+
+Wave 1 of the architecture review tracked in [#93](https://github.com/jwh3times/holland-vip/issues/93)
+— four independent findings, none of which touch the section modules.
+
+### Added
+
+- `components/ui/cta.tsx` — the site's call-to-action module. Interface is two variants
+  (`primary`, `secondary`) and two sizes (`md`, `lg`); the implementation derives the rendered
+  element from the props (no `href` → `<button>`, `/…` → `next/link`, anything else → `<a>` with
+  `target`/`rel` for external hosts) and owns focus-visible rings the hand-copied CTAs never had.
+- `lib/github-fetch.ts` — `githubFetch` (auth headers, `force-cache`, non-OK → throw, optional
+  `requireToken`) and `withFallback` (degrade to a committed snapshot, warn once). Both
+  `getFeaturedRepos` and `getContributions` now sit behind it.
+- `lib/github-contributions-query.mjs` — the GraphQL query and contribution-level map, shared with
+  `scripts/seed-contributions.mjs` so a query change can't silently drift the committed snapshot.
+  Plain `.mjs` because that script runs under bare `node` with no build step.
+- Tests: `tests/unit/cta.test.tsx` (11 cases, element derivation and variants),
+  `tests/unit/github-fetch.test.ts` (9 cases asserting the fetch/degrade policy directly), and
+  two `agent-sync` cases covering binary asset copying and CRLF sources.
+
+### Changed
+
+- `getFeaturedRepos` now documents its request count and failure mode: one request per entry in
+  `FEATURED_REPO_SLUGS` via `Promise.all`, so a single failure discards the whole batch.
+  `getContributions` issues one.
+- `scripts/lib/agent-sync.mjs` states in its header that `syncAll` is the entry point and the pure
+  transforms are exported only as test handles.
+
+### Removed
+
+- `components/ui/button.tsx` and its test — 24 declared variant/size combinations over a four-line
+  implementation with one production caller using two of them. The one ghost icon button is
+  inlined into `mode-toggle.tsx`; the five real CTAs now go through `Cta`.
+- `@radix-ui/react-slot` and `class-variance-authority` dependencies, unused once `button.tsx` went.
+- Dead `globals.css` surface: `.text-balance` (Tailwind v4 provides it), `.animate-fadeIn`,
+  `.animate-slideInLeft`, `.animate-slideInRight`, `.animate-scaleIn`, their four `@keyframes`
+  blocks, and the unreferenced `--border` / `--muted-foreground` variables.
+- `bannerLine` and `DEFAULT_PATHS` from the `agent-sync` module's exports — zero callers each.
+
+### Fixed
+
+- `ContactSection`'s CTA rendered in its own flat blue rather than the site's primary style; it now
+  matches the other CTAs.
+
 ## [1.1.22] - 2026-08-08
 
 ### Added

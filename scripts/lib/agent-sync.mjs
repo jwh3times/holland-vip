@@ -14,13 +14,20 @@
 //
 // Output is deterministic (LF line endings, no timestamps) so regeneration
 // never churns and --check is stable across platforms.
+//
+// INTERFACE: `syncAll` is the entry point — it is what scripts/sync-agents.mjs
+// calls and the only export a consumer needs. The pure transforms below
+// (parseFrontmatter, deriveSandboxMode, tomlBasicString, agentMarkdownToToml,
+// injectSkillBanner) are exported only so tests can exercise them directly;
+// they have no callers outside this module and its tests. Treat them as
+// internal — changing their shape is not a breaking change.
 
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync, existsSync } from "node:fs";
 import { join, relative, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /** Repo-relative banner marking a file as generated. */
-export function bannerLine(sourceRelPath, commentPrefix) {
+function bannerLine(sourceRelPath, commentPrefix) {
   return `${commentPrefix} GENERATED — do not edit. Source: ${sourceRelPath}. Regenerate: npm run sync:agents`;
 }
 
@@ -117,7 +124,7 @@ const REPO_ROOT = fileURLToPath(new URL("../..", import.meta.url))
   .replace(/\\/g, "/")
   .replace(/\/$/, "");
 
-export const DEFAULT_PATHS = {
+const DEFAULT_PATHS = {
   repoRoot: REPO_ROOT,
   /** Authored skills — the single source of truth for skill content. */
   skillSources: join(REPO_ROOT, ".agents", "skills"),
