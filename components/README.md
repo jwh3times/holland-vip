@@ -8,7 +8,8 @@ Reusable React components for the Holland.VIP portfolio website.
 components/
 ├── ui/                       # UI primitives and building blocks
 │   ├── bento-grid.tsx       # Feature showcase grid component
-│   └── cta.tsx              # The site's call-to-action module
+│   ├── cta.tsx              # The site's call-to-action module
+│   └── section.tsx          # The page-section shell (rhythm, container, h2, surface)
 ├── sections/                 # Page section components
 │   ├── HeroSection.tsx      # Hero/intro section
 │   ├── AboutSection.tsx     # About me section
@@ -86,6 +87,40 @@ last via `cn()`, so callers can add layout classes without forking the variant.
 <Cta href="#projects" size="lg">View My Work</Cta>
 <Cta variant="secondary" href="/">Go Home</Cta>
 <Cta onClick={reset}>Try Again</Cta>
+```
+
+#### `section.tsx`
+
+The page-section shell. Every body section renders through it.
+
+**Props:** `title` (rendered as the section's `h2`), `children`, `id?`, `subtitle?`,
+`surface?`, `width?` (`"wide"` default | `"narrow"`).
+
+It owns the `py-20` rhythm, the centered container, the `h2`, the typed anchor id,
+and the background surface. Heading margin is `mb-12`, or `mb-4` when a `subtitle`
+follows — sections don't set it.
+
+**A section never chooses its own surface.** `app/page.tsx` holds the ordered
+`bodySections` list and derives each surface from position via `surfaceAt(index)`,
+so adjacent sections can't collide. Sections accept `SectionSurfaceProps` and forward
+it. Sections that shouldn't render are dropped from that list _before_ surfaces are
+assigned, so a missing section can't re-phase the ones below it.
+
+**Anchor ids** are typed: `SECTION_IDS` is every anchorable id, `NAV_SECTION_IDS` the
+subset in the nav. `Navigation` maps a total `Record<NavSectionId, string>` of labels,
+so a nav link pointing at a section that doesn't exist is a type error. `education` is
+anchorable but deliberately not in the nav.
+
+**Usage:**
+
+```tsx
+<Section id="about" title="About Me" surface={surface}>
+  ...
+</Section>
+
+<Section id="contact" title="Get In Touch" surface={surface} width="narrow" subtitle={<>…</>}>
+  ...
+</Section>
 ```
 
 ### Theme Components

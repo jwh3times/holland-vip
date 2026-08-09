@@ -59,4 +59,32 @@ test.describe("Homepage", () => {
     await expect(githubLink).toHaveAttribute("target", "_blank");
     await expect(githubLink).toHaveAttribute("rel", /noopener/);
   });
+
+  // The surface each section renders on is derived from its position in the ordered
+  // list in app/page.tsx. Before that, each section hard-coded its own class and two
+  // adjacent ones (open-source and education) collided with nothing to catch it.
+  test("alternates section surfaces, with no two adjacent sections matching", async ({ page }) => {
+    const backgrounds = await page
+      .locator("main > section:not(.hero-section)")
+      .evaluateAll((sections) => sections.map((s) => getComputedStyle(s).backgroundColor));
+
+    expect(backgrounds.length).toBeGreaterThan(1);
+    for (let i = 0; i < backgrounds.length - 1; i++) {
+      expect(
+        backgrounds[i],
+        `sections ${i} and ${i + 1} share a background (${backgrounds[i]})`
+      ).not.toBe(backgrounds[i + 1]);
+    }
+  });
+
+  test("every nav anchor resolves to a section that exists on the page", async ({ page }) => {
+    const hrefs = await page
+      .locator("nav a[href^='#']")
+      .evaluateAll((links) => Array.from(new Set(links.map((l) => l.getAttribute("href") ?? ""))));
+
+    expect(hrefs.length).toBeGreaterThan(0);
+    for (const href of hrefs) {
+      await expect(page.locator(`section${href}`), `no section for ${href}`).toHaveCount(1);
+    }
+  });
 });

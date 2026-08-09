@@ -12,6 +12,48 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.24] - 2026-08-09
+
+Wave 2 of the architecture review tracked in [#93](https://github.com/jwh3times/holland-vip/issues/93):
+the Section shell ([#85](https://github.com/jwh3times/holland-vip/issues/85)).
+
+### Added
+
+- `components/ui/section.tsx` — the page-section shell every body section renders through. It owns
+  the `py-20` rhythm, the centered container, the `h2`, the typed anchor id, and the background
+  surface. Exports `Section`, `SECTION_IDS` / `NAV_SECTION_IDS` (the anchor registry),
+  `SectionSurface`, `SectionSurfaceProps`, and `surfaceAt`.
+- Playwright coverage for the two contracts that previously had none: no two adjacent sections
+  share a computed background, and every nav anchor resolves to a section that exists.
+- `tests/unit/section.test.tsx` — 13 cases covering the shell, the alternation invariant, and the
+  id registry.
+
+### Changed
+
+- **Sections no longer choose their own background.** `app/page.tsx` holds the ordered
+  `bodySections` list and derives each surface from position via `surfaceAt(index)`. The nine body
+  sections accept `SectionSurfaceProps` and forward it. `HeroSection` is unaffected — it keeps its
+  own background and sits outside the alternation.
+- `OpenSourceSection`'s empty-repos check moved up into `app/page.tsx`, which now drops the section
+  from the ordered list rather than having the section return `null` at render time.
+- `Navigation` builds its links from `NAV_SECTION_IDS` and a total `Record<NavSectionId, string>`
+  of labels instead of a hand-written array of `{ href, label }` literals. A nav link pointing at a
+  section id that doesn't exist is now a type error.
+- Section heading margins collapsed from four values (`mb-4`, `mb-6`, `mb-12`, `mb-16`) to one
+  rule: `mb-12`, or `mb-4` when a subtitle follows. Education, Experience, and Problem-Solving
+  headings tighten slightly; Contact's loosens.
+- `ContactSection`'s intro paragraph now renders as the shell's subtitle: centered and constrained
+  to `max-w-2xl`, at the shared subtitle size rather than `text-lg`.
+
+### Fixed
+
+- **Adjacent sections rendered on the same background.** `OpenSourceSection` and `EducationSection`
+  were both `section-surface`, breaking the alternation the docs describe. Worse, `OpenSourceSection`
+  returning `null` at runtime silently re-phased every section below it. Both are structural now:
+  surfaces are assigned from position after the list is built.
+- `#education` was an anchor nothing linked to and nothing checked. It is still deliberately absent
+  from the nav, but that is now a recorded decision in the id registry rather than an accident.
+
 ## [1.1.23] - 2026-08-09
 
 Wave 1 of the architecture review tracked in [#93](https://github.com/jwh3times/holland-vip/issues/93)

@@ -166,7 +166,8 @@ holland-vip/
 ├── components/              # Reusable React components
 │   ├── ui/                  # UI primitives
 │   │   ├── bento-grid.tsx   # Feature showcase grid
-│   │   └── cta.tsx          # Call-to-action module (button/link/anchor)
+│   │   ├── cta.tsx          # Call-to-action module (button/link/anchor)
+│   │   └── section.tsx      # Section shell (rhythm, container, h2, surface alternation)
 │   ├── sections/            # Page sections
 │   │   ├── HeroSection.tsx  # Hero/intro section
 │   │   ├── AboutSection.tsx # About me section

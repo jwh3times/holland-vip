@@ -51,9 +51,12 @@ describe("OpenSourceSection", () => {
     expect(screen.queryByText(/Lap time/i)).not.toBeInTheDocument();
   });
 
-  it("renders nothing when there are no repos", () => {
-    const { container } = render(<OpenSourceSection repos={[]} />);
-    expect(container).toBeEmptyDOMElement();
+  // Suppressing the empty case is the caller's job, not this module's: app/page.tsx
+  // drops the section from its ordered list so a missing section can't re-phase the
+  // surface alternation below it. See the note on OpenSourceSection.
+  it("takes its surface from the caller rather than choosing one", () => {
+    const { container } = render(<OpenSourceSection repos={repos} surface="contrast" />);
+    expect(container.querySelector("section")).toHaveClass("section-surface-contrast");
   });
 
   it("renders the contribution heatmap only when contributions are provided", () => {

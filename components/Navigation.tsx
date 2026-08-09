@@ -2,16 +2,24 @@
 
 import * as React from "react";
 import { ModeToggle } from "@/components/mode-toggle";
+import { NAV_SECTION_IDS, type NavSectionId } from "@/components/ui/section";
 import { Menu, X } from "lucide-react";
 
-const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "#skills", label: "Skills" },
-  { href: "#experience", label: "Experience" },
-  { href: "#projects", label: "Work" },
-  { href: "#open-source", label: "Open Source" },
-  { href: "#contact", label: "Contact" },
-];
+/**
+ * Nav label for each linkable section. Typed as a total `Record` over
+ * `NavSectionId`, so adding a nav section without a label — or labelling a
+ * section id that doesn't exist — is a type error rather than a dead anchor.
+ */
+const navLabels: Record<NavSectionId, string> = {
+  about: "About",
+  skills: "Skills",
+  experience: "Experience",
+  projects: "Work",
+  "open-source": "Open Source",
+  contact: "Contact",
+};
+
+const navLinks = NAV_SECTION_IDS.map((id) => ({ href: `#${id}`, label: navLabels[id] }));
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
