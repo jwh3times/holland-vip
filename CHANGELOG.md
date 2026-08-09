@@ -12,6 +12,40 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.26] - 2026-08-09
+
+Wave 3 of the architecture review tracked in [#93](https://github.com/jwh3times/holland-vip/issues/93),
+part two: the content seam ([#86](https://github.com/jwh3times/holland-vip/issues/86)).
+
+### Added
+
+- `content/` — ten typed modules holding what the site says, separate from how it looks:
+  `hero`, `about`, `skills`, `capabilities`, `problem-solving`, `experience`, `projects`,
+  `education`, `contact`, and `open-source`. Editing the resume is now a one-file change that
+  doesn't involve opening a component.
+
+### Changed
+
+- Section components no longer own any copy. The nine unshared record shapes they each defined now
+  share one vocabulary, and the four sections that had prose welded into JSX — About's three
+  biography paragraphs, Education's school, degrees and badges, Hero, and Contact — carry it as
+  data.
+- `content/projects.ts` names an icon with a `ProjectIcon` key rather than embedding JSX in a data
+  array; `ProjectsSection` maps the key to a Lucide component, keeping presentation out of content.
+- `ProblemSolving` renders its three per-card rows from `challengeRows` instead of three
+  near-identical JSX blocks.
+- `tests/unit/sections.test.tsx` imports the content modules and asserts against them instead of
+  restating nine of their strings, so a resume edit no longer breaks the test file. The assertions
+  also got stronger: they now cover every career highlight, skill, capability, challenge row, role,
+  project, degree, and education badge rather than one sample of each.
+- Docs corrected while updating them: the contact email is read from `siteConfig.email` in
+  `lib/site-config.ts`, not hardcoded in `app/page.tsx` as `CLAUDE.md` and `README.md` claimed.
+
+### Notes
+
+- This change is text-for-text lossless. The rendered text of `out/index.html` was compared against
+  `main` after normalizing whitespace and is identical.
+
 ## [1.1.25] - 2026-08-09
 
 Wave 3 of the architecture review tracked in [#93](https://github.com/jwh3times/holland-vip/issues/93),

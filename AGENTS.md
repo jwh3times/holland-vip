@@ -269,11 +269,14 @@ When adding a component:
 1. Put reusable primitives in `components/ui/`.
 2. Put page sections in `components/sections/`.
 3. Export new sections from `components/sections/index.ts`.
-4. Add `"use client"` only when client-side interactivity is required.
-5. Use `cn()` for class composition.
-6. Use semantic color utilities backed by CSS variables.
-7. Add `transition-colors duration-300` where theme color changes should animate.
-8. Add focused tests when behavior, rendering, or accessibility changes.
+4. If the section has copy (headings, body text, list items, labels), add a typed module under
+   `content/` and import from it rather than writing prose in the component. See "Content
+   Structure" below.
+5. Add `"use client"` only when client-side interactivity is required.
+6. Use `cn()` for class composition.
+7. Use semantic color utilities backed by CSS variables.
+8. Add `transition-colors duration-300` where theme color changes should animate.
+9. Add focused tests when behavior, rendering, or accessibility changes.
 
 ### Styling
 
@@ -302,6 +305,36 @@ Do not:
 ## Content Structure
 
 This is a single-page application. Main page composition lives in `app/page.tsx`.
+
+Site copy lives in `content/`, not in the section components. Ten typed modules hold what the
+site says; section components import from them and render — they own no prose. The `@/*` alias
+covers `content/`, so imports read `import { hero } from "@/content/hero"`.
+
+- `content/hero.ts` — `hero` (greeting, name, tagline, blurb, `ctas`) for `HeroSection`.
+- `content/about.ts` — `bio`, `careerHighlights`, `technicalAchievements`, `exploringTags`, plus
+  their headings, for `AboutSection`.
+- `content/skills.ts` — `skillCategories` for `SkillsSection`.
+- `content/capabilities.ts` — `capabilities` for `TechnicalCapabilities`.
+- `content/problem-solving.ts` — `challenges` and `challengeRows` (the Challenge/Solution/Impact
+  row labels, icon, and `bgColor`) for `ProblemSolving`.
+- `content/experience.ts` — `experiences` for `ExperienceSection`.
+- `content/projects.ts` — `projects`, `ProjectIcon`, `projectsSubtitle`, `confidentialLabel` for
+  `ProjectsSection`.
+- `content/education.ts` — `education` for `EducationSection`.
+- `content/contact.ts` — `contact` (subtitle, ctaLabel) for `ContactSection`; the email address
+  itself stays in `lib/site-config.ts`.
+- `content/open-source.ts` — `openSource` (subtitle) for `OpenSourceSection`; the repo list is
+  still fetched at build time by `lib/github.ts`.
+
+`ProjectsSection` is the one place a content record still needs a presentation-side lookup:
+content names an icon with a `ProjectIcon` key (`"clipboard" | "file" | "signature" |
+"columns"`), and the section maps that key to a Lucide component, so no JSX lives in a content
+array. Grid span is `"one" | "two"`, mapped to `md:col-span-*`. Accent keys (`Accent` from
+`lib/accent.ts`) are unchanged from before this split — content records carry `accent: Accent`
+directly.
+
+A resume edit (new role, new bullet, new badge) is a one-file change in `content/` and never
+touches a section component.
 
 Sections render in this order:
 
@@ -338,10 +371,12 @@ compile. To add a navigable section: add the id to `SECTION_IDS` (and
 
 Site metadata lives in the `Metadata` export in `app/layout.tsx`.
 
-The contact email `jerry@holland.vip` is hardcoded in `app/page.tsx` and covered
-by Playwright tests.
+The contact email `jerry@holland.vip` lives in `siteConfig.email` in
+`lib/site-config.ts` (used by `HeroSection`/`Footer` for socials and by
+`ContactSection`'s `mailto:` link) and is covered by Playwright tests.
 
-Social links are in `components/sections/HeroSection.tsx` and the footer:
+Social links are defined in `socialLinks` in `lib/site-config.ts` and rendered by
+`components/sections/HeroSection.tsx` and the footer:
 
 - GitHub: `https://github.com/jwh3times`
 - LinkedIn: `https://www.linkedin.com/in/jerryhollandiii`

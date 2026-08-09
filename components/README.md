@@ -218,20 +218,22 @@ Site footer with social links and copyright.
 
 ### Section Components (`/sections`)
 
-Modular page sections for the portfolio:
+Modular page sections for the portfolio. Each section owns no prose of its own — copy lives in a
+matching typed module under [`content/`](../content/) at the project root, and the section imports
+and renders it. A resume edit (new role, new bullet, new badge) belongs in `content/`, not here.
 
-| Component                   | Description                                  |
-| --------------------------- | -------------------------------------------- |
-| `HeroSection.tsx`           | Hero intro with name, title, and CTA buttons |
-| `AboutSection.tsx`          | Personal introduction and background         |
-| `SkillsSection.tsx`         | Core skills and technologies                 |
-| `TechnicalCapabilities.tsx` | Technical skills in a grid layout            |
-| `ProblemSolving.tsx`        | Problem-solving approach highlight           |
-| `ExperienceSection.tsx`     | Work experience timeline                     |
-| `ProjectsSection.tsx`       | Projects showcase using BentoGrid            |
-| `OpenSourceSection.tsx`     | Featured GitHub repos + contribution heatmap |
-| `EducationSection.tsx`      | Education and certifications                 |
-| `ContactSection.tsx`        | Contact information and links                |
+| Component                   | Description                                  | Content source                                                                |
+| --------------------------- | -------------------------------------------- | ----------------------------------------------------------------------------- |
+| `HeroSection.tsx`           | Hero intro with name, title, and CTA buttons | `content/hero.ts`                                                             |
+| `AboutSection.tsx`          | Personal introduction and background         | `content/about.ts`                                                            |
+| `SkillsSection.tsx`         | Core skills and technologies                 | `content/skills.ts`                                                           |
+| `TechnicalCapabilities.tsx` | Technical skills in a grid layout            | `content/capabilities.ts`                                                     |
+| `ProblemSolving.tsx`        | Problem-solving approach highlight           | `content/problem-solving.ts`                                                  |
+| `ExperienceSection.tsx`     | Work experience timeline                     | `content/experience.ts`                                                       |
+| `ProjectsSection.tsx`       | Projects showcase using BentoGrid            | `content/projects.ts` (icon-key → Lucide-component map lives in the section)  |
+| `OpenSourceSection.tsx`     | Featured GitHub repos + contribution heatmap | `content/open-source.ts` (repo list fetched at build time by `lib/github.ts`) |
+| `EducationSection.tsx`      | Education and certifications                 | `content/education.ts`                                                        |
+| `ContactSection.tsx`        | Contact information and links                | `content/contact.ts` (email itself in `lib/site-config.ts`)                   |
 
 **Usage:**
 
@@ -286,10 +288,12 @@ When adding new components:
 
 1. **Use TypeScript** - Define proper prop types
 2. **Export interfaces** - Make prop types reusable
-3. **Support theming** - Use CSS variables for colors
-4. **Be accessible** - Follow ARIA best practices
-5. **Stay modular** - Keep components focused and composable
-6. **Document props** - Add JSDoc comments for complex components
+3. **Separate content from presentation** - A section's copy belongs in a typed module under
+   `content/` at the project root, not written inline in the component
+4. **Support theming** - Use CSS variables for colors
+5. **Be accessible** - Follow ARIA best practices
+6. **Stay modular** - Keep components focused and composable
+7. **Document props** - Add JSDoc comments for complex components
 
 ## 📝 Example Component Template
 

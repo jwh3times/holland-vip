@@ -188,6 +188,17 @@ holland-vip/
 │   ├── Footer.tsx           # Site footer
 │   ├── mode-toggle.tsx      # Dark/light mode switcher
 │   └── theme-provider.tsx   # Theme context provider
+├── content/                 # Site copy — what each section says (typed modules, no JSX)
+│   ├── hero.ts              # HeroSection copy
+│   ├── about.ts             # AboutSection copy (bio, highlights, achievements)
+│   ├── skills.ts            # SkillsSection copy
+│   ├── capabilities.ts      # TechnicalCapabilities copy
+│   ├── problem-solving.ts   # ProblemSolving copy
+│   ├── experience.ts        # ExperienceSection copy
+│   ├── projects.ts          # ProjectsSection copy
+│   ├── education.ts         # EducationSection copy
+│   ├── contact.ts           # ContactSection copy (email lives in lib/site-config.ts)
+│   └── open-source.ts       # OpenSourceSection copy (repo list fetched at build time)
 ├── lib/                     # Non-UI modules
 │   ├── accent.ts            # The accent palette: Accent union + token table
 │   ├── github.ts            # Featured repos, resolved at build time
@@ -250,10 +261,13 @@ holland-vip/
 
 ### Content Updates
 
-- **Main content**: Edit `/app/page.tsx`
+- **Site copy**: Edit the typed modules in `/content/` (hero tagline, bio, skills, experience,
+  projects, education, etc.) — section components in `/components/sections/` import from these
+  and render them, they don't hold prose themselves. A resume edit is a one-file change.
+- **Page composition**: Edit `/app/page.tsx` (section order, surface alternation)
 - **Site metadata**: Update `/app/layout.tsx` (title, description, Open Graph)
-- **Contact info**: Update email links in `/app/page.tsx`
-- **Social links**: Update GitHub/LinkedIn URLs in footer
+- **Contact info**: Update `siteConfig.email` in `/lib/site-config.ts`
+- **Social links**: Update GitHub/LinkedIn URLs in `/lib/site-config.ts`
 
 ### Styling
 

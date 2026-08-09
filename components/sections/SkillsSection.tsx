@@ -1,52 +1,7 @@
 import { Section, type SectionSurfaceProps } from "@/components/ui/section";
-import { accent, type Accent } from "@/lib/accent";
+import { skillCategories } from "@/content/skills";
+import { accent } from "@/lib/accent";
 import { cn } from "@/lib/utils";
-
-interface SkillCategory {
-  title: string;
-  accent: Accent;
-  skills: string[];
-}
-
-const skillCategories: SkillCategory[] = [
-  {
-    title: "Languages & Frameworks",
-    accent: "blue",
-    skills: [
-      "Java",
-      "C#",
-      ".NET",
-      "Python",
-      "TypeScript",
-      "JavaScript",
-      "Angular",
-      "Node.js",
-      "React",
-    ],
-  },
-  {
-    title: "Cloud & DevOps",
-    accent: "purple",
-    skills: ["AWS", "Azure", "Kubernetes", "Docker", "Jenkins", "GitLab CI/CD", "Git"],
-  },
-  {
-    title: "Databases & Messaging",
-    accent: "green",
-    skills: ["PostgreSQL", "SQL Server", "Redis", "RabbitMQ", "Geode"],
-  },
-  {
-    title: "Architecture & Design",
-    accent: "orange",
-    skills: [
-      "REST APIs",
-      "Microservices",
-      "Multi-Tenancy",
-      "Distributed Systems",
-      "OAuth/OIDC",
-      "Event-Driven Architecture",
-    ],
-  },
-];
 
 function SkillBadge({ skill }: { skill: string }) {
   return (

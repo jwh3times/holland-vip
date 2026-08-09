@@ -4,6 +4,7 @@ import type { Repo } from "@/lib/github";
 import type { ContributionCalendar } from "@/lib/github-contributions";
 import { ContributionHeatmap } from "@/components/ContributionHeatmap";
 import { Section, type SectionSurfaceProps } from "@/components/ui/section";
+import { openSource } from "@/content/open-source";
 import { accent, accentAt } from "@/lib/accent";
 
 /**
@@ -34,12 +35,7 @@ export function OpenSourceSection({
   contributions?: ContributionCalendar;
 }) {
   return (
-    <Section
-      id="open-source"
-      title="Open Source"
-      surface={surface}
-      subtitle={<>Personal projects I build and maintain in the open — pulled live from GitHub.</>}
-    >
+    <Section id="open-source" title="Open Source" surface={surface} subtitle={openSource.subtitle}>
       <div className="grid gap-6 sm:grid-cols-2 max-w-4xl mx-auto">
         {repos.map((repo, index) => {
           const tokens = accent[accentAt(index)];
