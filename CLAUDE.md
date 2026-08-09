@@ -180,7 +180,7 @@ TypeScript configured with `@/*` alias mapping to project root:
 
 ```typescript
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Cta } from "@/components/ui/cta";
 ```
 
 ### Icon Libraries
@@ -194,10 +194,6 @@ import { Button } from "@/components/ui/button";
 Custom animations defined in [app/globals.css](app/globals.css):
 
 - `animate-fadeInUp` - 0.6s fade + translate up
-- `animate-fadeIn` - 0.8s opacity fade
-- `animate-slideInLeft` - 0.6s slide from left
-- `animate-slideInRight` - 0.6s slide from right
-- `animate-scaleIn` - 0.5s scale + opacity
 
 Apply as Tailwind classes: `<div className="animate-fadeInUp">...</div>`
 
@@ -246,7 +242,7 @@ Sections (in render order):
 
 Each section component lives in [components/sections/](components/sections/) and is re-exported from the index barrel.
 
-**Build-time GitHub data:** `app/page.tsx` fetches `getFeaturedRepos()` ([lib/github.ts](lib/github.ts)) and `getContributions()` ([lib/github-contributions.ts](lib/github-contributions.ts)) at build time for `OpenSourceSection`; the route is pinned `dynamic = "force-static"` so the contributions POST doesn't opt it out of static export. Neither call throws — they degrade to empty data. The weekly [refresh.yml](.github/workflows/refresh.yml) workflow exists to keep this baked-in data fresh (see CI/CD).
+**Build-time GitHub data:** `app/page.tsx` fetches `getFeaturedRepos()` ([lib/github.ts](lib/github.ts)) and `getContributions()` ([lib/github-contributions.ts](lib/github-contributions.ts)) at build time for `OpenSourceSection`; the route is pinned `dynamic = "force-static"` so the contributions POST doesn't opt it out of static export. Both sit on [lib/github-fetch.ts](lib/github-fetch.ts), the shared build-time access policy: `githubFetch()` adds the `holland-vip-build` User-Agent and a bearer `Authorization` header when `GITHUB_TOKEN` is set, uses `cache: "force-cache"`, and throws on a non-OK response; `withFallback()` wraps that call and is what makes `getFeaturedRepos()`/`getContributions()` never throw — any failure is warned once and swallowed in favor of the committed snapshot. The GraphQL query + contribution-level map live in `lib/github-contributions-query.mjs` (plain `.mjs`, not `.ts`) so `scripts/seed-contributions.mjs` — which runs under bare `node` with no build step — can share it. The weekly [refresh.yml](.github/workflows/refresh.yml) workflow exists to keep this baked-in data fresh (see CI/CD).
 
 **Navigation anchor IDs:** Sections use `id` attributes that match the nav links: `#about`, `#skills`, `#experience`, `#projects`, `#open-source`, `#contact`. When adding a new navigable section, add it to the `navLinks` array in [components/Navigation.tsx](components/Navigation.tsx).
 
@@ -283,12 +279,13 @@ const mounted = React.useSyncExternalStore(
   () => true,
   () => false
 );
-if (!mounted)
+if (!mounted) {
   return (
-    <Button variant="ghost" size="icon">
-      ...
-    </Button>
+    <button type="button" className={toggleBase} disabled tabIndex={-1} aria-hidden>
+      <Sun className="h-5 w-5" />
+    </button>
   );
+}
 ```
 
 ### Code Quality

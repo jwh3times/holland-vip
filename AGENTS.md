@@ -219,10 +219,6 @@ Special styling:
 Animations are defined in `app/globals.css` and used as utility classes:
 
 - `animate-fadeInUp`
-- `animate-fadeIn`
-- `animate-slideInLeft`
-- `animate-slideInRight`
-- `animate-scaleIn`
 
 ## Code Patterns
 
@@ -244,7 +240,7 @@ Use the `@/*` TypeScript path alias.
 
 ```tsx
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Cta } from "@/components/ui/cta";
 ```
 
 ### Icons
@@ -336,8 +332,19 @@ Social links are in `components/sections/HeroSection.tsx` and the footer:
 The route is pinned with `dynamic = "force-static"` so the contribution POST does
 not opt the page out of static export.
 
-These calls should not throw during builds. They degrade to empty data. The
-weekly refresh workflow triggers a rebuild so this static data stays current.
+Both functions sit on `lib/github-fetch.ts`, the shared build-time access
+policy: `githubFetch()` adds the `holland-vip-build` User-Agent and a bearer
+`Authorization` header when `GITHUB_TOKEN` is set, uses `cache: "force-cache"`,
+and throws on a non-OK response; `withFallback()` wraps that call, warns once,
+and returns a committed snapshot on any failure — this is what keeps
+`getFeaturedRepos()`/`getContributions()` non-throwing. The shared GraphQL
+query and contribution-level map live in `lib/github-contributions-query.mjs`
+(plain `.mjs`) so `scripts/seed-contributions.mjs`, which runs under bare
+`node` with no build step, can import it too.
+
+These calls never throw during builds. They degrade to the committed fallback
+JSON in `lib/`, not to empty data. The weekly refresh workflow triggers a
+rebuild so this static data stays current.
 
 ## Important Constraints
 

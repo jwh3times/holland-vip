@@ -10,7 +10,8 @@ Professional portfolio website for Jerry Holland showcasing over a decade of sof
 - **Language**: TypeScript 6.0+
 - **Icons**: Lucide React
 - **Theme**: next-themes (dark/light mode support)
-- **UI Components**: Radix UI primitives, class-variance-authority
+- **UI Components**: Custom Tailwind components (no headless-UI or variant-authoring
+  dependency — see `components/ui/`)
 - **Testing**: Vitest + Testing Library (unit) and Playwright (E2E)
 - **CI/CD**: GitHub Actions (lint, format check, unit coverage, E2E, changelog-version guard)
 - **Deployment**: Static Export (SSG) → Cloudflare Pages
@@ -165,7 +166,7 @@ holland-vip/
 ├── components/              # Reusable React components
 │   ├── ui/                  # UI primitives
 │   │   ├── bento-grid.tsx   # Feature showcase grid
-│   │   └── button.tsx       # Button component
+│   │   └── cta.tsx          # Call-to-action module (button/link/anchor)
 │   ├── sections/            # Page sections
 │   │   ├── HeroSection.tsx  # Hero/intro section
 │   │   ├── AboutSection.tsx # About me section

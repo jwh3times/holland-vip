@@ -11,31 +11,12 @@
 import { writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
+// Query and level mapping are shared with lib/github-contributions.ts so the
+// snapshot this writes can't drift out of shape from what the build expects.
+import { CONTRIBUTIONS_QUERY, LEVEL_MAP } from "../lib/github-contributions-query.mjs";
+
 const GITHUB_USER = "jwh3times";
 const OUT = fileURLToPath(new URL("../lib/github-contributions-fallback.json", import.meta.url));
-
-const QUERY = `
-  query ($login: String!) {
-    user(login: $login) {
-      contributionsCollection {
-        contributionCalendar {
-          totalContributions
-          weeks {
-            contributionDays { date contributionCount contributionLevel }
-          }
-        }
-      }
-    }
-  }
-`;
-
-const LEVEL_MAP = {
-  NONE: 0,
-  FIRST_QUARTILE: 1,
-  SECOND_QUARTILE: 2,
-  THIRD_QUARTILE: 3,
-  FOURTH_QUARTILE: 4,
-};
 
 const token = process.env.GITHUB_TOKEN;
 if (!token) {
@@ -50,7 +31,7 @@ const res = await fetch("https://api.github.com/graphql", {
     "Content-Type": "application/json",
     "User-Agent": "holland-vip-seed",
   },
-  body: JSON.stringify({ query: QUERY, variables: { login: GITHUB_USER } }),
+  body: JSON.stringify({ query: CONTRIBUTIONS_QUERY, variables: { login: GITHUB_USER } }),
 });
 
 if (!res.ok) {

@@ -98,9 +98,6 @@ Unit tests live in `tests/unit/` (jsdom; `next/image`/`next/link` stubbed); E2E 
 Custom animations defined in `globals.css`:
 
 - `animate-fadeInUp`: 0.6s fade + translate up
-- `animate-fadeIn`: 0.8s opacity fade
-- `animate-slideInLeft`, `animate-slideInRight`: 0.6s directional slides
-- `animate-scaleIn`: 0.5s scale + opacity
 
 Apply directly as Tailwind classes: `<div className="animate-fadeInUp">...</div>`
 

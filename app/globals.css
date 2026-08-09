@@ -11,8 +11,6 @@
     --background: 0 0% 100%;
     --foreground: 222 47% 11%;
     --muted: 220 14% 96%;
-    --muted-foreground: 215 16% 47%;
-    --border: 214 32% 91%;
     --hero-background: linear-gradient(135deg, #f0f4ff 0%, #ffffff 50%, #ede9fe 100%);
     --card-blue: 214 100% 97%;
     --card-green: 142 76% 96%;
@@ -45,8 +43,6 @@
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
     --muted: 215 28% 17%;
-    --muted-foreground: 217 19% 63%;
-    --border: 215 27% 16%;
     --hero-background: linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e1b4b 100%);
     --card-blue: 215 25% 20%;
     --card-green: 215 25% 20%;
@@ -96,10 +92,6 @@
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
   .text-heading {
     color: hsl(var(--heading-text));
   }
@@ -199,66 +191,8 @@
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 .animate-fadeInUp {
   animation: fadeInUp 0.6s ease-out;
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.8s ease-out;
-}
-
-.animate-slideInLeft {
-  animation: slideInLeft 0.6s ease-out;
-}
-
-.animate-slideInRight {
-  animation: slideInRight 0.6s ease-out;
-}
-
-.animate-scaleIn {
-  animation: scaleIn 0.5s ease-out;
 }
 
 /* Gradient text */

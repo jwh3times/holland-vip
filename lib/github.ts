@@ -1,3 +1,4 @@
+import { githubFetch, withFallback } from "./github-fetch";
 import fallbackData from "./github-fallback.json";
 
 /** GitHub account whose public repos are featured. */
@@ -53,26 +54,16 @@ function toRepo(r: GitHubRepoResponse): Repo {
 }
 
 async function fetchRepo(slug: string): Promise<Repo> {
-  const headers: Record<string, string> = {
-    Accept: "application/vnd.github+json",
-    "User-Agent": "holland-vip-build",
-    "X-GitHub-Api-Version": "2022-11-28",
-  };
-  // Optional build-time token, only to lift the 60 req/hr unauthenticated limit.
-  // Never shipped to the client — this module runs at build (Server Component / SSG).
-  const token = process.env.GITHUB_TOKEN;
-  if (token) headers.Authorization = `Bearer ${token}`;
-
-  const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${slug}`, {
-    headers,
-    // Static export: fetch runs once at build and the result is baked into the
-    // HTML. force-cache keeps the page statically generatable (no dynamic opt-out).
-    cache: "force-cache",
+  // The token is optional here — it only lifts the 60 req/hr unauthenticated
+  // limit. The REST repo API serves public repos anonymously.
+  const json = await githubFetch(`https://api.github.com/repos/${GITHUB_USER}/${slug}`, {
+    label: `GitHub API for ${GITHUB_USER}/${slug}`,
+    headers: {
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
   });
-  if (!res.ok) {
-    throw new Error(`GitHub API responded ${res.status} for ${GITHUB_USER}/${slug}`);
-  }
-  return toRepo((await res.json()) as GitHubRepoResponse);
+  return toRepo(json as GitHubRepoResponse);
 }
 
 /**
@@ -80,13 +71,14 @@ async function fetchRepo(slug: string): Promise<Repo> {
  *
  * Never throws: if any repo fetch fails (offline, rate-limited, 404), it degrades
  * to the committed `github-fallback.json` so `npm run build` always succeeds.
+ *
+ * Note the request count and its failure mode: this issues one request per entry
+ * in `FEATURED_REPO_SLUGS` (currently 4) via `Promise.all`, so a single failing
+ * repo discards the whole batch and the committed snapshot is used for *all* of
+ * them. `getContributions()` issues one request by comparison.
  */
 export async function getFeaturedRepos(): Promise<Repo[]> {
-  try {
-    return await Promise.all(FEATURED_REPO_SLUGS.map(fetchRepo));
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.warn(`[github] live fetch failed, using committed fallback: ${message}`);
-    return fallbackRepos;
-  }
+  return withFallback("live repo fetch", fallbackRepos, () =>
+    Promise.all(FEATURED_REPO_SLUGS.map(fetchRepo))
+  );
 }

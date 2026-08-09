@@ -1,3 +1,4 @@
+import { Cta } from "@/components/ui/cta";
 import { socialLinks, yearsOfExperience } from "@/lib/site-config";
 
 export function HeroSection() {
@@ -35,18 +36,12 @@ export function HeroSection() {
           </div>
 
           <div className="flex flex-wrap gap-4 justify-center animate-fadeInUp">
-            <a
-              href="#projects"
-              className="group relative bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white px-10 py-4 rounded-xl font-semibold transition-all hover:scale-105 shadow-lg hover:shadow-2xl"
-            >
+            <Cta href="#projects" size="lg">
               View My Work
-            </a>
-            <a
-              href="#contact"
-              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white dark:border-blue-500 dark:text-blue-400 dark:hover:bg-blue-500 dark:hover:text-white px-10 py-4 rounded-xl font-semibold transition-all hover:scale-105 shadow-lg"
-            >
+            </Cta>
+            <Cta href="#contact" variant="secondary" size="lg">
               Get in Touch
-            </a>
+            </Cta>
           </div>
         </div>
       </div>

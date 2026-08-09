@@ -12,6 +12,51 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.23] - 2026-08-09
+
+Wave 1 of the architecture review tracked in [#93](https://github.com/jwh3times/holland-vip/issues/93)
+— four independent findings, none of which touch the section modules.
+
+### Added
+
+- `components/ui/cta.tsx` — the site's call-to-action module. Interface is two variants
+  (`primary`, `secondary`) and two sizes (`md`, `lg`); the implementation derives the rendered
+  element from the props (no `href` → `<button>`, `/…` → `next/link`, anything else → `<a>` with
+  `target`/`rel` for external hosts) and owns focus-visible rings the hand-copied CTAs never had.
+- `lib/github-fetch.ts` — `githubFetch` (auth headers, `force-cache`, non-OK → throw, optional
+  `requireToken`) and `withFallback` (degrade to a committed snapshot, warn once). Both
+  `getFeaturedRepos` and `getContributions` now sit behind it.
+- `lib/github-contributions-query.mjs` — the GraphQL query and contribution-level map, shared with
+  `scripts/seed-contributions.mjs` so a query change can't silently drift the committed snapshot.
+  Plain `.mjs` because that script runs under bare `node` with no build step.
+- Tests: `tests/unit/cta.test.tsx` (11 cases, element derivation and variants),
+  `tests/unit/github-fetch.test.ts` (9 cases asserting the fetch/degrade policy directly), and
+  two `agent-sync` cases covering binary asset copying and CRLF sources.
+
+### Changed
+
+- `getFeaturedRepos` now documents its request count and failure mode: one request per entry in
+  `FEATURED_REPO_SLUGS` via `Promise.all`, so a single failure discards the whole batch.
+  `getContributions` issues one.
+- `scripts/lib/agent-sync.mjs` states in its header that `syncAll` is the entry point and the pure
+  transforms are exported only as test handles.
+
+### Removed
+
+- `components/ui/button.tsx` and its test — 24 declared variant/size combinations over a four-line
+  implementation with one production caller using two of them. The one ghost icon button is
+  inlined into `mode-toggle.tsx`; the five real CTAs now go through `Cta`.
+- `@radix-ui/react-slot` and `class-variance-authority` dependencies, unused once `button.tsx` went.
+- Dead `globals.css` surface: `.text-balance` (Tailwind v4 provides it), `.animate-fadeIn`,
+  `.animate-slideInLeft`, `.animate-slideInRight`, `.animate-scaleIn`, their four `@keyframes`
+  blocks, and the unreferenced `--border` / `--muted-foreground` variables.
+- `bannerLine` and `DEFAULT_PATHS` from the `agent-sync` module's exports — zero callers each.
+
+### Fixed
+
+- `ContactSection`'s CTA rendered in its own flat blue rather than the site's primary style; it now
+  matches the other CTAs.
+
 ## [1.1.22] - 2026-08-08
 
 ### Added
@@ -67,6 +112,61 @@ No unreleased changes.
 - Synced `package-lock.json` with the declared `package.json` ranges, which had drifted:
   `next` 16.2.9 → 16.3.0, `eslint` 10.5.0 → 10.8.0, `typescript-eslint` 8.61.1 → 8.65.0,
   `@tailwindcss/postcss` 4.3.1 → 4.3.3, `@vitejs/plugin-react` 6.0.2 → 6.0.5.
+
+## [1.1.19] - 2026-08-07
+
+### Changed
+
+- Dependency bumps: `next` and `@next/eslint-plugin-next` 16.2.12 → 16.3.0,
+  `@testing-library/user-event` 14.6.1 → 14.6.3.
+
+## [1.1.18] - 2026-08-05
+
+### Changed
+
+- Dependency bump (transitive, lockfile only): `fast-uri` 3.1.4 → 3.1.5.
+
+## [1.1.17] - 2026-08-03
+
+### Changed
+
+- Dependency bumps: `@playwright/test` 1.62.0 → 1.62.1, `@types/react` 19.2.17 → 19.2.18,
+  `@vitejs/plugin-react` 6.0.4 → 6.0.5.
+
+## [1.1.16] - 2026-07-30
+
+### Changed
+
+- Dependency bump: `lucide-react` 1.27.0 → 1.28.0.
+
+## [1.1.15] - 2026-07-29
+
+### Changed
+
+- Dependency bumps: `@types/node` 26.1.1 → 26.1.2, `eslint` 10.7.0 → 10.8.0,
+  `globals` 17.7.0 → 17.8.0, `jsdom` 30.0.0 → 30.0.1.
+
+## [1.1.14] - 2026-07-27
+
+### Changed
+
+- Dependency bump (major): `jsdom` 29.1.1 → 30.0.0.
+
+## [1.1.13] - 2026-07-27
+
+### Changed
+
+- Dependency bumps: `next` and `@next/eslint-plugin-next` 16.2.11 → 16.2.12,
+  `@playwright/test` 1.61.1 → 1.62.0, `@radix-ui/react-slot` 1.3.1 → 1.3.3,
+  `lucide-react` 1.26.0 → 1.27.0.
+
+## [1.1.12] - 2026-07-23
+
+### Changed
+
+- Dependency bumps: `@eslint-react/eslint-plugin` 5.13.1 → 5.18.0, `eslint` 10.6.0 → 10.7.0,
+  `typescript-eslint` 8.63.0 → 8.65.0, `lucide-react` 1.25.0 → 1.26.0,
+  `@radix-ui/react-slot` 1.3.0 → 1.3.1.
 
 ## [1.1.11] - 2026-07-23
 
