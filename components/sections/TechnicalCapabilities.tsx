@@ -1,3 +1,4 @@
+import { Section, type SectionSurfaceProps } from "@/components/ui/section";
 import { cn } from "@/lib/utils";
 
 const capabilities = [
@@ -47,35 +48,29 @@ const capabilities = [
   },
 ];
 
-export function TechnicalCapabilities() {
+export function TechnicalCapabilities({ surface }: SectionSurfaceProps) {
   return (
-    <section className="section-surface py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-heading">
-          Technical Capabilities
-        </h2>
-
-        <div className="max-w-6xl mx-auto space-y-8">
-          {capabilities.map((capability) => (
-            <div
-              key={capability.title}
-              className="rounded-2xl p-6 card-bg-white border border-gray-200 dark:border-slate-700 shadow-lg transition-colors duration-300"
-            >
-              <h3 className={cn("text-2xl font-bold mb-4", capability.colorClass)}>
-                {capability.title}
-              </h3>
-              <div className="grid md:grid-cols-2 gap-4">
-                {capability.items.map((item) => (
-                  <div key={item} className="flex items-start">
-                    <span className={cn("mr-2 text-xl", capability.bulletColor)}>•</span>
-                    <span className="text-label">{item}</span>
-                  </div>
-                ))}
-              </div>
+    <Section title="Technical Capabilities" surface={surface}>
+      <div className="max-w-6xl mx-auto space-y-8">
+        {capabilities.map((capability) => (
+          <div
+            key={capability.title}
+            className="rounded-2xl p-6 card-bg-white border border-gray-200 dark:border-slate-700 shadow-lg transition-colors duration-300"
+          >
+            <h3 className={cn("text-2xl font-bold mb-4", capability.colorClass)}>
+              {capability.title}
+            </h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              {capability.items.map((item) => (
+                <div key={item} className="flex items-start">
+                  <span className={cn("mr-2 text-xl", capability.bulletColor)}>•</span>
+                  <span className="text-label">{item}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }

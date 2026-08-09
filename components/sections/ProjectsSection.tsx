@@ -1,4 +1,5 @@
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
+import { Section, type SectionSurfaceProps } from "@/components/ui/section";
 import { ClipboardCopy, FileX, Signature, Columns3, Lock } from "lucide-react";
 
 const projects = [
@@ -32,35 +33,36 @@ const projects = [
   },
 ];
 
-export function ProjectsSection() {
+export function ProjectsSection({ surface }: SectionSurfaceProps) {
   return (
-    <section id="projects" className="section-surface-contrast py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-heading">
-          Professional Work
-        </h2>
-        <p className="text-center text-muted max-w-2xl mx-auto mb-4">
+    <Section
+      id="projects"
+      title="Professional Work"
+      surface={surface}
+      subtitle={
+        <>
           Selected work from my professional roles — anonymized and generalized to respect client
           and employer confidentiality. For my public, open-source work, see below.
-        </p>
-        <div className="flex justify-center mb-12">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-badge-orange dark:bg-orange-900/40">
-            <Lock className="h-3.5 w-3.5" aria-hidden="true" />
-            Confidential
-          </span>
-        </div>
-        <BentoGrid className="max-w-4xl mx-auto">
-          {projects.map((project) => (
-            <BentoGridItem
-              key={project.title}
-              title={project.title}
-              description={project.description}
-              icon={project.icon}
-              className={project.className}
-            />
-          ))}
-        </BentoGrid>
+        </>
+      }
+    >
+      <div className="flex justify-center mb-12">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-badge-orange dark:bg-orange-900/40">
+          <Lock className="h-3.5 w-3.5" aria-hidden="true" />
+          Confidential
+        </span>
       </div>
-    </section>
+      <BentoGrid className="max-w-4xl mx-auto">
+        {projects.map((project) => (
+          <BentoGridItem
+            key={project.title}
+            title={project.title}
+            description={project.description}
+            icon={project.icon}
+            className={project.className}
+          />
+        ))}
+      </BentoGrid>
+    </Section>
   );
 }

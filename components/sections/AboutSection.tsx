@@ -1,3 +1,4 @@
+import { Section, type SectionSurfaceProps } from "@/components/ui/section";
 import { cn } from "@/lib/utils";
 import { yearsOfExperience } from "@/lib/site-config";
 
@@ -111,109 +112,102 @@ const colorMap = {
   },
 };
 
-export function AboutSection() {
+export function AboutSection({ surface }: SectionSurfaceProps) {
   return (
-    <section id="about" className="section-surface py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-heading">About Me</h2>
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-lg text-muted mb-6 leading-relaxed">
-              I&apos;m a senior software engineer with {yearsOfExperience} years across full-stack
-              development, back-end architecture, and embedded systems. I focus on building
-              scalable, high-performance applications with modern cloud technologies and a
-              microservices approach.
-            </p>
-            <p className="text-lg text-muted mb-6 leading-relaxed">
-              Currently a Senior Software Engineer and Tech Lead at SoftPro, building the new ledger
-              and register experience for the Sky platform — letting closing teams balance the
-              register for a real-estate transaction file. My team is building it as a greenfield
-              microservice on AKS behind a modern Angular front end, integrated with SoftPro&apos;s
-              established Select backend. Alongside the full-stack work, I lead our team&apos;s
-              adoption of AI in the development workflow — building custom agents, maintaining
-              shared Copilot instructions, and authoring reusable prompts — and I partner with
-              product to scope work and shape technical direction.
-            </p>
-            <p className="text-lg text-muted leading-relaxed">
-              Outside of feature work, I focus on performance tuning, system optimization, and
-              mentoring other developers. I lean on test-driven development and Agile practices, and
-              I make a habit of learning continuously.
-            </p>
+    <Section id="about" title="About Me" surface={surface}>
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-12">
+          <p className="text-lg text-muted mb-6 leading-relaxed">
+            I&apos;m a senior software engineer with {yearsOfExperience} years across full-stack
+            development, back-end architecture, and embedded systems. I focus on building scalable,
+            high-performance applications with modern cloud technologies and a microservices
+            approach.
+          </p>
+          <p className="text-lg text-muted mb-6 leading-relaxed">
+            Currently a Senior Software Engineer and Tech Lead at SoftPro, building the new ledger
+            and register experience for the Sky platform — letting closing teams balance the
+            register for a real-estate transaction file. My team is building it as a greenfield
+            microservice on AKS behind a modern Angular front end, integrated with SoftPro&apos;s
+            established Select backend. Alongside the full-stack work, I lead our team&apos;s
+            adoption of AI in the development workflow — building custom agents, maintaining shared
+            Copilot instructions, and authoring reusable prompts — and I partner with product to
+            scope work and shape technical direction.
+          </p>
+          <p className="text-lg text-muted leading-relaxed">
+            Outside of feature work, I focus on performance tuning, system optimization, and
+            mentoring other developers. I lean on test-driven development and Agile practices, and I
+            make a habit of learning continuously.
+          </p>
 
-            {/* Currently exploring */}
-            <div className="mt-10">
-              <p className="text-sm font-semibold text-label mb-3">Currently exploring</p>
-              <div className="flex flex-wrap justify-center gap-2">
-                {exploringTags.map((tag) => (
-                  <span
-                    key={tag.label}
-                    className={cn("px-3 py-1 rounded-full text-xs font-semibold", tag.className)}
-                  >
-                    {tag.label}
-                  </span>
-                ))}
-              </div>
+          {/* Currently exploring */}
+          <div className="mt-10">
+            <p className="text-sm font-semibold text-label mb-3">Currently exploring</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {exploringTags.map((tag) => (
+                <span
+                  key={tag.label}
+                  className={cn("px-3 py-1 rounded-full text-xs font-semibold", tag.className)}
+                >
+                  {tag.label}
+                </span>
+              ))}
             </div>
           </div>
+        </div>
 
-          {/* Career Highlights */}
-          <div className="grid md:grid-cols-2 gap-6 mt-12">
-            {careerHighlights.map((highlight) => {
-              const colors = colorMap[highlight.colorClass];
+        {/* Career Highlights */}
+        <div className="grid md:grid-cols-2 gap-6 mt-12">
+          {careerHighlights.map((highlight) => {
+            const colors = colorMap[highlight.colorClass];
+            return (
+              <div
+                key={highlight.title}
+                className={cn(
+                  "rounded-2xl p-6 border transition-colors duration-300",
+                  colors.border,
+                  colors.bg
+                )}
+              >
+                <div className={cn("text-3xl font-bold mb-2", colors.text)}>{highlight.value}</div>
+                <div className="text-sm font-semibold text-label mb-1">{highlight.title}</div>
+                <div className="text-xs text-muted">{highlight.description}</div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Recent Technical Achievements */}
+        <div className="mt-16">
+          <h3 className="text-2xl font-bold text-center mb-8 text-heading">
+            Recent Technical Achievements
+          </h3>
+          <div className="space-y-6">
+            {technicalAchievements.map((achievement) => {
+              const colors = colorMap[achievement.colorClass];
               return (
                 <div
-                  key={highlight.title}
+                  key={achievement.title}
                   className={cn(
                     "rounded-2xl p-6 border transition-colors duration-300",
                     colors.border,
                     colors.bg
                   )}
                 >
-                  <div className={cn("text-3xl font-bold mb-2", colors.text)}>
-                    {highlight.value}
-                  </div>
-                  <div className="text-sm font-semibold text-label mb-1">{highlight.title}</div>
-                  <div className="text-xs text-muted">{highlight.description}</div>
+                  <h4 className={cn("text-xl font-bold mb-3", colors.text)}>{achievement.title}</h4>
+                  <ul className="space-y-2 text-muted">
+                    {achievement.items.map((item) => (
+                      <li key={item} className="flex items-start">
+                        <span className={cn("mr-2", colors.bullet)}>▸</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               );
             })}
           </div>
-
-          {/* Recent Technical Achievements */}
-          <div className="mt-16">
-            <h3 className="text-2xl font-bold text-center mb-8 text-heading">
-              Recent Technical Achievements
-            </h3>
-            <div className="space-y-6">
-              {technicalAchievements.map((achievement) => {
-                const colors = colorMap[achievement.colorClass];
-                return (
-                  <div
-                    key={achievement.title}
-                    className={cn(
-                      "rounded-2xl p-6 border transition-colors duration-300",
-                      colors.border,
-                      colors.bg
-                    )}
-                  >
-                    <h4 className={cn("text-xl font-bold mb-3", colors.text)}>
-                      {achievement.title}
-                    </h4>
-                    <ul className="space-y-2 text-muted">
-                      {achievement.items.map((item) => (
-                        <li key={item} className="flex items-start">
-                          <span className={cn("mr-2", colors.bullet)}>▸</span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }

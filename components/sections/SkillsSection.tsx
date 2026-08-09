@@ -1,3 +1,4 @@
+import { Section, type SectionSurfaceProps } from "@/components/ui/section";
 import { cn } from "@/lib/utils";
 
 const skillCategories = [
@@ -48,29 +49,23 @@ function SkillBadge({ skill }: { skill: string }) {
   );
 }
 
-export function SkillsSection() {
+export function SkillsSection({ surface }: SectionSurfaceProps) {
   return (
-    <section id="skills" className="section-surface-contrast py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-heading">
-          Skills & Technologies
-        </h2>
-
-        <div className="max-w-6xl mx-auto space-y-12">
-          {skillCategories.map((category) => (
-            <div key={category.title}>
-              <h3 className={cn("text-xl font-semibold mb-4 text-center", category.colorClass)}>
-                {category.title}
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                {category.skills.map((skill) => (
-                  <SkillBadge key={skill} skill={skill} />
-                ))}
-              </div>
+    <Section id="skills" title="Skills & Technologies" surface={surface}>
+      <div className="max-w-6xl mx-auto space-y-12">
+        {skillCategories.map((category) => (
+          <div key={category.title}>
+            <h3 className={cn("text-xl font-semibold mb-4 text-center", category.colorClass)}>
+              {category.title}
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {category.skills.map((skill) => (
+                <SkillBadge key={skill} skill={skill} />
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }

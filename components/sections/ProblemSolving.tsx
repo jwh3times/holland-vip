@@ -1,3 +1,4 @@
+import { Section, type SectionSurfaceProps } from "@/components/ui/section";
 import { cn } from "@/lib/utils";
 
 const challenges = [
@@ -53,44 +54,38 @@ function ChallengeItem({ icon, title, description, bgColor }: ChallengeItemProps
   );
 }
 
-export function ProblemSolving() {
+export function ProblemSolving({ surface }: SectionSurfaceProps) {
   return (
-    <section className="section-surface-contrast py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-heading">
-          Problem-Solving Highlights
-        </h2>
-
-        <div className="max-w-5xl mx-auto space-y-8">
-          {challenges.map((item) => (
-            <div
-              key={item.challenge}
-              className="rounded-2xl p-8 card-bg-white border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-2xl transition-all duration-300"
-            >
-              <div className="space-y-4">
-                <ChallengeItem
-                  icon="⚠️"
-                  title="Challenge"
-                  description={item.challenge}
-                  bgColor="bg-red-100 dark:bg-red-900/30"
-                />
-                <ChallengeItem
-                  icon="💡"
-                  title="Solution"
-                  description={item.solution}
-                  bgColor="bg-blue-100 dark:bg-blue-900/30"
-                />
-                <ChallengeItem
-                  icon="✅"
-                  title="Impact"
-                  description={item.impact}
-                  bgColor="bg-green-100 dark:bg-green-900/30"
-                />
-              </div>
+    <Section title="Problem-Solving Highlights" surface={surface}>
+      <div className="max-w-5xl mx-auto space-y-8">
+        {challenges.map((item) => (
+          <div
+            key={item.challenge}
+            className="rounded-2xl p-8 card-bg-white border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-2xl transition-all duration-300"
+          >
+            <div className="space-y-4">
+              <ChallengeItem
+                icon="⚠️"
+                title="Challenge"
+                description={item.challenge}
+                bgColor="bg-red-100 dark:bg-red-900/30"
+              />
+              <ChallengeItem
+                icon="💡"
+                title="Solution"
+                description={item.solution}
+                bgColor="bg-blue-100 dark:bg-blue-900/30"
+              />
+              <ChallengeItem
+                icon="✅"
+                title="Impact"
+                description={item.impact}
+                bgColor="bg-green-100 dark:bg-green-900/30"
+              />
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }
