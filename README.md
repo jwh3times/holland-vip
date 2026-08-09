@@ -165,7 +165,9 @@ holland-vip/
 │   └── sitemap.ts           # Sitemap route (build-time → out/sitemap.xml)
 ├── components/              # Reusable React components
 │   ├── ui/                  # UI primitives
+│   │   ├── badge.tsx        # Pill badge (accent-aware)
 │   │   ├── bento-grid.tsx   # Feature showcase grid
+│   │   ├── card.tsx         # Card shell (accent-aware)
 │   │   ├── cta.tsx          # Call-to-action module (button/link/anchor)
 │   │   └── section.tsx      # Section shell (rhythm, container, h2, surface alternation)
 │   ├── sections/            # Page sections
@@ -186,7 +188,12 @@ holland-vip/
 │   ├── Footer.tsx           # Site footer
 │   ├── mode-toggle.tsx      # Dark/light mode switcher
 │   └── theme-provider.tsx   # Theme context provider
-├── lib/                     # Utility functions
+├── lib/                     # Non-UI modules
+│   ├── accent.ts            # The accent palette: Accent union + token table
+│   ├── github.ts            # Featured repos, resolved at build time
+│   ├── github-contributions.ts  # Contribution calendar, resolved at build time
+│   ├── github-fetch.ts      # Shared GitHub fetch + degrade-to-snapshot policy
+│   ├── site-config.ts       # Email, social links, years of experience
 │   └── utils.ts             # Helper functions (cn, etc.)
 ├── scripts/                 # Standalone Node scripts (not part of the Next.js build)
 │   ├── next-version.mjs     # Computes the next release version (major.minor.build)
