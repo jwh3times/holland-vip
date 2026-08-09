@@ -40,6 +40,21 @@ afterEach(() => {
 });
 
 describe("toCalendar", () => {
+  // The `?? 0` on the level lookup. GitHub owns the `contributionLevel` enum,
+  // so a value we don't recognise is a forward-compatibility case rather than a
+  // bug: render the day as empty instead of `undefined`, which would break the
+  // heatmap's class lookup.
+  it("falls back to level 0 for a contributionLevel it does not recognise", () => {
+    const payload = ghPayload();
+    payload.data.user.contributionsCollection.contributionCalendar.weeks[0].contributionDays[0].contributionLevel =
+      "FIFTH_QUARTILE";
+
+    const cal = toCalendar(payload);
+
+    expect(cal.weeks[0][0].level).toBe(0);
+    expect(cal.weeks[0][1].level).toBe(4);
+  });
+
   it("maps GraphQL days to numeric levels and a weeks matrix", () => {
     const cal = toCalendar(ghPayload());
     expect(cal.totalContributions).toBe(12);

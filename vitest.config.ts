@@ -30,12 +30,27 @@ export default defineConfig({
       reporter: ["text", "text-summary", "html", "lcov"],
       reportsDirectory: "./coverage",
       include: ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}", "lib/**/*.{ts,tsx}"],
-      exclude: ["**/*.d.ts"],
+      // Pure-JSX modules are excluded on purpose. A component whose body is a
+      // single JSX expression is one statement to V8, so it reports 100% the
+      // moment anything renders it — `components/ui/section.tsx` scored 4/4 over
+      // 118 physical lines. Including them inflated the total while measuring
+      // almost nothing: across the old scope, V8 instrumented 180 lines out of
+      // 2,023 physical (9%).
+      //
+      // These modules are not untested. Their behaviour is asserted through the
+      // seams instead — surface alternation and the anchor registry in
+      // section.test.tsx, rendered copy in sections.test.tsx, accents in
+      // accent.test.tsx — which is where those invariants actually live.
+      exclude: [
+        "**/*.d.ts",
+        "components/sections/**",
+        "components/ui/{section,card,badge,bento-grid}.tsx",
+      ],
       thresholds: {
-        statements: 80,
-        branches: 80,
-        functions: 80,
-        lines: 80,
+        statements: 95,
+        branches: 95,
+        functions: 95,
+        lines: 95,
       },
     },
   },

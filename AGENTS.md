@@ -35,8 +35,13 @@ Unit and component tests use Vitest, Testing Library, and jsdom. Tests live in
 `tests/unit/` as `*.test.tsx`. `next/image` and `next/link` are stubbed through
 `tests/unit/mocks/*`. CSS is not processed in unit tests.
 
-Coverage uses V8 and is gated at 80% for statements, branches, functions, and
-lines in `vitest.config.ts`.
+Coverage uses V8 and is gated at 95% for statements, branches, functions, and
+lines in `vitest.config.ts`. `components/sections/**` and the pure-JSX
+`components/ui/{section,card,badge,bento-grid}.tsx` shells are excluded from
+that gate — a component whose body is a single JSX expression reports 100%
+coverage as soon as anything renders it, so line coverage says nothing useful
+about them. Their behavior is asserted through seam tests instead
+(`section.test.tsx`, `sections.test.tsx`, `accent.test.tsx`).
 
 ```bash
 npm run test:unit
@@ -89,7 +94,9 @@ a static export.
 - The CI build job runs `npm run lint`, `npm run format:check`,
   `node scripts/sync-agents.mjs --check`, and `npm run build`.
 - The unit job runs `npm run test:unit:coverage` and fails if coverage drops
-  below the 80% thresholds.
+  below the 95% thresholds, excluding `components/sections/**` and the
+  pure-JSX `ui/{section,card,badge,bento-grid}` shells, which are covered
+  through seam tests instead.
 - The Playwright job runs the Chromium-engine projects only.
 - The changelog job (PR-only, skipped for Dependabot) fails the PR if the top
   `## [x.y.z]` version in `CHANGELOG.md` doesn't match the version that merging
@@ -425,7 +432,8 @@ so this static data stays current.
 - Keep security headers in `public/_headers`.
 - Keep CodeQL managed by default setup in GitHub settings, not a workflow file.
 - Maintain strict TypeScript compliance.
-- Maintain the 80% unit coverage gate.
+- Maintain the 95% unit coverage gate (pure-JSX section/shell components are
+  excluded from it and covered through seam tests instead).
 
 ## Documentation
 

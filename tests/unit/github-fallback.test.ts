@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 
 import { parseRepos, FEATURED_REPO_SLUGS } from "@/lib/github";
 import { parseCalendar } from "@/lib/github-contributions";
@@ -68,6 +68,50 @@ describe("parseRepos", () => {
 
   it("accepts null description and language", () => {
     expect(parseRepos([{ ...repoSnapshot[0], description: null, language: null }])).not.toBeNull();
+  });
+});
+
+/**
+ * The `?? []` / `?? { ... }` arms on the module-scope fallback constants. They
+ * are the documented behaviour for a corrupt committed snapshot — degrade to
+ * empty rather than render garbage — and are only reachable by re-importing the
+ * module with a malformed JSON.
+ */
+describe("a malformed committed snapshot", () => {
+  afterEach(() => {
+    vi.doUnmock("@/lib/github-fallback.json");
+    vi.doUnmock("@/lib/github-contributions-fallback.json");
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+    vi.resetModules();
+  });
+
+  it("degrades getFeaturedRepos to an empty list", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    vi.resetModules();
+    vi.doMock("@/lib/github-fallback.json", () => ({ default: [{ nope: true }] }));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new Error("offline");
+      })
+    );
+
+    const { getFeaturedRepos } = await import("@/lib/github");
+
+    await expect(getFeaturedRepos()).resolves.toEqual([]);
+  });
+
+  it("degrades getContributions to an empty calendar", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    vi.resetModules();
+    vi.doMock("@/lib/github-contributions-fallback.json", () => ({
+      default: { totalContributions: "not a number" },
+    }));
+
+    const { getContributions } = await import("@/lib/github-contributions");
+
+    await expect(getContributions()).resolves.toEqual({ totalContributions: 0, weeks: [] });
   });
 });
 

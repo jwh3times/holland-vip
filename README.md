@@ -73,11 +73,14 @@ The project has two test layers: **Vitest + Testing Library** for fast unit/comp
 ```bash
 npm run test:unit            # Run unit/component tests once
 npm run test:unit:watch      # Watch mode
-npm run test:unit:coverage   # Run with V8 coverage (enforces 80% thresholds)
+npm run test:unit:coverage   # Run with V8 coverage (enforces 95% thresholds)
 ```
 
-Unit tests live in `tests/unit/` and run in jsdom. Coverage is gated at 80%
-(statements/branches/functions/lines) in `vitest.config.ts`.
+Unit tests live in `tests/unit/` and run in jsdom. Coverage is gated at 95%
+(statements/branches/functions/lines) in `vitest.config.ts`, excluding
+`components/sections/**` and the pure-JSX `ui/{section,card,badge,bento-grid}`
+shells — those are covered through seam tests instead, since a single-JSX-expression
+component reports 100% line coverage as soon as anything renders it.
 
 #### End-to-end tests (Playwright)
 
@@ -288,7 +291,7 @@ The site uses CSS custom properties for theming:
 - **ESLint**: Flat config (`eslint.config.mjs`) on ESLint 10 with `@eslint-react`, `typescript-eslint`, `react-hooks`, and `@next/next`; Prettier owns formatting
 - **Prettier**: Code formatting with consistent style
 - **TypeScript**: Full type safety across the project (`strict: true`)
-- **Vitest + Testing Library**: Unit/component tests with V8 coverage gated at 80% in CI
+- **Vitest + Testing Library**: Unit/component tests with V8 coverage gated at 95% in CI (pure-JSX section/shell components excluded, covered via seam tests)
 - **Playwright**: E2E tests across multiple browsers (Chrome, Firefox, Safari) — chromium-only in CI
 - **GitHub Actions**: Automated CI pipeline (build, lint, format check, unit coverage, E2E, changelog-version guard)
 

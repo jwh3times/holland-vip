@@ -26,12 +26,12 @@ There are two test layers: **Vitest + Testing Library** for fast unit/component 
 
 #### Unit tests (Vitest)
 
-Component/unit tests live in [tests/unit/](tests/unit/) (`*.test.tsx`). They run in jsdom; `next/image` and `next/link` are stubbed via `tests/unit/mocks/*`, and CSS is not processed (Tailwind/PostCSS stay out of unit runs). Coverage is collected with V8 and **gated at 80%** (statements/branches/functions/lines) in [vitest.config.ts](vitest.config.ts).
+Component/unit tests live in [tests/unit/](tests/unit/) (`*.test.tsx`). They run in jsdom; `next/image` and `next/link` are stubbed via `tests/unit/mocks/*`, and CSS is not processed (Tailwind/PostCSS stay out of unit runs). Coverage is collected with V8 and **gated at 95%** (statements/branches/functions/lines) in [vitest.config.ts](vitest.config.ts). `components/sections/**` and the pure-JSX `components/ui/{section,card,badge,bento-grid}.tsx` shells are excluded from that measurement — a component whose body is a single JSX expression reports 100% the moment anything renders it, so it isn't a meaningful line-coverage signal; their behavior is asserted instead through seam tests (`section.test.tsx`, `sections.test.tsx`, `accent.test.tsx`).
 
 ```bash
 npm run test:unit            # Run unit tests once
 npm run test:unit:watch      # Watch mode
-npm run test:unit:coverage   # Run with V8 coverage (enforces the 80% thresholds)
+npm run test:unit:coverage   # Run with V8 coverage (enforces the 95% thresholds)
 ```
 
 #### End-to-end (Playwright)
@@ -60,7 +60,7 @@ After `npm run build`, the `/out` directory contains the complete static site. T
 
 ## CI/CD
 
-- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with four jobs: the `build` job runs `npm run lint`, `npm run format:check`, `node scripts/sync-agents.mjs --check`, then `npm run build` (and uploads the `out/` artifact); the `unit` job runs `npm run test:unit:coverage` and **fails if coverage drops below the 80% thresholds** in `vitest.config.ts`; the `test` job (needs `build`) installs chromium and runs Playwright against the Chromium-engine projects (`chromium` + `Mobile Chrome`); the `changelog` job (PR-only, skipped for `dependabot[bot]`) fails the PR if the top `## [x.y.z]` version in [CHANGELOG.md](CHANGELOG.md) doesn't match the version `node scripts/next-version.mjs` computes — i.e. the version that merging this PR will actually mint. **A PR will fail CI if formatting drifts — run `npm run format` before committing.**
+- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with four jobs: the `build` job runs `npm run lint`, `npm run format:check`, `node scripts/sync-agents.mjs --check`, then `npm run build` (and uploads the `out/` artifact); the `unit` job runs `npm run test:unit:coverage` and **fails if coverage drops below the 95% thresholds** in `vitest.config.ts` — the gate's `include` excludes `components/sections/**` and the pure-JSX `ui/{section,card,badge,bento-grid}` shells, whose behavior is verified through seam tests rather than line coverage; the `test` job (needs `build`) installs chromium and runs Playwright against the Chromium-engine projects (`chromium` + `Mobile Chrome`); the `changelog` job (PR-only, skipped for `dependabot[bot]`) fails the PR if the top `## [x.y.z]` version in [CHANGELOG.md](CHANGELOG.md) doesn't match the version `node scripts/next-version.mjs` computes — i.e. the version that merging this PR will actually mint. **A PR will fail CI if formatting drifts — run `npm run format` before committing.**
 - **Agent artifact sync — [.github/workflows/sync-agents.yml](.github/workflows/sync-agents.yml)** — on same-repo pull requests, regenerates the agent artifacts from their authored sources and auto-commits any drift back to the branch; requires the `SYNC_PAT` repo secret (no-ops if unset) and is skipped for fork PRs. This runs alongside — not instead of — the `build` job's secret-free `sync-agents.mjs --check` gate above; see [Agent artifact sync](#agent-artifact-sync) below for how the artifacts are derived.
 - **Dependency review — [.github/workflows/dependency-review.yml](.github/workflows/dependency-review.yml)** — on PRs to `main`, fails on high-severity dependency vulnerabilities.
 - **Code scanning — CodeQL (default setup)** — enabled via GitHub's **default setup** (repo _Settings → Code security_), which scans JS/TS + Actions on PRs to `main` and weekly; findings surface in the Security tab. There is intentionally **no `codeql.yml`** in the repo: an advanced CodeQL workflow cannot upload results while default setup is enabled (it fails with _"analyses from advanced configurations cannot be processed when the default setup is enabled"_). Manage CodeQL from the Security settings, not a workflow file.
@@ -326,7 +326,7 @@ if (!mounted) {
 - ESLint flat config ([eslint.config.mjs](eslint.config.mjs)) on ESLint 10, using `@eslint-react` (TS-first, replaces `eslint-plugin-react`), `typescript-eslint`, `react-hooks`, and `@next/next`; `eslint-config-prettier` last so Prettier owns formatting
 - Run `npm run format` before commits
 - Maintain TypeScript strict mode compliance
-- Unit-test coverage is gated at 80% in CI — new components generally need a test in `tests/unit/`
+- Unit-test coverage is gated at 95% in CI — new components generally need a test in `tests/unit/` (pure-JSX section/shell components are excluded from the gate and covered via seam tests instead; see Unit tests above)
 
 ## Agents & docs automation
 
