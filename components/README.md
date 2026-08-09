@@ -202,7 +202,9 @@ Responsive header navigation with mobile hamburger menu.
 - Mobile hamburger menu (Menu/X icons)
 - Scroll-aware sticky positioning
 - Smooth transitions
-- Accessible (keyboard navigation, ARIA attributes)
+- Accessible (keyboard navigation, ARIA attributes) — the hamburger button's
+  `aria-controls="mobile-menu"` references the mobile panel's `id="mobile-menu"`,
+  alongside `aria-expanded`/`aria-label`
 - Includes theme toggle
 
 #### `Footer.tsx`
