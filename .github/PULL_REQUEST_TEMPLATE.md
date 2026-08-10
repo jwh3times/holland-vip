@@ -19,7 +19,7 @@ What does this PR change, and why?
 
 - [ ] `npm run lint` passes
 - [ ] `npm run format` has been run (CI fails on formatting drift)
-- [ ] `npm run test:unit` passes and coverage stays at or above the 80% thresholds
+- [ ] `npm run test:unit:coverage` passes at the 95% thresholds
 - [ ] `npm run test` (Playwright e2e) passes locally
 - [ ] `npm run build` succeeds (static export to `/out`)
 - [ ] UI changes verified in both light and dark mode

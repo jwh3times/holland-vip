@@ -40,3 +40,4 @@ yarn-error.log*
 
 # Private Files
 private/
+/.claude/settings.local.json

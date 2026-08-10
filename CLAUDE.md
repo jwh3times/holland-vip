@@ -36,7 +36,16 @@ npm run test:unit:coverage   # Run with V8 coverage (enforces the 95% thresholds
 
 #### End-to-end (Playwright)
 
-The dev server is started automatically — `playwright.config.ts` defines a `webServer` that runs `npm run dev` and waits on `localhost:3000` (`reuseExistingServer` is on locally, off in CI). You do **not** need to start a server manually.
+A server is started automatically — `playwright.config.ts` defines a `webServer` that waits on `localhost:3000` (`reuseExistingServer` is on locally, off in CI). You do **not** need to start one manually.
+
+**Which server depends on the target**, and this matters when reproducing a CI failure:
+
+| Condition                             | `webServer.command`                          | System under test           |
+| ------------------------------------- | -------------------------------------------- | --------------------------- |
+| Default (local)                       | `npm run dev`                                | Next.js dev server          |
+| `CI` set, or `E2E_TARGET=build` local | `npx serve out --listen 3000 --no-clipboard` | The static export in `out/` |
+
+So **CI e2e never exercises the dev server** — it tests the exact `out/` artifact the `build` job produced. To reproduce that locally, run `npm run build` first (the `out/` directory must exist), then `E2E_TARGET=build npx playwright test`. A failure that reproduces under `E2E_TARGET=build` but not under `npm run dev` is a build/export difference, not a flake.
 
 Because `reuseExistingServer` accepts whatever is already on port 3000 — the Next.js default, so a second project's dev server can claim it — [tests/global-setup.ts](tests/global-setup.ts) probes `baseURL` first and aborts the run if the server answering isn't this site (checked against `siteConfig.url` and `siteConfig.name`). Nothing listening is fine; only a foreign server is rejected. Without it the suite runs green-or-red against the wrong app with no hint that the port is the problem.
 
@@ -54,7 +63,7 @@ npx playwright test --project=chromium
 
 Tests run across 5 projects (Desktop Chrome/Firefox/Safari + Mobile Chrome/Safari). **CI runs the Chromium-engine projects only** (`npm run test:e2e -- --project=chromium --project="Mobile Chrome"` — desktop + mobile viewport), so a test that passes in CI may still surface Firefox/WebKit-specific failures only when run across all projects locally.
 
-Test files are in [tests/](tests/) covering homepage, accessibility, SEO, theme toggling, and mobile navigation. Select elements by role, test id (`data-testid`), or ARIA attribute rather than Tailwind utility classes — a class-name selector (e.g. `nav .hidden.md\:flex`) passes as long as the string is present even if the styles never apply, and breaks the moment the class list is reordered or renamed.
+Test files are in [tests/](tests/) covering homepage, accessibility, SEO, theme toggling, mobile navigation, and the 404 page (`not-found.spec.ts`). Select elements by role, test id (`data-testid`), or ARIA attribute rather than Tailwind utility classes — a class-name selector (e.g. `nav .hidden.md\:flex`) passes as long as the string is present even if the styles never apply, and breaks the moment the class list is reordered or renamed.
 
 ### Testing Build Output
 
@@ -62,11 +71,11 @@ After `npm run build`, the `/out` directory contains the complete static site. T
 
 ## CI/CD
 
-- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with four jobs: the `build` job runs `npm run lint`, `npm run format:check`, `node scripts/sync-agents.mjs --check`, then `npm run build` (and uploads the `out/` artifact); the `unit` job runs `npm run test:unit:coverage` and **fails if coverage drops below the 95% thresholds** in `vitest.config.ts` — the gate's `include` excludes `components/sections/**` and the pure-JSX `ui/{section,card,badge,bento-grid}` shells, whose behavior is verified through seam tests rather than line coverage; the `test` job (needs `build`) installs chromium and runs Playwright against the Chromium-engine projects (`chromium` + `Mobile Chrome`); the `changelog` job (PR-only, skipped for `dependabot[bot]`) fails the PR if the top `## [x.y.z]` version in [CHANGELOG.md](CHANGELOG.md) doesn't match the version `node scripts/next-version.mjs` computes — i.e. the version that merging this PR will actually mint. **A PR will fail CI if formatting drifts — run `npm run format` before committing.**
+- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with four jobs: the `build` job runs `npm run lint`, `npm run format:check`, `node scripts/sync-agents.mjs --check`, then `npm run build` (and uploads the `out/` artifact); the `unit` job runs `npm run test:unit:coverage` and **fails if coverage drops below the 95% thresholds** in `vitest.config.ts` — the gate's `include` excludes `components/sections/**` and the pure-JSX `ui/{section,card,badge,bento-grid}` shells, whose behavior is verified through seam tests rather than line coverage; the `test` job (needs `build`) downloads the `build` job's `static-site` artifact into `out/`, installs chromium, and runs Playwright against the Chromium-engine projects (`chromium` + `Mobile Chrome`) — so CI e2e exercises the built static export, not a dev server; the `changelog` job (PR-only, skipped for `dependabot[bot]`) fails the PR if the top `## [x.y.z]` version in [CHANGELOG.md](CHANGELOG.md) doesn't match the version `node scripts/next-version.mjs` computes — i.e. the version that merging this PR will actually mint. **A PR will fail CI if formatting drifts — run `npm run format` before committing.**
 - **Agent artifact sync — [.github/workflows/sync-agents.yml](.github/workflows/sync-agents.yml)** — on same-repo pull requests, regenerates the agent artifacts from their authored sources and auto-commits any drift back to the branch; requires the `SYNC_PAT` repo secret (no-ops if unset) and is skipped for fork PRs. This runs alongside — not instead of — the `build` job's secret-free `sync-agents.mjs --check` gate above; see [Agent artifact sync](#agent-artifact-sync) below for how the artifacts are derived.
 - **Dependency review — [.github/workflows/dependency-review.yml](.github/workflows/dependency-review.yml)** — on PRs to `main`, fails on high-severity dependency vulnerabilities.
 - **Code scanning — CodeQL (default setup)** — enabled via GitHub's **default setup** (repo _Settings → Code security_), which scans JS/TS + Actions on PRs to `main` and weekly; findings surface in the Security tab. There is intentionally **no `codeql.yml`** in the repo: an advanced CodeQL workflow cannot upload results while default setup is enabled (it fails with _"analyses from advanced configurations cannot be processed when the default setup is enabled"_). Manage CodeQL from the Security settings, not a workflow file.
-- **Versioning — [.github/workflows/version.yml](.github/workflows/version.yml)** — on every merge (push) to `main`, creates a standard SemVer tag and GitHub Release in `v<major>.<minor>.<build>` format (for example, `v1.0.3`). The version is computed by [scripts/next-version.mjs](scripts/next-version.mjs) — the single source of truth, shared with the CI `changelog` guard and the `/ship` skill. It reads `package.json` `version` as the requested `major.minor.build` release line, auto-increments the build number from existing tags in that major/minor line, and preserves `x.y.0` when a new major/minor line has no existing `v<x>.<y>.*` tags.
+- **Versioning — [.github/workflows/version.yml](.github/workflows/version.yml)** — on every merge (push) to `main`, creates a standard SemVer tag and GitHub Release in `v<major>.<minor>.<build>` format (for example, `v1.0.3`). `/ship` classifies the branch as major, minor, or build-only and updates the `package.json` release line for a confirmed major/minor increase. The exact version is computed by [scripts/next-version.mjs](scripts/next-version.mjs) — the single source of truth shared with the CI `changelog` guard and `/ship`. It reads `package.json` `version` as the requested `major.minor.build` release line, auto-increments the build number from existing tags in that major/minor line, and preserves `x.y.0` when a new major/minor line has no existing `v<x>.<y>.*` tags.
 - **Deployment — Cloudflare Pages** — Cloudflare builds and deploys directly from the GitHub repo on every push to `main` (build command `npm run build`, output dir `out`). There is **no deploy workflow in this repo** — deployment is configured in the Cloudflare dashboard, not GitHub Actions. CI is a parallel quality gate, not a deploy gate.
 - **Post-deploy smoke — [.github/workflows/smoke.yml](.github/workflows/smoke.yml)** — daily cron (+ manual `workflow_dispatch`) curls the live `https://holland.vip`, asserting HTTP 200, expected content, and the security headers. This is the only check that exercises the _deployed_ site rather than the pre-deploy build. It reaches the site from a GitHub datacenter runner, which only works because Cloudflare **Bot Fight Mode is kept off** for the zone — free-plan Bot Fight Mode 403s datacenter IPs and cannot be skipped by any rule or header, so re-enabling it will break this check.
 - **Data refresh — [.github/workflows/refresh.yml](.github/workflows/refresh.yml)** — weekly cron (Mondays 08:00 UTC, + manual `workflow_dispatch`) POSTs the Cloudflare Pages deploy hook (`CLOUDFLARE_DEPLOY_HOOK_URL` secret) to trigger a rebuild, refreshing the build-time GitHub repo/contribution data baked into `OpenSourceSection`. The run fails with an error if the secret is unset or the hook returns a non-2xx status.
@@ -127,8 +136,8 @@ The four accent colors (blue/green/purple/orange) are unified in a single token 
 - `--body-text` / `.text-body` - Body copy
 - `--label-text` / `.text-label` - Labels/semibold text
 - `--muted-text` / `.text-muted` - Secondary/muted text
-- `--badge-text` / `.text-badge` - Badge/pill text
-- `--subheading-text` / `.text-subheading` - Subheadings (between heading and body)
+
+There is deliberately no `.text-badge` or `.text-subheading` — both were byte-identical aliases of `.text-heading` and were removed in v1.1.27. Use `.text-heading` for a subheading, and the colored `.text-badge-*` utilities below for badge text.
 
 **Colored Badge Text** (adapts for contrast):
 
@@ -150,8 +159,14 @@ The four accent colors (blue/green/purple/orange) are unified in a single token 
 
 **Section Backgrounds:**
 
-- `.section-surface` - Standard section background (alternating)
-- `.section-surface-contrast` - Contrasting section background (used to visually alternate sections)
+- `.section-surface` - Standard section background (alternating; fills with `--muted`)
+- `.section-surface-contrast` - Contrasting section background (fills with `--background`, used to visually alternate sections)
+
+**Page Base** (applied to `body` in `app/globals.css`; no utility class of their own):
+
+- `--background` - Page background, and the fill behind `.section-surface-contrast`
+- `--foreground` - Default text color for the document
+- `--muted` - Muted surface fill, used by `.section-surface`
 
 **Special Backgrounds:**
 
@@ -337,9 +352,10 @@ AGENTS.md in sync with the code. It is invoked by the [`/ship` skill](.agents/sk
 — scoped to the current branch's diff, not a full audit — when a branch is ready for a PR. There is
 no longer a docs-freshness `Stop` hook; docs refresh only happens when `/ship` runs.
 
-`/ship` also writes the [CHANGELOG.md](CHANGELOG.md) entry for the version the merge will mint
-(computed by [scripts/next-version.mjs](scripts/next-version.mjs)), runs the fast checks
-(`npm run format:check`, `npm run lint`, `npx tsc --noEmit`), and opens or updates the PR.
+`/ship` also classifies the branch's SemVer impact, settles the major/minor release line, writes the
+[CHANGELOG.md](CHANGELOG.md) entry for the exact version the merge will mint (computed by
+[scripts/next-version.mjs](scripts/next-version.mjs)), formats authored files, regenerates and
+verifies agent artifacts, runs lint and TypeScript checks, and opens or updates the PR.
 `docs-updater` does **not** own `CHANGELOG.md` — `/ship` does.
 
 ### Agent artifact sync
@@ -350,7 +366,7 @@ trees**, and [scripts/sync-agents.mjs](scripts/sync-agents.mjs) derives the othe
 
 | Authored source            | Generated artifact          | Transform                                 |
 | -------------------------- | --------------------------- | ----------------------------------------- |
-| `.agents/skills/<name>/**` | `.claude/skills/<name>/**`  | verbatim mirror plus a `GENERATED` banner |
+| `.agents/skills/<name>/**` | `.claude/skills/<name>/**`  | verbatim; banner added to `SKILL.md` only |
 | `.claude/agents/<name>.md` | `.codex/agents/<name>.toml` | frontmatter → TOML                        |
 
 **Skills are authored under `.agents/skills/`** — that is where the skill installer writes them (it
@@ -362,8 +378,12 @@ For subagents the direction is the opposite — `.claude/agents/<name>.md` is au
 derives `sandbox_mode` from the `tools:` list (`workspace-write` if it includes `Write`/`Edit`, else
 `read-only`); `model` is omitted so Codex uses its default.
 
-Edit **only** the authored side — never the generated `.claude/skills/`/`.codex/` files (each carries
-a `GENERATED — do not edit` banner). Regenerate with `npm run sync:agents`; verify with
+Edit **only** the authored side — never the generated `.claude/skills/`/`.codex/` files. Note that
+only the mirrored `SKILL.md` files and the generated `.toml` carry a `GENERATED — do not edit`
+banner; every other mirrored file (reference `.md`s, `scripts/*.sh`, `agents/openai.yaml`) is a
+byte-identical copy with no in-file marker. **Absence of a banner does not mean a file is
+authored** — its location in the tree is what decides, and an accidental edit under
+`.claude/skills/` surfaces only as a `--check` failure. Regenerate with `npm run sync:agents`; verify with
 `node scripts/sync-agents.mjs --check`. CI runs that same `--check` in the `build` job on every
 push/PR (see below) and fails the build if committed artifacts are stale — this needs no secret and
 runs on fork PRs too. On same-repo PRs the
@@ -377,3 +397,26 @@ regenerated from unformatted sources and drift again on the next format pass.
 Do **not** replace the generated `.claude/skills/` tree with symlinks into `.agents/`: this repo is
 developed on Windows with `core.symlinks=false`, so Git walks through them and commits duplicate file
 content instead of links.
+
+## Agent skills
+
+### Workflow router
+
+Use `/ask-matt` to choose among the installed engineering workflows. Most build flows end with
+`/ship`, which refreshes docs, writes the required versioned changelog entry, verifies the fast CI
+gates, pushes, and opens or updates the PR.
+
+### Issue tracker
+
+Issues live in GitHub Issues for jwh3times/holland-vip, using the `gh` CLI. See
+`docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The default five-role vocabulary is `needs-triage`, `needs-info`, `ready-for-agent`,
+`ready-for-human`, and `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+This is a single-context repo with one root `CONTEXT.md` and ADRs under `docs/adr/`. See
+`docs/agents/domain.md`.
