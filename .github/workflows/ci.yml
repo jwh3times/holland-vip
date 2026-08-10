@@ -110,7 +110,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Fails the job if coverage drops below the 80% thresholds in vitest.config.ts.
+      # Fails the job if coverage drops below the 95% thresholds in vitest.config.ts.
       - name: Run unit tests with coverage
         run: npm run test:unit:coverage
 

@@ -9,8 +9,8 @@ The `.out-of-scope/` directory in a repo stores persistent records of rejected f
 
 ```
 .out-of-scope/
-├── dark-mode.md
 ├── plugin-system.md
+├── spreadsheet-export.md
 └── graphql-api.md
 ```
 
@@ -21,43 +21,40 @@ One file per **concept**, not per issue. Multiple issues requesting the same thi
 The file should be written in a relaxed, readable style — more like a short design document than a database entry. Use paragraphs, code samples, and examples to make the reasoning clear and useful to someone encountering it for the first time.
 
 ````markdown
-# Dark Mode
+# Spreadsheet Export
 
-This project does not support dark mode or user-facing theming.
+This project does not generate spreadsheet files.
 
 ## Why this is out of scope
 
-The rendering pipeline assumes a single color palette defined in
-`ThemeConfig`. Supporting multiple themes would require:
+The export pipeline emits a structured JSON document consumed by downstream
+tools. Supporting spreadsheets would require:
 
-- A theme context provider wrapping the entire component tree
-- Per-component theme-aware style resolution
-- A persistence layer for user theme preferences
+- A tabular projection for nested records
+- A policy for multiple worksheets and formulas
+- A second compatibility and validation surface
 
 This is a significant architectural change that doesn't align with the
-project's focus on content authoring. Theming is a concern for downstream
-consumers who embed or redistribute the output.
+project's focus on structured data interchange. Spreadsheet presentation is a
+concern for downstream consumers.
 
 ```ts
-// The current ThemeConfig interface is not designed for runtime switching:
-interface ThemeConfig {
-  colors: ColorPalette; // single palette, resolved at build time
-  fonts: FontStack;
+// The current export contract preserves nested structure:
+interface ExportDocument {
+  records: NestedRecord[];
 }
 ```
-````
 
 ## Prior requests
 
-- #42 — "Add dark mode support"
-- #87 — "Night theme for accessibility"
-- #134 — "Dark theme option"
-
-```
+- #42 — "Export reports as XLSX"
+- #87 — "Add spreadsheet downloads"
+- #134 — "Excel export option"
+````
 
 ### Naming the file
 
-Use a short, descriptive kebab-case name for the concept: `dark-mode.md`, `plugin-system.md`, `graphql-api.md`. The name should be recognizable enough that someone browsing the directory understands what was rejected without opening the file.
+Use a short, descriptive kebab-case name for the concept: `spreadsheet-export.md`, `plugin-system.md`, `graphql-api.md`. The name should be recognizable enough that someone browsing the directory understands what was rejected without opening the file.
 
 ### Writing the reason
 
@@ -74,8 +71,11 @@ The reason should be durable. Avoid referencing temporary circumstances ("we're 
 During triage (Step 1: Gather context), read all files in `.out-of-scope/`. When evaluating a new issue:
 
 - Check if the request matches an existing out-of-scope concept
-- Matching is by concept similarity, not keyword — "night theme" matches `dark-mode.md`
-- If there's a match, surface it to the maintainer: "This is similar to `.out-of-scope/dark-mode.md` — we rejected this before because [reason]. Do you still feel the same way?"
+- Matching is by concept similarity, not keyword — "download as Excel" matches
+  `spreadsheet-export.md`
+- If there's a match, surface it to the maintainer: "This is similar to
+  `.out-of-scope/spreadsheet-export.md` — we rejected this before because [reason]. Do you still
+  feel the same way?"
 
 The maintainer may:
 
@@ -85,7 +85,7 @@ The maintainer may:
 
 ## When to write to `.out-of-scope/`
 
-Only when an **enhancement** (not a bug) is *rejected* as `wontfix`. This applies to enhancement PRs exactly as it does to issues — a rejected PR is recorded here so the same request doesn't return as fresh code.
+Only when an **enhancement** (not a bug) is _rejected_ as `wontfix`. This applies to enhancement PRs exactly as it does to issues — a rejected PR is recorded here so the same request doesn't return as fresh code.
 
 Do **not** write here when something is closed as `wontfix` because it's **already implemented**. That's a built feature, not a rejected one; recording it would poison the dedup checks with false rejections. Instead, the closing comment points to where the feature already lives.
 
@@ -105,4 +105,3 @@ If the maintainer changes their mind about a previously rejected concept:
 - Delete the `.out-of-scope/` file
 - The skill does not need to reopen old issues — they're historical records
 - The new issue that triggered the reconsideration proceeds through normal triage
-```

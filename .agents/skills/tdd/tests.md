@@ -27,11 +27,13 @@ Characteristics:
 **Implementation-detail tests**: Coupled to internal structure.
 
 ```typescript
+import { expect, test, vi } from "vitest";
+
 // BAD: Tests implementation details
 test("checkout calls paymentService.process", async () => {
-  const mockPayment = jest.mock(paymentService);
-  await checkout(cart, payment);
-  expect(mockPayment.process).toHaveBeenCalledWith(cart.total);
+  const process = vi.spyOn(paymentService, "process");
+  await checkout(cart, paymentService);
+  expect(process).toHaveBeenCalledWith(cart.total);
 });
 ```
 

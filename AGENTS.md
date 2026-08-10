@@ -52,11 +52,16 @@ npm run test:unit:coverage
 ### End-to-End Tests
 
 Playwright tests live in `tests/`. They cover the homepage, accessibility, SEO,
-theme toggling, and mobile navigation.
+theme toggling, mobile navigation, and the 404 page.
 
-The Playwright config starts the dev server automatically with `npm run dev` and
-waits for `localhost:3000`. Do not start a server manually before running the
-standard Playwright commands unless you specifically need to inspect the app.
+The Playwright config starts a server automatically and waits for
+`localhost:3000`. The default local target runs `npm run dev`; CI and local runs
+with `E2E_TARGET=build` run `npx serve out --listen 3000 --no-clipboard` against
+the static export. CI downloads the build job's `out/` artifact before running
+the Chromium-engine projects, so CI never exercises the dev server. To reproduce
+that path locally, run `npm run build`, set `E2E_TARGET=build` in your shell, and
+run Playwright. Do not start a server manually before the standard Playwright
+commands unless you specifically need to inspect the app.
 
 `reuseExistingServer` is on locally, and it accepts whatever already holds port
 3000 — the Next.js default, so another project's dev server can claim it.
@@ -105,11 +110,13 @@ a static export.
   below the 95% thresholds, excluding `components/sections/**` and the
   pure-JSX `ui/{section,card,badge,bento-grid}` shells, which are covered
   through seam tests instead.
-- The Playwright job runs the Chromium-engine projects only.
+- The Playwright job downloads the build job's `out/` artifact and runs the
+  Chromium-engine projects against that static export only.
 - The changelog job (PR-only, skipped for Dependabot) fails the PR if the top
   `## [x.y.z]` version in `CHANGELOG.md` doesn't match the version that merging
-  the PR will actually mint. Run `/ship` to write that entry; it computes the
-  version with `scripts/next-version.mjs` rather than guessing.
+  the PR will actually mint. Run `/ship` to classify the branch as major, minor,
+  or build-only, settle the `package.json` release line, and write that entry; it
+  computes the exact version with `scripts/next-version.mjs` rather than guessing.
 - `.github/workflows/sync-agents.yml` runs on same-repo pull requests. It
   regenerates the agent artifacts from their authored sources and auto-commits
   any drift back to the branch. It needs the `SYNC_PAT` repo secret and is
@@ -214,8 +221,10 @@ Text hierarchy:
 - `--body-text` / `.text-body`
 - `--label-text` / `.text-label`
 - `--muted-text` / `.text-muted`
-- `--badge-text` / `.text-badge`
-- `--subheading-text` / `.text-subheading`
+
+There is no `.text-badge` or `.text-subheading`; both were byte-identical aliases
+of `.text-heading` and were removed in v1.1.27. Use `.text-heading` for a
+subheading and the colored `.text-badge-*` utilities below for badge text.
 
 Badge text utilities:
 
@@ -239,6 +248,12 @@ Section backgrounds:
 
 - `.section-surface`
 - `.section-surface-contrast`
+
+Page base variables, applied to `body` with no utility class of their own:
+
+- `--background` — page background and `.section-surface-contrast` fill
+- `--foreground` — default document text color
+- `--muted` — muted fill used by `.section-surface`
 
 Special styling:
 
@@ -452,10 +467,11 @@ The existing Claude docs automation lives under `.claude/`. The `/ship` skill
 (`.agents/skills/ship/SKILL.md`) refreshes `CLAUDE.md` and `README.md` when a
 branch is ready for a PR, by invoking the `docs-updater` subagent scoped to the
 branch's diff. It runs once per ship, not on every stop — there is no longer a
-docs-freshness stop hook. `/ship` also writes the `CHANGELOG.md` entry for the
-version the merge will mint. `docs-updater` maintains this file too, but only
-when `/ship` runs — so if you are changing agent-facing guidance outside that
-flow, update `AGENTS.md` explicitly rather than assuming it will be caught.
+docs-freshness stop hook. `/ship` also classifies the branch's SemVer impact and
+writes the `CHANGELOG.md` entry for the version the merge will mint. `docs-updater`
+maintains this file too, but only when `/ship` runs — so if you are changing
+agent-facing guidance outside that flow, update `AGENTS.md` explicitly rather
+than assuming it will be caught.
 
 ## Keeping agent artifacts in sync
 
@@ -468,13 +484,15 @@ Skills and subagents are authored in **different** trees, and each generates its
 - **Subagents** are authored in `.claude/agents/<name>.md`. `.codex/agents/<name>.toml` is the
   **generated** artifact Codex reads.
 
-Do not edit generated files by hand (each carries a `GENERATED — do not edit` banner). Edit the
-authored side, then run `npm run sync:agents` to regenerate. `node scripts/sync-agents.mjs --check`
-verifies the artifacts match their sources without writing; CI runs this check on every push/PR
-(including fork PRs, since it needs no secret) and fails the build if the artifacts are stale. On
-same-repo pull requests only, a separate workflow additionally regenerates and commits any drift
-automatically once the `SYNC_PAT` secret is set; it is skipped for fork PRs, which get a read-only
-token.
+Do not edit generated files by hand. Only mirrored `SKILL.md` files and generated `.toml` files
+carry a `GENERATED — do not edit` banner; other mirrored references, scripts, and assets are
+byte-identical copies with no in-file warning. The tree location, not a banner, identifies the
+authored side. Edit the authored side, then run `npm run sync:agents` to regenerate.
+`node scripts/sync-agents.mjs --check` verifies the artifacts match their sources without writing;
+CI runs this check on every push/PR (including fork PRs, since it needs no secret) and fails the
+build if the artifacts are stale. On same-repo pull requests only, a separate workflow additionally
+regenerates and commits any drift automatically once the `SYNC_PAT` secret is set; it is skipped for
+fork PRs, which get a read-only token.
 
 `.prettierignore` excludes `.claude/skills/` and `.codex/` — the generator, not Prettier, owns their
 formatting. Prettier does format the authored `.agents/skills/` sources, so run `npm run format`
@@ -487,6 +505,12 @@ rather than links, and `listDirs()` in `scripts/lib/agent-sync.mjs` skips symlin
 would make every mirrored file look extraneous and get pruned.
 
 ## Agent skills
+
+### Workflow router
+
+Use `/ask-matt` to choose among the installed engineering workflows. Most build flows end with
+`/ship`, which refreshes docs, writes the required versioned changelog entry, verifies the fast CI
+gates, pushes, and opens or updates the PR.
 
 ### Issue tracker
 

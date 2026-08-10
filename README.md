@@ -4,7 +4,7 @@ Professional portfolio website for Jerry Holland showcasing over a decade of sof
 
 ## 🚀 Tech Stack
 
-- **Framework**: Next.js 16.2+ (App Router)
+- **Framework**: Next.js 16.3+ (App Router)
 - **UI Library**: React 19.2+
 - **Styling**: Tailwind CSS v4 (CSS-first config, no `tailwind.config.ts`)
 - **Language**: TypeScript 6.0+
@@ -96,12 +96,24 @@ E2E tests cover:
 - Homepage content and navigation
 - Theme switching functionality
 - Mobile navigation (hamburger menu)
+- Custom 404 page behavior
 - Accessibility (skip links, landmarks, ARIA)
 - SEO meta tags (Open Graph, Twitter cards)
 
-The Playwright dev server starts automatically — `playwright.config.ts` defines a
-`webServer` that runs `npm run dev`. Locally, tests fan out across 5 browser/device
-projects; CI runs the Chromium-engine projects (chromium + Mobile Chrome).
+Playwright starts its server automatically. Local tests default to the Next.js dev
+server and fan out across five browser/device projects. CI downloads the build
+job's `out/` artifact, serves that static export, and runs the Chromium-engine
+projects (chromium + Mobile Chrome), so it never tests the dev server. To exercise
+the CI target locally, build first and set `E2E_TARGET=build` when invoking
+Playwright:
+
+```bash
+npm run build
+E2E_TARGET=build npx playwright test
+```
+
+In PowerShell, set the variable with `$env:E2E_TARGET = "build"` before the
+Playwright command.
 
 ### Build for Production
 
@@ -132,7 +144,9 @@ the requested release line, auto-increments the build number from existing tags
 in the same major/minor line, and preserves `x.y.0` when a new major/minor line
 has no existing `v<x>.<y>.*` tags. The next version is computed by
 `scripts/next-version.mjs`, a single source of truth shared with the CI changelog
-guard and the `/ship` skill.
+guard and the `/ship` skill. Before calling it, `/ship` classifies the branch as a
+major, minor, or build-only release and updates the package release line for a
+confirmed major/minor increase.
 
 Release history is documented in [CHANGELOG.md](CHANGELOG.md) (Keep a Changelog
 format). Its top entry must name the version that the next merge to `main` will
@@ -217,6 +231,7 @@ holland-vip/
 │       └── agent-sync.mjs   # Transform + orchestration logic used by sync-agents.mjs
 ├── tests/                   # Tests
 │   ├── homepage.spec.ts     # Playwright E2E — homepage
+│   ├── not-found.spec.ts    # Playwright E2E — 404 page
 │   ├── theme.spec.ts        # Playwright E2E — theme switching
 │   ├── mobile-navigation.spec.ts
 │   ├── accessibility.spec.ts
@@ -243,14 +258,13 @@ holland-vip/
 │   ├── dependabot.yml              # npm + GitHub Actions update schedule
 │   └── copilot-instructions.md
 ├── .agents/
-│   └── skills/              # AUTHORED skills (installer target; see skills-lock.json)
-│       └── ship/
-│           └── SKILL.md            # `/ship` skill: docs refresh, changelog entry, fast checks, PR
+│   └── skills/              # AUTHORED skills: repo `ship` skill + installs in skills-lock.json
 ├── skills-lock.json         # Provenance + content hashes for installed third-party skills
 ├── .claude/
 │   ├── agents/              # AUTHORED subagents (docs-updater)
 │   └── skills/              # GENERATED from .agents/skills/ — do not edit (see scripts/sync-agents.mjs)
 ├── .codex/                  # GENERATED from .claude/agents/ — do not edit (see scripts/sync-agents.mjs)
+├── CONTEXT.md               # Shared domain language for the portfolio
 ├── CHANGELOG.md             # Keep a Changelog release history
 ├── playwright.config.ts     # Playwright (E2E) configuration
 ├── vitest.config.ts         # Vitest (unit) configuration + coverage thresholds

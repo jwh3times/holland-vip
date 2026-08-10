@@ -12,6 +12,31 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.31] - 2026-08-09
+
+### Added
+
+- A root `CONTEXT.md` now defines the portfolio's domain language, including the distinctions
+  between skills and capabilities, professional projects and featured repositories, and current
+  exploration versus established expertise.
+
+### Changed
+
+- The `/ship` workflow now classifies each branch as major, minor, or build-only before computing
+  its exact release, confirms major/minor release-line changes, regenerates agent artifacts, and
+  verifies the same sync gate enforced by CI.
+- The installed engineering workflows now carry work through review, accepted fixes, the required
+  changelog entry, and PR creation, while preserving this repo's existing tracker and domain-doc
+  configuration on setup reruns.
+
+### Fixed
+
+- Agent-facing guidance now matches the repository's actual CSS tokens, static-export Playwright
+  target, 95% coverage gate, generated-file banners, framework version, and test inventory.
+- Repo-local skill guidance now uses the real standards sources, Vitest-native examples,
+  skill-relative support files, and neutral triage examples; all generated Claude mirrors and
+  project skill hashes were refreshed from the authored sources.
+
 ## [1.1.30] - 2026-08-09
 
 Closes [#99](https://github.com/jwh3times/holland-vip/issues/99).
