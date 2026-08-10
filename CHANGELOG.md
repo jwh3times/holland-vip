@@ -12,6 +12,25 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.34] - 2026-08-10
+
+### Changed
+
+- Upgraded the development toolchain to TypeScript 7.0.2 and enabled Oxlint's type-aware checks
+  through `oxlint-tsgolint`.
+- Updated the lint scripts, dependency grouping, editor recommendations, and repository guidance
+  to use Oxlint consistently.
+
+### Removed
+
+- Removed the ESLint configuration and all ESLint and typescript-eslint dependencies.
+
+## [1.1.33] - 2026-08-10
+
+### Changed
+
+- Updated `lucide-react` from 1.28 to 1.29.
+
 ## [1.1.32] - 2026-08-10
 
 ### Changed
