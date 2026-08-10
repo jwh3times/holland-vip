@@ -32,7 +32,7 @@ Professional portfolio website for Jerry Holland showcasing over a decade of sof
 
 ### Prerequisites
 
-- Node.js 24 (pinned in [.nvmrc](.nvmrc) — run `nvm use` to match CI and Cloudflare)
+- Node.js 26 (pinned in [.nvmrc](.nvmrc) — run `nvm use` to match CI and Cloudflare)
 - npm (comes with Node.js)
 
 ### Installation
