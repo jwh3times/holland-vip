@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { yearsOfExperience } from "@/lib/site-config";
+import { siteConfig, yearsOfExperience } from "@/lib/site-config";
 
-const siteUrl = "https://holland.vip";
+const siteUrl = siteConfig.url;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

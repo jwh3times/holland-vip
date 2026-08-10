@@ -8,6 +8,13 @@ export default defineConfig({
   testDir: "./tests",
   /* Only Playwright e2e specs; Vitest unit tests live in tests/unit/*.test.tsx */
   testMatch: "**/*.spec.ts",
+  /*
+   * Refuses to run against a server that isn't this site. `reuseExistingServer`
+   * below accepts anything already on the port, and port 3000 is the Next.js
+   * default — so a second project's dev server can silently become the system
+   * under test. See tests/global-setup.ts.
+   */
+  globalSetup: "./tests/global-setup.ts",
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code */
