@@ -12,6 +12,18 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.35] - 2026-08-10
+
+### Changed
+
+- Standardized local development, CI, and Cloudflare Pages builds on Node.js 26 with matching
+  Node type definitions.
+- Updated `lucide-react` from 1.29 to 1.31 and `@testing-library/jest-dom` from 7.0.0 to 7.0.1.
+
+### Removed
+
+- Removed the unused `@babel/core` dependency override.
+
 ## [1.1.34] - 2026-08-10
 
 ### Changed

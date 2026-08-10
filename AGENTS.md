@@ -149,7 +149,9 @@ a static export.
 - `.github/workflows/refresh.yml` runs weekly and manually to trigger the
   Cloudflare Pages deploy hook so build-time GitHub contribution data stays
   fresh.
-- Node 26 is pinned in `.nvmrc`. CI and Cloudflare Pages both use that file.
+- Node 26 is pinned in `.nvmrc` and declared in `package.json` under
+  `engines.node`. CI and Cloudflare Pages use `.nvmrc`; keep both declarations
+  aligned when changing the runtime.
 
 Run `npm run format` before committing because CI fails on formatting drift.
 
