@@ -32,7 +32,8 @@ Professional portfolio website for Jerry Holland showcasing over a decade of sof
 
 ### Prerequisites
 
-- Node.js 24 (pinned in [.nvmrc](.nvmrc) — run `nvm use` to match CI and Cloudflare)
+- Node.js 26 (pinned in [.nvmrc](.nvmrc) and declared in `package.json` under
+  `engines.node`; run `nvm use` to match CI and Cloudflare)
 - npm (comes with Node.js)
 
 ### Installation
@@ -269,7 +270,7 @@ holland-vip/
 ├── CHANGELOG.md             # Keep a Changelog release history
 ├── playwright.config.ts     # Playwright (E2E) configuration
 ├── vitest.config.ts         # Vitest (unit) configuration + coverage thresholds
-└── .nvmrc                   # Pinned Node version (single source of truth)
+└── .nvmrc                   # Node version used by CI and Cloudflare Pages
 ```
 
 > Deployment is handled by Cloudflare Pages from the dashboard — there is no
