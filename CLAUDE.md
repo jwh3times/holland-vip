@@ -38,6 +38,8 @@ npm run test:unit:coverage   # Run with V8 coverage (enforces the 95% thresholds
 
 The dev server is started automatically — `playwright.config.ts` defines a `webServer` that runs `npm run dev` and waits on `localhost:3000` (`reuseExistingServer` is on locally, off in CI). You do **not** need to start a server manually.
 
+Because `reuseExistingServer` accepts whatever is already on port 3000 — the Next.js default, so a second project's dev server can claim it — [tests/global-setup.ts](tests/global-setup.ts) probes `baseURL` first and aborts the run if the server answering isn't this site (checked against `siteConfig.url` and `siteConfig.name`). Nothing listening is fine; only a foreign server is rejected. Without it the suite runs green-or-red against the wrong app with no hint that the port is the problem.
+
 ```bash
 npm test              # Run all Playwright tests (headless)
 npm run test:ui       # Open Playwright UI mode
