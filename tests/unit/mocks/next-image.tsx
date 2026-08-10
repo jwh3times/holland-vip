@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+/* oxlint-disable @next/next/no-img-element */
 // Minimal stand-in for next/image: renders a plain <img> and ignores
 // Next-only props (unoptimized, priority, etc.) via the index signature.
 type ImageProps = {

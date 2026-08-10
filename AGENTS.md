@@ -5,7 +5,7 @@ Guidance for coding agents working in this repository.
 ## Project Overview
 
 This is Jerry Holland's personal portfolio site. It uses Next.js 16+ with the App
-Router, React 19.2+, TypeScript 6+, and Tailwind CSS v4.
+Router, React 19.2+, TypeScript 7+, and Tailwind CSS v4.
 
 The site is configured for static export and deploys to Cloudflare Pages at
 `holland.vip`. Cloudflare Pages builds directly from the repository on pushes to
@@ -23,11 +23,19 @@ configured in CSS with custom properties and utility classes. There is no
 npm run dev
 npm run build
 npm run lint
+npm run lint:fix
 npm run format
 npm run format:check
 ```
 
 `npm run build` creates the static export in `out/`.
+
+Linting uses Oxlint with `.oxlintrc.json`; Prettier remains the standalone formatter. Type-aware
+TypeScript rules run through `oxlint-tsgolint` using its TypeScript 7 engine. The lint stack has no
+ESLint packages, config, or JavaScript-plugin bridges.
+
+Next.js 16.3+ runs the project-local TypeScript CLI by default, so TypeScript 7 needs no
+`experimental.useTypeScriptCli` override in `next.config.ts`.
 
 ### Unit Tests
 

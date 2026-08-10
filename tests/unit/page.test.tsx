@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/require-await -- async module test doubles intentionally resolve synchronously */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Home from "@/app/page";

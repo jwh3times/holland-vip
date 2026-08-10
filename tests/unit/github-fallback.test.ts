@@ -1,4 +1,5 @@
 // @vitest-environment node
+/* oxlint-disable typescript/require-await -- async test doubles intentionally resolve synchronously */
 import { describe, it, expect, vi, afterEach } from "vitest";
 
 import { parseRepos, FEATURED_REPO_SLUGS } from "@/lib/github";
