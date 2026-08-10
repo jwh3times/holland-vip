@@ -264,6 +264,7 @@ holland-vip/
 │   ├── agents/              # AUTHORED subagents (docs-updater)
 │   └── skills/              # GENERATED from .agents/skills/ — do not edit (see scripts/sync-agents.mjs)
 ├── .codex/                  # GENERATED from .claude/agents/ — do not edit (see scripts/sync-agents.mjs)
+├── CONTEXT.md               # Shared domain language for the portfolio
 ├── CHANGELOG.md             # Keep a Changelog release history
 ├── playwright.config.ts     # Playwright (E2E) configuration
 ├── vitest.config.ts         # Vitest (unit) configuration + coverage thresholds
