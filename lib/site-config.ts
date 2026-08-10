@@ -6,6 +6,14 @@ import { GitHubIcon, LinkedInIcon } from "@/components/icons/SocialIcons";
  */
 export const siteConfig = {
   email: "jerry@holland.vip",
+  /**
+   * Canonical origin. Drives `metadataBase`, `og:url`, and the sitemap — and is
+   * what `tests/global-setup.ts` looks for to confirm the server the e2e suite
+   * is about to drive is actually this site.
+   */
+  url: "https://holland.vip",
+  /** Rendered in the document title; the second identity signal for the e2e check. */
+  name: "Jerry Holland",
 } as const;
 
 /** Career began mid-2013 (NCSU grad → first role). Single source for "years of experience". */

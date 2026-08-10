@@ -12,6 +12,29 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.30] - 2026-08-09
+
+Closes [#99](https://github.com/jwh3times/holland-vip/issues/99).
+
+### Added
+
+- `tests/global-setup.ts` — the e2e suite now refuses to run against a server that isn't this site.
+  `reuseExistingServer` is on locally and accepts whatever already holds port 3000; since that's the
+  Next.js default, another project's dev server could silently become the system under test. It
+  happened twice during the architecture review — 20 of 72 tests failed with assertions that read
+  like a regression here, and nothing in the output mentioned the port. A false _pass_ was possible
+  the same way.
+
+  The check probes `baseURL` and, if something answers, requires this site's `og:url` and name
+  before any test runs. Nothing listening is fine — Playwright starts ours. Only a foreign server is
+  rejected, and the error names the port, the foreign `<title>`, what was missing, and the
+  `netstat`/`lsof` command to find the process.
+
+### Changed
+
+- `siteUrl` moved from `app/layout.tsx` into `siteConfig.url`, joined by `siteConfig.name`, so the
+  identity check reads the same source the metadata does and can't drift from it.
+
 ## [1.1.29] - 2026-08-09
 
 Closes [#92](https://github.com/jwh3times/holland-vip/issues/92), the last finding from the

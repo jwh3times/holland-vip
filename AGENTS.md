@@ -58,6 +58,14 @@ The Playwright config starts the dev server automatically with `npm run dev` and
 waits for `localhost:3000`. Do not start a server manually before running the
 standard Playwright commands unless you specifically need to inspect the app.
 
+`reuseExistingServer` is on locally, and it accepts whatever already holds port
+3000 — the Next.js default, so another project's dev server can claim it.
+`tests/global-setup.ts` probes `baseURL` before the suite and aborts if the
+server answering is not this site, checked against `siteConfig.url` and
+`siteConfig.name`. Nothing listening is fine; only a foreign server is rejected.
+If you see that error, stop whatever holds the port rather than editing the
+check.
+
 ```bash
 npm test
 npm run test:ui
