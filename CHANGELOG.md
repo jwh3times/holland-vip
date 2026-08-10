@@ -12,6 +12,14 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.32] - 2026-08-10
+
+### Changed
+
+- `next-env.d.ts` is no longer tracked and is ignored as a Next.js-generated file, preventing
+  `next dev` and `next build` from leaving environment-specific type-reference churn in the
+  working tree.
+
 ## [1.1.31] - 2026-08-09
 
 ### Added
