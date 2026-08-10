@@ -1,4 +1,5 @@
 // @vitest-environment node
+/* oxlint-disable typescript/no-unsafe-assignment, typescript/no-unsafe-call, typescript/no-unsafe-member-access -- the bare-node .mjs module has no TypeScript declarations */
 import { describe, it, expect } from "vitest";
 import {
   parseFrontmatter,

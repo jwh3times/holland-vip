@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/require-await -- async fetch test doubles intentionally resolve synchronously */
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { getFeaturedRepos, FEATURED_REPO_SLUGS, type Repo } from "@/lib/github";
 import fallback from "@/lib/github-fallback.json";

@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Personal portfolio website built with **Next.js 16.3+ (App Router)**, **React 19.2+**, **TypeScript 6.0+**, and **Tailwind CSS v4**. Configured for **static export** (SSG) and deployed to **Cloudflare Pages** (custom domain `holland.vip`). The `/out` static output is portable to any static host.
+Personal portfolio website built with **Next.js 16.3+ (App Router)**, **React 19.2+**, **TypeScript 7.0+**, and **Tailwind CSS v4**. Configured for **static export** (SSG) and deployed to **Cloudflare Pages** (custom domain `holland.vip`). The `/out` static output is portable to any static host.
 
 **Purpose**: Professional portfolio showcasing over a decade of software engineering experience.
 
@@ -50,7 +50,8 @@ import { Button } from "@/components/ui/button";
 
 ```bash
 npm run dev          # Start dev server on localhost:3000
-npm run lint         # ESLint check (Next.js + Prettier rules)
+npm run lint         # Oxlint check (TypeScript + React + Next.js rules)
+npm run lint:fix     # Apply Oxlint's safe fixes
 npm run format       # Auto-format with Prettier
 npm run format:check # Verify formatting without changes
 ```
@@ -143,7 +144,7 @@ All theme-aware elements use `transition-colors duration-300` for smooth mode sw
 
 **Linting/Formatting**:
 
-- ESLint flat config in `eslint.config.mjs` (ESLint 10) — `@eslint-react`, `typescript-eslint`, `react-hooks`, `@next/next`; `eslint-config-prettier` last so Prettier owns formatting
+- Oxlint config in `.oxlintrc.json` — native React Hooks and Next.js rules plus TypeScript 7-powered type-aware rules from `oxlint-tsgolint`; there are no ESLint dependencies or JavaScript-plugin bridges, and Prettier remains the standalone formatter
 - Prettier config in `.prettierrc` (100-col, LF, double quotes, ES5 trailing commas)
 
 ## Content Updates

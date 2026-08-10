@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Personal portfolio website for Jerry Holland built with Next.js 16+ (App Router), React 19.2+, TypeScript 6+, and Tailwind CSS v4. The site is configured for **static export** (SSG) and is deployed to **Cloudflare Pages** (custom domain `holland.vip`, with `www` 301-redirecting to the apex). Cloudflare Pages builds directly from the repo on push to `main`. The static `/out` output is portable to any static host.
+Personal portfolio website for Jerry Holland built with Next.js 16+ (App Router), React 19.2+, TypeScript 7+, and Tailwind CSS v4. The site is configured for **static export** (SSG) and is deployed to **Cloudflare Pages** (custom domain `holland.vip`, with `www` 301-redirecting to the apex). Cloudflare Pages builds directly from the repo on push to `main`. The static `/out` output is portable to any static host.
 
 Tailwind v4 is loaded via `@import "tailwindcss"` in [app/globals.css](app/globals.css) and configured entirely in CSS (custom properties + utility classes) — there is **no `tailwind.config.ts`**.
 
@@ -15,7 +15,8 @@ Tailwind v4 is loaded via `@import "tailwindcss"` in [app/globals.css](app/globa
 ```bash
 npm run dev          # Start dev server on localhost:3000
 npm run build        # Build static site to /out directory
-npm run lint         # Run ESLint
+npm run lint         # Run Oxlint
+npm run lint:fix     # Apply Oxlint's safe fixes
 npm run format       # Format code with Prettier
 npm run format:check # Check formatting without changes
 ```
@@ -340,7 +341,7 @@ if (!mounted) {
 
 ### Code Quality
 
-- ESLint flat config ([eslint.config.mjs](eslint.config.mjs)) on ESLint 10, using `@eslint-react` (TS-first, replaces `eslint-plugin-react`), `typescript-eslint`, `react-hooks`, and `@next/next`; `eslint-config-prettier` last so Prettier owns formatting
+- Oxlint config ([.oxlintrc.json](.oxlintrc.json)) with native React Hooks and Next.js rules plus TypeScript 7-powered type-aware rules from `oxlint-tsgolint`; there are no ESLint dependencies or JavaScript-plugin bridges, and Prettier remains the standalone formatter
 - Run `npm run format` before commits
 - Maintain TypeScript strict mode compliance
 - Unit-test coverage is gated at 95% in CI — new components generally need a test in `tests/unit/` (pure-JSX section/shell components are excluded from the gate and covered via seam tests instead; see Unit tests above)

@@ -28,8 +28,7 @@ updates:
       # --- Peer-locked families — majors only. All minor/patch bumps land in the
       #     catch-all group at the bottom. ---
 
-      # next and @next/eslint-plugin-next ship in lockstep — the plugin's major
-      # tracks the Next.js major it supports.
+      # Keep the Next.js framework family on one major line.
       next-ecosystem:
         patterns:
           - "next"
@@ -73,17 +72,12 @@ updates:
         update-types:
           - "major"
 
-      # @eslint/js is lockstep-versioned with eslint; plugins peer-cap on the eslint
-      # major; typescript-eslint peer-bounds both eslint and typescript.
+      # Oxlint and tsgolint provide syntax and TypeScript 7-powered semantic linting;
+      # keep their majors aligned with the project compiler line.
       lint-and-typescript:
         patterns:
-          - "eslint"
-          - "@eslint/*"
-          - "@eslint-react/*"
-          - "eslint-plugin-*"
-          - "eslint-config-*"
-          - "typescript-eslint"
-          - "globals"
+          - "oxlint"
+          - "oxlint-tsgolint"
           - "typescript"
         update-types:
           - "major"

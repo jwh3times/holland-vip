@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/no-unnecessary-type-assertion, typescript/only-throw-error, typescript/require-await -- intentional test doubles and non-Error throw coverage */
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { githubFetch, withFallback } from "@/lib/github-fetch";
 
