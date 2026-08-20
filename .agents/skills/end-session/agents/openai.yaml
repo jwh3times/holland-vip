@@ -1,0 +1,5 @@
+interface:
+  display_name: "End Session"
+  short_description: "Close out a work session cleanly"
+policy:
+  allow_implicit_invocation: false
