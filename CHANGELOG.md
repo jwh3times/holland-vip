@@ -12,6 +12,13 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.38] - 2026-08-20
+
+### Security
+
+- Bumped the transitive `nanoid` dependency (via `postcss`) from 3.3.17 to 3.3.18, resolving
+  GHSA-2v37-7h3g-55p8 (high): custom generators could loop indefinitely when `size` is zero.
+
 ## [1.1.37] - 2026-08-20
 
 ### Added
