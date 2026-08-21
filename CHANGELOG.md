@@ -12,6 +12,21 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.37] - 2026-08-20
+
+### Added
+
+- New `/end-session` agent skill for closing out a work session: it sorts the session's output into
+  project memory, the gitignored `private/` docs, GitHub issues, and local-workspace cleanup, and
+  stops short of pushing or shipping.
+
+## [1.1.36] - 2026-08-17
+
+### Changed
+
+- Updated `next` from 16.3.0 to 16.3.1, `@axe-core/playwright` from 4.12.1 to 4.13.0, and
+  `@testing-library/user-event` from 14.6.3 to 14.6.4.
+
 ## [1.1.35] - 2026-08-10
 
 ### Changed

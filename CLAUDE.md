@@ -407,6 +407,12 @@ Use `/ask-matt` to choose among the installed engineering workflows. Most build 
 `/ship`, which refreshes docs, writes the required versioned changelog entry, verifies the fast CI
 gates, pushes, and opens or updates the PR.
 
+### Session close-out
+
+`/end-session` (authored at `.agents/skills/end-session/SKILL.md`) ends a work session: it sorts
+what the session produced into project memory, the gitignored `private/` docs, GitHub issues, and
+local-workspace cleanup. User-invoked only, and it never pushes — `/ship` still owns that.
+
 ### Issue tracker
 
 Issues live in GitHub Issues for jwh3times/holland-vip, using the `gh` CLI. See
