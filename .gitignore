@@ -42,3 +42,6 @@ yarn-error.log*
 # Private Files
 private/
 /.claude/settings.local.json
+
+# Agent scratch output
+/.superpowers/

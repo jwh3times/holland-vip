@@ -410,13 +410,22 @@ gates, pushes, and opens or updates the PR.
 ### Session close-out
 
 `/end-session` (authored at `.agents/skills/end-session/SKILL.md`) ends a work session: it sorts
-what the session produced into project memory, the gitignored `private/` docs, GitHub issues, and
-local-workspace cleanup. User-invoked only, and it never pushes — `/ship` still owns that.
+what the session produced into public guidance, the independent private repository under
+`private/`, the matching GitHub Issue tracker, project memory, and local-workspace cleanup. It
+checks both repositories and reports private work that is uncommitted or unpushed. User-invoked
+only, and it never pushes — `/ship` still owns public shipping.
 
 ### Issue tracker
 
-Issues live in GitHub Issues for jwh3times/holland-vip, using the `gh` CLI. See
-`docs/agents/issue-tracker.md`.
+Public work lives in `jwh3times/holland-vip` Issues; confidential work lives in
+`jwh3times/holland-vip-workspace` Issues. See `docs/agents/issue-tracker.md` for routing.
+
+### Private workspace recovery
+
+Maintainers clone `jwh3times/holland-vip-workspace` as the ignored, independent `private/`
+repository. It is never a submodule or a public tracked path. Read
+`docs/agents/workspace-bootstrap.md` when setting up a machine, restoring private context, or
+checking whether a session is portable.
 
 ### Triage labels
 
