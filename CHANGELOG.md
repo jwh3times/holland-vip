@@ -12,6 +12,36 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.41] - 2026-08-25
+
+### Added
+
+- Added a fresh-machine bootstrap and storage contract for an independent private companion
+  repository under the public clone's ignored `private/` directory, including safe 1Password
+  injection and public/private Issue routing.
+- Added a portable root ignore for agent scratch output and preserved the workspace portability
+  research and implementation plan as public documentation.
+
+### Changed
+
+- Updated `/end-session` to reconcile both repositories, keep `private/CURRENT.md` as a short Issue
+  handoff, and report uncommitted or unpushed private work without publishing it.
+
+## [1.1.40] - 2026-08-24
+
+### Changed
+
+- Updated `lucide-react` from 1.31.0 to 1.33.0, `@vitejs/plugin-react` from 6.0.5 to 6.1.0,
+  `@vitest/coverage-v8` from 4.1.10 to 4.1.11, and `oxlint` from 1.78.0 to 1.79.0.
+- Replaced Oxlint's removed React Compiler umbrella rule with the explicit compiler-rule set
+  supported by Oxlint 1.79.
+
+## [1.1.39] - 2026-08-21
+
+### Changed
+
+- Updated `@testing-library/user-event` from 14.6.4 to 14.6.5.
+
 ## [1.1.38] - 2026-08-20
 
 ### Security

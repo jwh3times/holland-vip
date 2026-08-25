@@ -48,8 +48,13 @@ Professional portfolio website for Jerry Holland showcasing over a decade of sof
 2. Install dependencies:
 
    ```bash
-   npm install
+   npm ci
    ```
+
+The public clone is complete on its own. Maintainers recovering confidential workspace context clone
+the independent private companion into the ignored `private/` directory; see
+[`docs/agents/workspace-bootstrap.md`](docs/agents/workspace-bootstrap.md). Public contributors and
+CI never need that repository.
 
 ### Development
 
