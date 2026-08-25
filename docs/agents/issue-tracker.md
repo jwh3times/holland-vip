@@ -1,17 +1,38 @@
 # Issue tracker: GitHub
 
-Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
+Public and private work use separate GitHub Issue trackers. Use the `gh` CLI for all operations and
+route by disclosure boundary before reading or writing details.
+
+| Information                                          | Destination                                     |
+| ---------------------------------------------------- | ----------------------------------------------- |
+| Public code, architecture, and contributor guidance  | Public repository                               |
+| Durable private prose and session handoffs           | Private companion repository                    |
+| Public task or defect                                | `jwh3times/holland-vip` Issue                   |
+| Confidential task, decision, or infrastructure check | `jwh3times/holland-vip-workspace` Issue         |
+| Genuine undisclosed vulnerability                    | `jwh3times/holland-vip` draft security advisory |
+| Credential or recovery code                          | 1Password                                       |
+| Deployed credential copy                             | GitHub or Cloudflare secret store               |
+
+GitHub Projects are optional views over Issues, never the only copy of a task or decision.
+`private/CURRENT.md` links to active Issues but does not duplicate their bodies or maintain a second
+backlog.
 
 ## Conventions
 
-- **Create an issue**: `gh issue create --title "..." --body "..."`. Use a heredoc for multi-line bodies.
-- **Read an issue**: `gh issue view <number> --comments`, filtering comments by `jq` and also fetching labels.
-- **List issues**: `gh issue list --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'` with appropriate `--label` and `--state` filters.
-- **Comment on an issue**: `gh issue comment <number> --body "..."`
-- **Apply / remove labels**: `gh issue edit <number> --add-label "..."` / `--remove-label "..."`
-- **Close**: `gh issue close <number> --comment "..."`
+- **Create a public issue**: `gh issue create -R jwh3times/holland-vip --title "..." --body "..."`.
+- **Create a private issue**: `gh issue create -R jwh3times/holland-vip-workspace --title "..." --body "..."`.
+- **Read an issue**: `gh issue view -R <owner/repo> <number> --comments`, filtering comments by `jq` and also fetching labels.
+- **List issues**: `gh issue list -R <owner/repo> --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'` with appropriate `--label` and `--state` filters.
+- **Comment on an issue**: `gh issue comment -R <owner/repo> <number> --body "..."`
+- **Apply / remove labels**: `gh issue edit -R <owner/repo> <number> --add-label "..."` / `--remove-label "..."`
+- **Close**: `gh issue close -R <owner/repo> <number> --comment "..."`
 
-Infer the repo from `git remote -v` — `gh` does this automatically when run inside a clone.
+Use explicit `-R` routing whenever private context is in scope. Inference from `git remote -v` is
+acceptable only when the active repository and disclosure boundary are already unambiguous.
+
+On Windows, run authenticated `gh` operations outside the native elevated sandbox so the CLI can
+use the host credential manager. Never run `gh auth token`, print a token, copy one into the
+workspace, or transfer the CLI login into 1Password manually.
 
 ## Pull requests as a triage surface
 
@@ -27,7 +48,7 @@ GitHub shares one number space across issues and PRs, so a bare `#42` may be eit
 
 ## When a skill says "publish to the issue tracker"
 
-Create a GitHub issue.
+Create a GitHub Issue in the repository selected by the routing table.
 
 ## When a skill says "fetch the relevant ticket"
 
