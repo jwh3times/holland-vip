@@ -9,7 +9,7 @@ By participating, you agree to abide by our [Code of Conduct](./CODE_OF_CONDUCT.
 ## Getting set up
 
 Follow the [Getting Started](./README.md#-getting-started) section of the README
-(Node version pinned in `.nvmrc` — run `nvm use` — then `npm install`,
+(Node version pinned in `.nvmrc` — run `nvm use` — then `npm ci`,
 `npm run dev`).
 
 ## Workflow
