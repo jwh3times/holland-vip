@@ -12,6 +12,14 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.45] - 2026-08-27
+
+### Changed
+
+- `CONTRIBUTING.md` now tells contributors to install with `npm ci`, matching the README, the
+  workspace bootstrap guide, and CI, so a first install reproduces the locked dependency tree
+  instead of potentially rewriting `package-lock.json`.
+
 ## [1.1.44] - 2026-08-27
 
 ### Added
