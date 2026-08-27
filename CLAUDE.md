@@ -423,7 +423,11 @@ Public work lives in `jwh3times/holland-vip` Issues; confidential work lives in
 ### Private workspace recovery
 
 Maintainers clone `jwh3times/holland-vip-workspace` as the ignored, independent `private/`
-repository. It is never a submodule or a public tracked path. Read
+repository. It is never a submodule or a public tracked path. `npm run bootstrap:private`
+([scripts/bootstrap-private.mjs](scripts/bootstrap-private.mjs)) installs it — it reads the clone
+locator from 1Password (`op://holland-vip/holland-vip-workspace/private_repo_url`), validates it
+is a credential-free GitHub URL, and is a no-op when `private/.git` already exists — so run it in
+every new git worktree, where the ignored `private/` is absent. Read
 `docs/agents/workspace-bootstrap.md` when setting up a machine, restoring private context, or
 checking whether a session is portable.
 

@@ -12,6 +12,33 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.44] - 2026-08-27
+
+### Added
+
+- Added `npm run bootstrap:private` (`scripts/bootstrap-private.mjs`), which installs the private
+  companion repository into the ignored `private/` directory on a fresh machine or new git
+  worktree: it reads the clone locator from 1Password, accepts only a credential-free GitHub URL,
+  and exits without changes when the companion is already installed.
+
+### Changed
+
+- The workspace bootstrap guide now leads with the bootstrap script, documents its `--url`,
+  `--op-reference`, and `--service-account-reference` options, and notes that its PowerShell steps
+  map one-to-one to bash.
+
+## [1.1.43] - 2026-08-27
+
+### Changed
+
+- Updated `@types/react-dom` from 19.2.4 to 19.2.5.
+
+## [1.1.42] - 2026-08-25
+
+### Changed
+
+- Updated `next` from 16.3.1 to 16.3.2 and `@testing-library/user-event` from 14.6.5 to 14.6.6.
+
 ## [1.1.41] - 2026-08-25
 
 ### Added

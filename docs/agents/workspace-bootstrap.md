@@ -43,20 +43,41 @@ git clone https://github.com/jwh3times/holland-vip.git
 Set-Location holland-vip
 ```
 
-The companion name is intentionally public, so the normal private clone is:
+After `npm ci`, the fastest path — and the one to use for every new git worktree, where `private/`
+is absent because it is ignored — is the bootstrap script:
+
+```powershell
+npm run bootstrap:private
+```
+
+[`scripts/bootstrap-private.mjs`](../../scripts/bootstrap-private.mjs) reads the clone locator from
+`op://holland-vip/holland-vip-workspace/private_repo_url`, rejects any URL that is not a
+credential-free `github.com` HTTPS/SSH locator, clones it into `private/`, and exits 0 without
+touching anything if `private/.git` already exists (it refuses to overwrite a non-empty `private/`
+that is not a repository). `--url <locator>` bypasses 1Password, `--op-reference` points at a
+different field, and `--service-account-reference` (or the
+`HOLLAND_VIP_OP_SERVICE_ACCOUNT_REFERENCE` environment variable) names a field holding a 1Password
+service-account token to retry with when the interactive identity cannot read the item. Only the
+locator is ever read; the token never leaves the child process.
+
+The companion name is intentionally public, so the equivalent manual clone is:
 
 ```powershell
 git clone https://github.com/jwh3times/holland-vip-workspace.git private
 ```
 
 If a future companion name or locator is intentionally private, retrieve only the locator without
-displaying it:
+displaying it (this is what the script does):
 
 ```powershell
-$privateRepoUrl = op read "op://<vault>/holland-vip-workspace/private_repo_url"
+$privateRepoUrl = op read "op://holland-vip/holland-vip-workspace/private_repo_url"
 git clone -- $privateRepoUrl private
 Remove-Variable privateRepoUrl
 ```
+
+The commands in this document are written for PowerShell; every step maps one-to-one to bash
+(`cp` for `Copy-Item`, `cat` for `Get-Content`), and `npm run bootstrap:private` is identical on
+both.
 
 An HTTPS repository locator without an embedded credential may be passed to `git clone`; credential
 values still flow only through `op run` or direct standard input. Never add `.gitmodules`, stage

@@ -52,7 +52,8 @@ Professional portfolio website for Jerry Holland showcasing over a decade of sof
    ```
 
 The public clone is complete on its own. Maintainers recovering confidential workspace context clone
-the independent private companion into the ignored `private/` directory; see
+the independent private companion into the ignored `private/` directory with
+`npm run bootstrap:private` (also the step to run in each new git worktree); see
 [`docs/agents/workspace-bootstrap.md`](docs/agents/workspace-bootstrap.md). Public contributors and
 CI never need that repository.
 
