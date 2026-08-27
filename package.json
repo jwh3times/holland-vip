@@ -11,6 +11,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "sync:agents": "node scripts/sync-agents.mjs",
+    "bootstrap:private": "node scripts/bootstrap-private.mjs",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
     "test:unit:coverage": "vitest run --coverage",
