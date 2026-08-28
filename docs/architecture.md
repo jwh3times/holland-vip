@@ -35,6 +35,17 @@ Theme colors are CSS custom properties in `app/globals.css`, surfaced through se
 such as `text-heading`, `text-body`, and `section-surface`. Components compose classes with `cn()`
 from `lib/utils.ts`.
 
+`app/globals.css` defines these project-specific utility classes:
+
+- Text hierarchy: `text-heading`, `text-body`, `text-label`, `text-muted`
+- Badge text: `text-badge-blue`, `text-badge-green`, `text-badge-purple`,
+  `text-badge-orange`
+- Card surfaces: `card-bg-blue`, `card-bg-green`, `card-bg-purple`, `card-bg-orange`,
+  `card-bg-white`, `card-bg-white-transparent`, `card-bg-white-80`, `bento-card-bg`
+- Section and hero surfaces: `section-surface`, `section-surface-contrast`, `hero-section`
+- Decorative treatments: `gradient-text`, `gradient-text-blue`, `glass`
+- Animation: `animate-fadeInUp`
+
 The four accent names and every associated token live in `lib/accent.ts`. `Badge` and `Card`
 consume that table; callers name an accent rather than rebuilding background, border, and text
 class combinations.

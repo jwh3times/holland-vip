@@ -23,6 +23,8 @@ No unreleased changes.
 
 - Consolidated coding-agent guidance into authoritative `AGENTS.md` rules with thin Claude and
   Copilot overlays, and updated the docs-updater agent to route each fact to one owning document.
+- Updated the CSS documentation guard to validate the single owning architecture reference
+  instead of requiring duplicated utility catalogs in tool overlays.
 - Shortened the human README, corrected contributor guidance to the 95% coverage contract, and
   moved the surviving derived backlog into public Issues #121–#129.
 - Updated the workspace bootstrap guide for the private repository's reorganized settings example.
