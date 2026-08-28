@@ -1,6 +1,6 @@
 // Transforms + orchestration for keeping the per-harness agent artifacts in
 // sync with their canonical sources. See
-// docs/superpowers/specs/2026-07-22-codex-agent-sync-design.md.
+// docs/adr/0002-agent-artifact-sync.md.
 //
 // Two trees are hand-authored, and each derives one generated tree:
 //   .agents/skills/<name>/**   (source) → .claude/skills/<name>/**  (generated)

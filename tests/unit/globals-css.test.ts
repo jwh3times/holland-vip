@@ -88,16 +88,14 @@ describe("globals.css interface", () => {
     expect(dead, `unreferenced CSS variables in app/globals.css: ${dead.join(", ")}`).toEqual([]);
   });
 
-  it("documents every utility class in the files agents are told to read", () => {
-    // The class list is restated in CLAUDE.md and AGENTS.md. It has drifted
-    // before — 8 of 30 classes were undocumented in both. Keep them honest.
-    for (const doc of ["CLAUDE.md", "AGENTS.md"]) {
-      const text = readFileSync(join(root, doc), "utf8");
-      const undocumented = definedClasses().filter(
-        (name) => !NOT_REFERENCED_IN_SOURCE.has(name) && !text.includes(name)
-      );
-      expect(undocumented, `${doc} is missing: ${undocumented.join(", ")}`).toEqual([]);
-    }
+  it("documents every utility class in the owning architecture reference", () => {
+    const doc = "docs/architecture.md";
+    const text = readFileSync(join(root, doc), "utf8");
+    const undocumented = definedClasses().filter(
+      (name) => !NOT_REFERENCED_IN_SOURCE.has(name) && !text.includes(name)
+    );
+
+    expect(undocumented, `${doc} is missing: ${undocumented.join(", ")}`).toEqual([]);
   });
 
   it("defines no two text tokens with identical values in both themes", () => {

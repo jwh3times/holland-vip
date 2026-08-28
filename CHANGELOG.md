@@ -12,6 +12,37 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.47] - 2026-08-28
+
+### Added
+
+- Added a stable architecture reference and concise ADRs for release prediction, agent-artifact
+  synchronization, and the independent private-workspace boundary.
+
+### Changed
+
+- Consolidated coding-agent guidance into authoritative `AGENTS.md` rules with thin Claude and
+  Copilot overlays, and updated the docs-updater agent to route each fact to one owning document.
+- Updated the CSS documentation guard to validate the single owning architecture reference
+  instead of requiring duplicated utility catalogs in tool overlays.
+- Shortened the human README, corrected contributor guidance to the 95% coverage contract, and
+  moved the surviving derived backlog into public Issues #121–#129.
+- Updated the workspace bootstrap guide for the private repository's reorganized settings example.
+
+### Removed
+
+- Removed redundant directory READMEs and completed planning, design, and research documents whose
+  durable decisions now live in ADRs and whose work state now lives in GitHub Issues.
+- Removed the unrelated `public/README.md` handoff so it is no longer copied into the deployed
+  static export.
+
+## [1.1.46] - 2026-08-28
+
+### Changed
+
+- Updated `lucide-react` from 1.33.0 to 1.34.0, `@types/node` from 26.2.0 to 26.3.0, and
+  `oxlint` from 1.79.0 to 1.80.0.
+
 ## [1.1.45] - 2026-08-27
 
 ### Changed
