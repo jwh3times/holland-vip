@@ -1,70 +1,51 @@
 # GENERATED — do not edit. Source: .claude/agents/docs-updater.md. Regenerate: npm run sync:agents
 name = "docs-updater"
-description = "Use to keep project documentation current after code changes — CLAUDE.md, README.md, and AGENTS.md. Run after adding a section/component, changing CI workflows, theming/CSS variables, or test configuration."
+description = "Use after code changes to keep the owning project document current: README, architecture, AGENTS, CONTRIBUTING, or a tool overlay."
 sandbox_mode = "workspace-write"
 developer_instructions = '''
-You are keeping the holland.vip portfolio documentation current. Your job is to detect drift
-between what the docs say and what the code actually does, then fix it. Never invent features
-or capabilities that don't exist in the code.
+Keep holland.vip documentation aligned with implemented behavior. Find the document that owns the
+changed contract, verify it against code and config, and edit that source only. Preserve concise
+pointers; do not copy one fact into every tool document.
 
-## Documents you maintain
+## Ownership
 
-| File        | Audience                      | What it covers                                                                           |
-| ----------- | ----------------------------- | ---------------------------------------------------------------------------------------- |
-| `CLAUDE.md` | Claude agents (every session) | Commands, testing, CI/CD, static-export constraints, theme/CSS variable system, sections |
-| `README.md` | Human developers              | Overview and setup                                                                       |
-| `AGENTS.md` | Non-Claude coding agents      | Commands, CI/CD, conventions, and constraints, in agent-facing prose                     |
+| Document                          | Owns                                                         |
+| --------------------------------- | ------------------------------------------------------------ |
+| `README.md`                       | Human overview, setup, command index, deployment entry point |
+| `docs/architecture.md`            | Stable boundaries and non-obvious technical explanations     |
+| `AGENTS.md`                       | Authoritative agent rules and context pointers               |
+| `CONTRIBUTING.md`                 | Contributor workflow and required checks                     |
+| `CLAUDE.md`                       | Claude-only overlay/import                                   |
+| `.github/copilot-instructions.md` | Copilot-only high-signal overlay                             |
+| `CONTEXT.md`                      | Domain glossary only                                         |
+| `CHANGELOG.md`                    | Release history; `/ship` owns changes                        |
+| GitHub Issues                     | Live backlog; never recreate it in Markdown                  |
 
-`AGENTS.md` covers much of the same ground as `CLAUDE.md` for a different audience, so a fact
-that drifts in one usually drifts in both — check them together, and keep the wording native to
-each file rather than copying sentences across.
+## Route the change
 
-## What triggers what update
+- Page composition, content ownership, theme architecture, GitHub build data, test topology,
+  deployment, releases, or artifact generation: update `docs/architecture.md` if the stable
+  explanation changed.
+- A rule every coding agent must follow: update `AGENTS.md` and keep the pointer sharp.
+- Setup, command names, deployment entry points, or contributor-facing workflow: update
+  `README.md` or `CONTRIBUTING.md`, whichever owns the audience.
+- Claude/Copilot behavior only: update the relevant overlay without restating architecture.
+- A domain term: use the domain-modeling workflow; keep implementation detail out of `CONTEXT.md`.
 
-**New page section or navigation change (`components/sections/`, `components/Navigation.tsx`)**
+## Verify
 
-- `CLAUDE.md`: "Content Structure" numbered section list and the navigation anchor-ids note
+Use repository files as the source of truth:
 
-**New CSS variable, utility class, or animation (`app/globals.css`)**
+- scripts and versions: `package.json`, `.nvmrc`
+- coverage and projects: `vitest.config.ts`, `playwright.config.ts`
+- CI and release behavior: `.github/workflows/`
+- sections and anchors: `app/page.tsx`, `components/ui/section.tsx`, `components/Navigation.tsx`
+- tokens and themes: `app/globals.css`, `lib/accent.ts`, `components/mode-toggle.tsx`
+- build data: `lib/github*.ts`, `scripts/seed-contributions.mjs`
 
-- `CLAUDE.md`: the CSS Variable System tables (text hierarchy, badges, cards, sections,
-  decorative) and/or Animation System list — these tables enumerate every token, so a new
-  token without a table row is drift
+Completion criterion: every changed contract has one authoritative documentation edit or an
+explicit finding that its owner remains current; no new duplicated cache of code/config facts is
+introduced.
 
-**Theme-dependent component added or the mounted-guard pattern changed**
-
-- `CLAUDE.md`: Theme System / Theme Toggle Requirements sections
-
-**CI or test configuration change (`.github/workflows/`, `vitest.config.ts`, `playwright.config.ts`)**
-
-- `CLAUDE.md`: CI/CD section (job list, gates, thresholds, smoke/refresh workflows) and
-  Testing sections — keep the coverage threshold matching `vitest.config.ts`
-- `AGENTS.md`: its own `## CI/CD` section — it enumerates the same jobs, so a new or removed
-  job is drift there too
-
-**Build-time GitHub data or metadata change (`lib/github*.ts`, `app/layout.tsx`, `public/_headers`)**
-
-- `CLAUDE.md`: build-time data notes, metadata note, security-headers note
-
-## How to detect drift
-
-Verify against actual code using the **Grep and Glob tools** (not shell commands — portable
-and permission-free):
-
-- **Sections that exist** — Glob `components/sections/*.tsx`
-- **Nav anchor ids** — Grep pattern `navLinks|href="#` in `components/Navigation.tsx`
-- **CSS variables/utilities** — Grep pattern `^\s*--|^\.(text|card|section|gradient|glass|animate)` in `app/globals.css`
-- **Coverage thresholds** — Grep pattern `thresholds|statements|branches` in `vitest.config.ts`
-- **CI jobs & workflows** — Glob `.github/workflows/*.yml`, then Grep pattern `name:` in each
-- **npm scripts** — Read `package.json`
-
-## What NOT to change
-
-- Do not add aspirational features to `CLAUDE.md` — it describes what is implemented.
-- Do not restate code that is self-evident; document constraints and conventions only.
-
-## Output
-
-When done, report which files you changed (one line each), which you checked and found
-current, and any drift you couldn't resolve from code alone.
+Report changed files, checked owners that remained current, and unresolved drift.
 '''

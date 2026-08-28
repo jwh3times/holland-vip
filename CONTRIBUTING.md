@@ -21,7 +21,7 @@ Follow the [Getting Started](./README.md#-getting-started) section of the README
    ```bash
    npm run lint && npm run format:check   # Build & Lint job (with npm run build)
    npm run build
-   npm run test:unit:coverage             # Unit Tests & Coverage job (80% gate)
+   npm run test:unit:coverage             # Unit Tests & Coverage job (95% gate)
    npm test                               # Playwright E2E (CI runs Chromium projects)
    ```
 
@@ -32,11 +32,12 @@ Follow the [Getting Started](./README.md#-getting-started) section of the README
 
 - **Formatting** — Prettier owns formatting; run `npm run format` before
   committing. A PR fails CI if formatting drifts.
-- **Tests** — unit coverage is gated at **80%** (statements/branches/functions/
+- **Tests** — unit coverage is gated at **95%** (statements/branches/functions/
   lines), so new components generally need a test in `tests/unit/`.
-- **Conventions** — use the CSS-variable utility classes and the `cn()` helper;
-  never hardcode colors. The full conventions live in [CLAUDE.md](./CLAUDE.md)
-  (theme/hydration patterns, static-export constraints, styling DO/DON'Ts).
+- **Conventions** — use CSS-variable utilities and the `cn()` helper; keep literal colors out of
+  components. Stable architecture and invariants live in
+  [docs/architecture.md](./docs/architecture.md); agent-specific rules live in
+  [AGENTS.md](./AGENTS.md).
 
 ## Security issues
 

@@ -113,7 +113,7 @@ If the private repository contains a sanitized machine-settings example and thos
 still desired, copy it to the ignored local path:
 
 ```powershell
-Copy-Item private\runbooks\claude-settings.local.example.json .claude\settings.local.json
+Copy-Item private\examples\claude-settings.local.example.json .claude\settings.local.json
 ```
 
 Machine-specific settings are optional and are never required for the public build.

@@ -3,7 +3,7 @@ name: Sync Agent Artifacts
 # Regenerate the derived agent artifacts and commit any drift back to the PR
 # branch. Skills are authored in .agents/skills and generate .claude/skills;
 # subagents are authored in .claude/agents and generate .codex/agents. See
-# docs/superpowers/specs/2026-07-22-codex-agent-sync-design.md.
+# docs/adr/0002-agent-artifact-sync.md.
 
 on:
   pull_request:
