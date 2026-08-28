@@ -61,8 +61,8 @@ rebuild keeps successfully fetched live data current.
 ## Test and delivery topology
 
 Vitest and Testing Library cover modules with meaningful executable seams. Coverage policy lives
-in `vitest.config.ts`; pure-JSX shells are excluded from line accounting and asserted through seam
-tests instead.
+in `vitest.config.ts`; pure-JSX section and UI shell modules are excluded from line accounting and
+asserted through seam tests instead.
 
 Playwright starts its own server. Local runs cover the configured desktop and mobile projects. CI
 builds once, uploads `out/`, then runs the Chromium-engine projects against that downloaded

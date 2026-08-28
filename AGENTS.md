@@ -32,8 +32,8 @@ Authoritative guidance for coding agents working in this repository.
 - `components/ui/` owns reusable primitives.
 - `app/page.tsx` owns ordered page composition and derives body-section surfaces with
   `surfaceAt(index)`. Sections accept and forward a surface; they do not choose one.
-- `components/ui/section.tsx` owns anchor IDs and the section shell. Update `SECTION_IDS`,
-  `NAV_SECTION_IDS`, and navigation labels together.
+- `components/ui/section.tsx` owns anchor IDs and the section shell. Add navigable IDs to both
+  registries and their navigation label; add intentional deep-link-only IDs to `SECTION_IDS` alone.
 - `lib/site-config.ts` owns the contact email and social URLs.
 - `lib/accent.ts` owns the accent vocabulary and token table. Render accent pills/cards through
   `<Badge accent>` and `<Card accent>` instead of reconstructing their class strings.
