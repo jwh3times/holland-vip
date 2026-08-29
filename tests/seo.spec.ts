@@ -52,8 +52,53 @@ test.describe("SEO & Metadata", () => {
     await expect(manifest).toHaveAttribute("href", "/manifest.json");
   });
 
-  test("should have icon links", async ({ page }) => {
-    const iconLink = page.locator('link[rel="icon"]');
-    await expect(iconLink).toBeAttached();
+  test("should reference raster Apple touch and conventional favicon assets", async ({
+    page,
+    request,
+  }) => {
+    await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute(
+      "href",
+      "/apple-touch-icon.png"
+    );
+    await expect(page.locator('link[rel="icon"][href="/favicon.ico"]')).toBeAttached();
+
+    const [appleTouchIcon, favicon] = await Promise.all([
+      request.get("/apple-touch-icon.png"),
+      request.get("/favicon.ico"),
+    ]);
+
+    await expect(appleTouchIcon).toBeOK();
+    expect(appleTouchIcon.headers()["content-type"]).toContain("image/png");
+    await expect(favicon).toBeOK();
+    expect(favicon.headers()["content-type"]).toContain("image/x-icon");
+  });
+
+  test("should expose separate any and maskable raster manifest icons", async ({ request }) => {
+    const manifestResponse = await request.get("/manifest.json");
+    await expect(manifestResponse).toBeOK();
+
+    const manifest: unknown = await manifestResponse.json();
+    expect(manifest).toMatchObject({
+      icons: [
+        {
+          src: "/icon-192.png",
+          sizes: "192x192",
+          type: "image/png",
+          purpose: "any",
+        },
+        {
+          src: "/icon-512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "any",
+        },
+        {
+          src: "/icon-maskable-512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "maskable",
+        },
+      ],
+    });
   });
 });
