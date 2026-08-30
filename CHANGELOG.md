@@ -12,6 +12,13 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.1.48] - 2026-08-29
+
+### Fixed
+
+- Added compatible raster icons for Apple touch devices, conventional favicon consumers, and the
+  web manifest, including separate `any` and `maskable` variants for platform-appropriate display.
+
 ## [1.1.47] - 2026-08-28
 
 ### Added
