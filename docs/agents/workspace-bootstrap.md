@@ -94,6 +94,19 @@ git status --short --untracked-files=all
 The first two commands must describe the companion repository. The root status must not list any
 `private/` content.
 
+## Sync an existing workspace
+
+From the public repository root, move both independent repositories to `main` and fast-forward
+them from `origin/main`:
+
+```powershell
+npm run sync:main
+```
+
+The command refuses dirty worktrees and divergent branches rather than stashing changes or
+creating merge commits. If the private companion is not installed, it reports and skips it. Use
+`npm run sync:main -- --skip-private` when only the public checkout should be updated.
+
 ## Restore the working environment
 
 Install the exact public dependencies:

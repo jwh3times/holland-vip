@@ -12,6 +12,13 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.3.1] - 2026-09-02
+
+### Added
+
+- Added one root command to move the public repository and optional private companion to `main`
+  and fast-forward each from `origin/main`, while refusing dirty or divergent worktrees.
+
 ## [1.3.0] - 2026-09-02
 
 ### Added
