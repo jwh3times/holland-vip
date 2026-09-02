@@ -21,6 +21,11 @@ No unreleased changes.
 - Added an HTTP-level regression check for the exported security contact document and documented
   its annual renewal policy, including the CI warning window.
 
+### Fixed
+
+- Preserved the hidden `.well-known` directory when transferring the static export between CI
+  jobs, so Playwright verifies the same security contact document that is deployed.
+
 ## [1.2.0] - 2026-09-02
 
 ### Added

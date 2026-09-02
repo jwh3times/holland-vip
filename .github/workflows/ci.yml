@@ -49,6 +49,8 @@ jobs:
         with:
           name: static-site
           path: out/
+          # RFC 9116 requires the security contact at /.well-known/security.txt.
+          include-hidden-files: true
           retention-days: 7
 
   test:
