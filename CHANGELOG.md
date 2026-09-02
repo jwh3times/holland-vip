@@ -12,6 +12,15 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.3.0] - 2026-09-02
+
+### Added
+
+- Published an RFC 9116 security contact document at `/.well-known/security.txt`, with canonical,
+  policy, language, and expiration metadata.
+- Added an HTTP-level regression check for the exported security contact document and documented
+  its annual renewal policy, including the CI warning window.
+
 ## [1.2.0] - 2026-09-02
 
 ### Added
