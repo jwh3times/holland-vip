@@ -108,4 +108,24 @@ test.describe("SEO & Metadata", () => {
       ],
     });
   });
+
+  test("should publish current private vulnerability-reporting instructions", async ({
+    request,
+  }) => {
+    const response = await request.get("/.well-known/security.txt");
+    await expect(response).toBeOK();
+    expect(response.headers()["content-type"]).toContain("text/plain");
+
+    const body = await response.text();
+    expect(body).toContain("Contact: mailto:jerry@holland.vip");
+    expect(body).toContain(
+      "Contact: https://github.com/jwh3times/holland-vip/security/advisories/new"
+    );
+    expect(body).toContain("Canonical: https://holland.vip/.well-known/security.txt");
+    expect(body).toContain("Policy: https://github.com/jwh3times/holland-vip/security/policy");
+
+    const expires = body.match(/^Expires: (.+)$/m)?.[1];
+    expect(expires).toBeDefined();
+    expect(Date.parse(expires!)).toBeGreaterThan(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  });
 });

@@ -14,6 +14,11 @@ Please report security issues **privately** rather than opening a public issue:
 - Or use GitHub's [private vulnerability reporting](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability)
   on this repository (**Security → Report a vulnerability**).
 
+These channels are also published in the RFC 9116 discovery document at
+<https://holland.vip/.well-known/security.txt>. Its `Expires` field is renewed annually; the
+end-to-end test begins failing 30 days before expiration so stale reporting instructions cannot
+ship unnoticed.
+
 Please include:
 
 - A description of the issue and its potential impact

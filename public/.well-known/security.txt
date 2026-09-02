@@ -1,0 +1,6 @@
+Contact: mailto:jerry@holland.vip
+Contact: https://github.com/jwh3times/holland-vip/security/advisories/new
+Expires: 2027-08-31T23:59:59Z
+Canonical: https://holland.vip/.well-known/security.txt
+Policy: https://github.com/jwh3times/holland-vip/security/policy
+Preferred-Languages: en
