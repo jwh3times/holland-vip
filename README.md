@@ -53,6 +53,7 @@ handling.
 | `npm run test:unit`                | Run unit and component tests            |
 | `npm run test:unit:coverage`       | Run the gated V8 coverage suite         |
 | `npm test`                         | Run all Playwright projects             |
+| `npm run sync:main`                | Fast-forward public and private `main`  |
 | `npm run sync:agents`              | Regenerate Claude/Codex agent artifacts |
 | `npm run refresh:github-snapshots` | Refresh both validated GitHub fallbacks |
 
