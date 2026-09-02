@@ -65,9 +65,17 @@ force-cache behavior, non-OK failure, and warn-once fallback.
 An upstream failure uses the validated snapshot; an invalid snapshot degrades further to empty
 data. This makes public, CI, and offline builds independent from credentials and GitHub uptime.
 
-The contribution GraphQL query and level map live in a plain `.mjs` module because the standalone
-Node seeder imports the same contract without a TypeScript build step. A scheduled Cloudflare
-rebuild keeps successfully fetched live data current.
+The repository allowlist/normalizer and contribution query/normalizer live in plain `.mjs` modules
+so the standalone Node refresh script imports the production contracts without a TypeScript build
+step. `npm run refresh:github-snapshots`, run through the private process-scoped credential
+template, validates all upstream responses before replacing both committed snapshots. Review both
+JSON diffs and run the fallback tests before committing them. A scheduled Cloudflare rebuild keeps
+successfully fetched live data current between committed snapshot refreshes.
+
+The static homepage writes `data-github-data-source="live"` on its main element only when both
+repository and contribution requests succeed. If either request falls back—including when a
+committed snapshot is malformed and degrades to empty data—the marker is `fallback`. This exposes
+the build result to production checks without rendering UI or disclosing request details.
 
 ## Test and delivery topology
 
@@ -81,8 +89,10 @@ artifact. `tests/global-setup.ts` refuses to run against an unrelated service al
 port 3000.
 
 Cloudflare deployment is independent from GitHub Actions CI. The scheduled smoke workflow checks
-the deployed site, while the refresh workflow calls the Cloudflare Pages deploy hook. Release tags
-and changelog prediction follow [ADR 0001](adr/0001-release-and-ship.md).
+the deployed site. The refresh workflow calls the Cloudflare Pages deploy hook, polls the returned
+deployment ID through the Pages API until it succeeds or fails, then verifies both that deployment's
+URL and the production homepage report live GitHub data. Release tags and changelog prediction
+follow [ADR 0001](adr/0001-release-and-ship.md).
 
 ## Agent and private-workspace boundaries
 

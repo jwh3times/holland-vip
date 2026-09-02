@@ -129,8 +129,20 @@ op run --env-file private/config/holland-vip.env.tpl -- <command>
 For example:
 
 ```powershell
-op run --env-file private/config/holland-vip.env.tpl -- node scripts/seed-contributions.mjs
+op run --env-file private/config/holland-vip.env.tpl -- npm run refresh:github-snapshots
 ```
+
+The refresh fetches and validates both public fallback snapshots before replacing either one.
+Review and verify the generated pair together:
+
+```powershell
+git diff -- lib/github-fallback.json lib/github-contributions-fallback.json
+npm run test:unit -- --run tests/unit/github-fallback.test.ts
+```
+
+Commit both JSON files in the same public change after confirming that the featured repositories,
+descriptions, totals, dates, and contribution levels are plausible. Do not copy the token or any
+resolved private environment value into the commit.
 
 When a destination CLI accepts standard input, stream the field directly:
 

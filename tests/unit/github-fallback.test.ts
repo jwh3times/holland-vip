@@ -98,9 +98,10 @@ describe("a malformed committed snapshot", () => {
       })
     );
 
-    const { getFeaturedRepos } = await import("@/lib/github");
+    const { getFeaturedRepos, getFeaturedReposWithSource } = await import("@/lib/github");
 
     await expect(getFeaturedRepos()).resolves.toEqual([]);
+    await expect(getFeaturedReposWithSource()).resolves.toEqual({ data: [], source: "fallback" });
   });
 
   it("degrades getContributions to an empty calendar", async () => {
@@ -110,9 +111,14 @@ describe("a malformed committed snapshot", () => {
       default: { totalContributions: "not a number" },
     }));
 
-    const { getContributions } = await import("@/lib/github-contributions");
+    const { getContributions, getContributionsWithSource } =
+      await import("@/lib/github-contributions");
 
     await expect(getContributions()).resolves.toEqual({ totalContributions: 0, weeks: [] });
+    await expect(getContributionsWithSource()).resolves.toEqual({
+      data: { totalContributions: 0, weeks: [] },
+      source: "fallback",
+    });
   });
 });
 

@@ -1,6 +1,10 @@
 import { GITHUB_USER } from "./github";
-import { githubFetch, withFallback } from "./github-fetch";
-import { CONTRIBUTIONS_QUERY, LEVEL_MAP as RAW_LEVEL_MAP } from "./github-contributions-query.mjs";
+import { githubFetch, withFallbackSource, type GitHubDataResult } from "./github-fetch";
+import {
+  CONTRIBUTIONS_QUERY,
+  parseCalendar as parseCalendarContract,
+  toCalendar as toCalendarContract,
+} from "./github-contributions-query.mjs";
 import fallbackData from "./github-contributions-fallback.json";
 
 /** Intensity bucket for a single day, 0 (none) .. 4 (most), mirroring GitHub's quartiles. */
@@ -31,24 +35,7 @@ export interface ContributionCalendar {
  * must never break the build.
  */
 export function parseCalendar(data: unknown): ContributionCalendar | null {
-  if (typeof data !== "object" || data === null) return null;
-  const candidate = data as ContributionCalendar;
-  if (typeof candidate.totalContributions !== "number") return null;
-  if (!Array.isArray(candidate.weeks)) return null;
-
-  const daysValid = candidate.weeks.every(
-    (week) =>
-      Array.isArray(week) &&
-      week.every(
-        (day: unknown) =>
-          typeof day === "object" &&
-          day !== null &&
-          typeof (day as ContributionDay).date === "string" &&
-          typeof (day as ContributionDay).count === "number" &&
-          [0, 1, 2, 3, 4].includes((day as ContributionDay).level)
-      )
-  );
-  return daysValid ? candidate : null;
+  return parseCalendarContract(data) as ContributionCalendar | null;
 }
 
 /**
@@ -60,11 +47,6 @@ const fallbackCalendar: ContributionCalendar = parseCalendar(fallbackData) ?? {
   totalContributions: 0,
   weeks: [],
 };
-
-// The query and level mapping are shared with `scripts/seed-contributions.mjs`,
-// which runs under bare node and so cannot import this module. See that file's
-// header for why the shared piece is `.mjs`.
-const LEVEL_MAP = RAW_LEVEL_MAP as Record<string, ContributionLevel>;
 
 /** Shape of the slice of the GraphQL response we consume. */
 interface GraphQLContributionsResponse {
@@ -89,23 +71,7 @@ interface GraphQLContributionsResponse {
 
 /** Normalizes the GraphQL payload to a `ContributionCalendar`. */
 export function toCalendar(json: GraphQLContributionsResponse): ContributionCalendar {
-  if (json.errors?.length) {
-    throw new Error(`GitHub GraphQL errors: ${json.errors.map((e) => e.message).join("; ")}`);
-  }
-  const calendar = json.data?.user?.contributionsCollection.contributionCalendar;
-  if (!calendar) {
-    throw new Error("GitHub GraphQL returned no contribution calendar");
-  }
-  return {
-    totalContributions: calendar.totalContributions,
-    weeks: calendar.weeks.map((week) =>
-      week.contributionDays.map((day) => ({
-        date: day.date,
-        count: day.contributionCount,
-        level: LEVEL_MAP[day.contributionLevel] ?? 0,
-      }))
-    ),
-  };
+  return toCalendarContract(json) as ContributionCalendar;
 }
 
 async function fetchContributions(): Promise<ContributionCalendar> {
@@ -130,5 +96,12 @@ async function fetchContributions(): Promise<ContributionCalendar> {
  * Issues exactly one request.
  */
 export async function getContributions(): Promise<ContributionCalendar> {
-  return withFallback("contributions fetch", fallbackCalendar, fetchContributions);
+  return (await getContributionsWithSource()).data;
+}
+
+/** Returns contributions and the build-time source selected for them. */
+export async function getContributionsWithSource(): Promise<
+  GitHubDataResult<ContributionCalendar>
+> {
+  return withFallbackSource("contributions fetch", fallbackCalendar, fetchContributions);
 }

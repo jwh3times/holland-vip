@@ -41,19 +41,20 @@ handling.
 
 ## Commands
 
-| Command                      | Purpose                                 |
-| ---------------------------- | --------------------------------------- |
-| `npm run dev`                | Start the Next.js development server    |
-| `npm run build`              | Build the static export into `out/`     |
-| `npm run preview`            | Serve the built static export           |
-| `npm run lint`               | Run Oxlint                              |
-| `npm run lint:fix`           | Apply safe Oxlint fixes                 |
-| `npm run format`             | Format the repository with Prettier     |
-| `npm run format:check`       | Check formatting                        |
-| `npm run test:unit`          | Run unit and component tests            |
-| `npm run test:unit:coverage` | Run the gated V8 coverage suite         |
-| `npm test`                   | Run all Playwright projects             |
-| `npm run sync:agents`        | Regenerate Claude/Codex agent artifacts |
+| Command                            | Purpose                                 |
+| ---------------------------------- | --------------------------------------- |
+| `npm run dev`                      | Start the Next.js development server    |
+| `npm run build`                    | Build the static export into `out/`     |
+| `npm run preview`                  | Serve the built static export           |
+| `npm run lint`                     | Run Oxlint                              |
+| `npm run lint:fix`                 | Apply safe Oxlint fixes                 |
+| `npm run format`                   | Format the repository with Prettier     |
+| `npm run format:check`             | Check formatting                        |
+| `npm run test:unit`                | Run unit and component tests            |
+| `npm run test:unit:coverage`       | Run the gated V8 coverage suite         |
+| `npm test`                         | Run all Playwright projects             |
+| `npm run sync:agents`              | Regenerate Claude/Codex agent artifacts |
+| `npm run refresh:github-snapshots` | Refresh both validated GitHub fallbacks |
 
 Playwright starts its own server. Set `E2E_TARGET=build` after `npm run build` to exercise the same
 static-export target used in CI.

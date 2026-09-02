@@ -1,6 +1,6 @@
 {
   "name": "hollandvip_webpage",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Personal portfolio website for holland.vip",
   "scripts": {
     "dev": "next dev",
@@ -11,6 +11,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "sync:agents": "node scripts/sync-agents.mjs",
+    "refresh:github-snapshots": "node scripts/refresh-github-snapshots.mjs",
     "bootstrap:private": "node scripts/bootstrap-private.mjs",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",

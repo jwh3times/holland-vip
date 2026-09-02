@@ -3,25 +3,32 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Home from "@/app/page";
 import { ThemeProvider } from "@/components/theme-provider";
-import { getFeaturedRepos } from "@/lib/github";
+import { getFeaturedReposWithSource } from "@/lib/github";
+import { getContributionsWithSource } from "@/lib/github-contributions";
 
 // Stub the build-time GitHub fetch so the async page renders deterministically
 // without hitting the network.
 vi.mock("@/lib/github", () => ({
-  getFeaturedRepos: vi.fn(async () => [
-    {
-      name: "apexracers",
-      description: "Lap time percentile tracking",
-      language: "C#",
-      stars: 1,
-      pushedAt: "2026-06-18T00:00:00Z",
-      url: "https://github.com/jwh3times/apexracers",
-    },
-  ]),
+  getFeaturedReposWithSource: vi.fn(async () => ({
+    data: [
+      {
+        name: "apexracers",
+        description: "Lap time percentile tracking",
+        language: "C#",
+        stars: 1,
+        pushedAt: "2026-06-18T00:00:00Z",
+        url: "https://github.com/jwh3times/apexracers",
+      },
+    ],
+    source: "live",
+  })),
 }));
 
 vi.mock("@/lib/github-contributions", () => ({
-  getContributions: vi.fn(async () => ({ totalContributions: 0, weeks: [] })),
+  getContributionsWithSource: vi.fn(async () => ({
+    data: { totalContributions: 0, weeks: [] },
+    source: "live",
+  })),
 }));
 
 const repoFixture = {
@@ -49,7 +56,14 @@ async function renderPage() {
 
 describe("Home page", () => {
   beforeEach(() => {
-    vi.mocked(getFeaturedRepos).mockResolvedValue([repoFixture]);
+    vi.mocked(getFeaturedReposWithSource).mockResolvedValue({
+      data: [repoFixture],
+      source: "live",
+    });
+    vi.mocked(getContributionsWithSource).mockResolvedValue({
+      data: { totalContributions: 0, weeks: [] },
+      source: "live",
+    });
   });
 
   it("composes navigation, main content, and footer", async () => {
@@ -68,6 +82,19 @@ describe("Home page", () => {
     expect(screen.getByRole("heading", { name: "Get In Touch" })).toBeInTheDocument();
   });
 
+  it("marks the static page live only when both GitHub requests are live", async () => {
+    const first = await renderPage();
+    expect(screen.getByRole("main")).toHaveAttribute("data-github-data-source", "live");
+    first.unmount();
+
+    vi.mocked(getContributionsWithSource).mockResolvedValue({
+      data: { totalContributions: 0, weeks: [] },
+      source: "fallback",
+    });
+    await renderPage();
+    expect(screen.getByRole("main")).toHaveAttribute("data-github-data-source", "fallback");
+  });
+
   it("alternates section surfaces with no two adjacent sections matching", async () => {
     const { surfaces } = await renderPage();
 
@@ -81,7 +108,7 @@ describe("Home page", () => {
   // time, which silently re-phased the surface alternation for every section
   // below it. The decision now lives here, before surfaces are assigned.
   it("drops the Open Source section when there are no repos", async () => {
-    vi.mocked(getFeaturedRepos).mockResolvedValue([]);
+    vi.mocked(getFeaturedReposWithSource).mockResolvedValue({ data: [], source: "fallback" });
 
     const { surfaces } = await renderPage();
 
@@ -99,7 +126,7 @@ describe("Home page", () => {
     const withRepoCount = withRepos.surfaces.length;
     withRepos.unmount();
 
-    vi.mocked(getFeaturedRepos).mockResolvedValue([]);
+    vi.mocked(getFeaturedReposWithSource).mockResolvedValue({ data: [], source: "fallback" });
     const withoutRepos = await renderPage();
 
     expect(withoutRepos.surfaces.length).toBe(withRepoCount - 1);

@@ -1,6 +1,6 @@
 /* oxlint-disable typescript/no-unnecessary-type-assertion, typescript/only-throw-error, typescript/require-await -- intentional test doubles and non-Error throw coverage */
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { githubFetch, withFallback } from "@/lib/github-fetch";
+import { githubFetch, withFallback, withFallbackSource } from "@/lib/github-fetch";
 
 function okResponse(body: unknown = { ok: true }): Response {
   return { ok: true, status: 200, json: async () => body } as unknown as Response;
@@ -131,5 +131,24 @@ describe("withFallback", () => {
 
     expect(result).toBe("snapshot");
     expect(warn.mock.calls[0][0]).toContain("plain string");
+  });
+});
+
+describe("withFallbackSource", () => {
+  it("reports live when the fetch succeeds", async () => {
+    await expect(withFallbackSource("test", "snapshot", async () => "live")).resolves.toEqual({
+      data: "live",
+      source: "live",
+    });
+  });
+
+  it("reports fallback without throwing when the fetch fails", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    await expect(
+      withFallbackSource("test", "snapshot", async () => {
+        throw new Error("offline");
+      })
+    ).resolves.toEqual({ data: "snapshot", source: "fallback" });
   });
 });

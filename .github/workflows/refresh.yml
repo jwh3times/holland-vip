@@ -10,7 +10,9 @@ name: Refresh build (repo data)
 #      Deploy hooks → create a hook (branch: main). Copy the generated URL.
 #   2. GitHub → repo Settings → Secrets and variables → Actions → New repository secret
 #      named CLOUDFLARE_DEPLOY_HOOK_URL, value = the hook URL.
-# The hook URL is a write trigger, so it's kept as a secret (not a plain var).
+#   3. Add CLOUDFLARE_API_TOKEN (Pages Read) and CLOUDFLARE_ACCOUNT_ID as
+#      repository secrets, plus CLOUDFLARE_PROJECT_NAME as a repository variable.
+# The hook URL and API token are credentials, so they remain secrets.
 on:
   schedule:
     # Weekly, Mondays at 08:00 UTC. Scheduled runs execute on the default branch.
@@ -22,10 +24,20 @@ permissions:
 
 jobs:
   refresh:
-    name: Trigger Cloudflare rebuild
+    name: Rebuild and verify production
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
-      - name: Ping Cloudflare deploy hook
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Trigger Cloudflare deploy hook
+        id: trigger
         env:
           DEPLOY_HOOK_URL: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK_URL }}
         run: |
@@ -39,15 +51,24 @@ jobs:
           echo "POST <deploy hook> (URL hidden — secret)"
           status=$(curl -sS -X POST --retry 3 --retry-delay 5 -o response.json -w '%{http_code}' "$DEPLOY_HOOK_URL")
           echo "HTTP $status"
-          cat response.json || true
-          echo
-
           case "$status" in
             2*)
-              echo "Cloudflare rebuild triggered."
+              deployment_id=$(jq -er '.result.id' response.json) || {
+                echo "::error::Deploy hook response did not include a deployment ID"
+                exit 1
+              }
+              echo "deployment_id=$deployment_id" >> "$GITHUB_OUTPUT"
+              echo "Cloudflare rebuild triggered for deployment $deployment_id."
               ;;
             *)
               echo "::error::Deploy hook returned HTTP $status (expected 2xx)"
               exit 1
               ;;
           esac
+
+      - name: Wait for deployment and verify production
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PROJECT_NAME: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
+        run: node scripts/verify-cloudflare-deployment.mjs "${{ steps.trigger.outputs.deployment_id }}"

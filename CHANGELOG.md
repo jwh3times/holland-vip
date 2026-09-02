@@ -12,6 +12,35 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.2.0] - 2026-09-02
+
+### Added
+
+- Added one validated command to refresh both committed GitHub fallback snapshots through
+  process-scoped credentials, sharing the production query and normalization contracts.
+- Added a non-sensitive live-versus-fallback marker to the static homepage so automated checks can
+  detect degraded GitHub data without visible UI noise.
+
+### Changed
+
+- The scheduled Cloudflare refresh now follows the deploy-hook response through the corresponding
+  Pages deployment, fails on provider failure or timeout, and verifies live GitHub data on both the
+  deployment artifact and production homepage before reporting success.
+
+## [1.1.50] - 2026-09-01
+
+### Changed
+
+- Updated `lucide-react` from 1.35.0 to 1.37.0.
+
+## [1.1.49] - 2026-09-01
+
+### Changed
+
+- Updated `lucide-react` from 1.34.0 to 1.35.0, `next` from 16.3.2 to 16.3.3,
+  `@testing-library/react` from 16.3.2 to 16.3.3, `@types/node` from 26.3.0 to 26.4.0, and
+  `@vitejs/plugin-react` from 6.1.0 to 6.1.1.
+
 ## [1.1.48] - 2026-08-29
 
 ### Fixed

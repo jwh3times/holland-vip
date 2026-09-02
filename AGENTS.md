@@ -57,8 +57,8 @@ policy in `lib/github-fetch.ts` adds the build User-Agent, optionally authentica
 `GITHUB_TOKEN`, and degrades to committed snapshots. `parseRepos()` and `parseCalendar()` validate
 snapshots; malformed snapshots degrade to empty data instead of failing the build.
 
-Keep this path non-throwing and compatible with tokenless builds. The shared GraphQL query remains
-plain `.mjs` so the bare-Node seeding script can import it.
+Keep this path non-throwing and compatible with tokenless builds. The shared repository and
+contribution contracts remain plain `.mjs` so the bare-Node snapshot refresh can import them.
 
 ## Verification
 
@@ -88,8 +88,8 @@ projects against `out/`. `tests/global-setup.ts` rejects a foreign server alread
   version source of truth.
 - `.github/workflows/smoke.yml` checks the deployed site. Cloudflare Bot Fight Mode must stay off
   for GitHub-hosted runners to reach it.
-- `.github/workflows/refresh.yml` triggers the Cloudflare Pages deploy hook so baked GitHub data is
-  refreshed.
+- `.github/workflows/refresh.yml` triggers and verifies the Cloudflare Pages rebuild that refreshes
+  baked GitHub data.
 - Cloudflare Pages deploys directly from GitHub. There is no deploy workflow in this repository.
 
 ## Documentation ownership
