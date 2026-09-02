@@ -52,6 +52,13 @@ test.describe("SEO & Metadata", () => {
     await expect(manifest).toHaveAttribute("href", "/manifest.json");
   });
 
+  test("should expose the build-time GitHub data source", async ({ page }) => {
+    await expect(page.locator("main#main-content")).toHaveAttribute(
+      "data-github-data-source",
+      /^(live|fallback)$/
+    );
+  });
+
   test("should reference raster Apple touch and conventional favicon assets", async ({
     page,
     request,

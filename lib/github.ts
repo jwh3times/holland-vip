@@ -1,8 +1,11 @@
-import { githubFetch, withFallback } from "./github-fetch";
+import { githubFetch, withFallbackSource, type GitHubDataResult } from "./github-fetch";
+import {
+  FEATURED_REPO_SLUGS as RAW_FEATURED_REPO_SLUGS,
+  GITHUB_USER,
+  parseRepos as parseRepoContract,
+  toRepo,
+} from "./github-repos-contract.mjs";
 import fallbackData from "./github-fallback.json";
-
-/** GitHub account whose public repos are featured. */
-export const GITHUB_USER = "jwh3times";
 
 /**
  * Curated allowlist of repos to feature, in display order.
@@ -11,12 +14,8 @@ export const GITHUB_USER = "jwh3times";
  * keeps the interview-submission repos out of the Open Source section. Update
  * this array (and `github-fallback.json`) to change what the site shows.
  */
-export const FEATURED_REPO_SLUGS = [
-  "apexracers",
-  "LeaseBook",
-  "GuardianTracker",
-  "holland-vip",
-] as const;
+export { GITHUB_USER };
+export const FEATURED_REPO_SLUGS = RAW_FEATURED_REPO_SLUGS as readonly string[];
 
 /** A featured repository, normalized to just the fields the UI renders. */
 export interface Repo {
@@ -41,19 +40,7 @@ export interface Repo {
  * must never break the build.
  */
 export function parseRepos(data: unknown): Repo[] | null {
-  if (!Array.isArray(data) || data.length === 0) return null;
-  const ok = data.every(
-    (r: unknown) =>
-      typeof r === "object" &&
-      r !== null &&
-      typeof (r as Repo).name === "string" &&
-      (typeof (r as Repo).description === "string" || (r as Repo).description === null) &&
-      (typeof (r as Repo).language === "string" || (r as Repo).language === null) &&
-      typeof (r as Repo).stars === "number" &&
-      typeof (r as Repo).pushedAt === "string" &&
-      typeof (r as Repo).url === "string"
-  );
-  return ok ? (data as Repo[]) : null;
+  return parseRepoContract(data) as Repo[] | null;
 }
 
 /**
@@ -65,26 +52,6 @@ export function parseRepos(data: unknown): Repo[] | null {
 const fallbackRepos: Repo[] = parseRepos(fallbackData) ?? [];
 
 /** The subset of GitHub's `/repos/{owner}/{repo}` payload we consume. */
-interface GitHubRepoResponse {
-  name: string;
-  description: string | null;
-  language: string | null;
-  stargazers_count: number;
-  pushed_at: string;
-  html_url: string;
-}
-
-function toRepo(r: GitHubRepoResponse): Repo {
-  return {
-    name: r.name,
-    description: r.description,
-    language: r.language,
-    stars: r.stargazers_count,
-    pushedAt: r.pushed_at,
-    url: r.html_url,
-  };
-}
-
 async function fetchRepo(slug: string): Promise<Repo> {
   // The token is optional here — it only lifts the 60 req/hr unauthenticated
   // limit. The REST repo API serves public repos anonymously.
@@ -95,7 +62,7 @@ async function fetchRepo(slug: string): Promise<Repo> {
       "X-GitHub-Api-Version": "2022-11-28",
     },
   });
-  return toRepo(json as GitHubRepoResponse);
+  return toRepo(json) as Repo;
 }
 
 /**
@@ -110,7 +77,12 @@ async function fetchRepo(slug: string): Promise<Repo> {
  * them. `getContributions()` issues one request by comparison.
  */
 export async function getFeaturedRepos(): Promise<Repo[]> {
-  return withFallback("live repo fetch", fallbackRepos, () =>
+  return (await getFeaturedReposWithSource()).data;
+}
+
+/** Returns featured repositories and the build-time source selected for them. */
+export async function getFeaturedReposWithSource(): Promise<GitHubDataResult<Repo[]>> {
+  return withFallbackSource("live repo fetch", fallbackRepos, () =>
     Promise.all(FEATURED_REPO_SLUGS.map(fetchRepo))
   );
 }

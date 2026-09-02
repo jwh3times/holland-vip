@@ -13,6 +13,13 @@
 
 const USER_AGENT = "holland-vip-build";
 
+export type GitHubDataSource = "live" | "fallback";
+
+export interface GitHubDataResult<T> {
+  data: T;
+  source: GitHubDataSource;
+}
+
 /**
  * Performs an authenticated build-time GitHub request and returns the parsed
  * JSON body.
@@ -86,11 +93,20 @@ export async function withFallback<T>(
   snapshot: T,
   fetchLive: () => Promise<T>
 ): Promise<T> {
+  return (await withFallbackSource(label, snapshot, fetchLive)).data;
+}
+
+/** Runs a live fetch and preserves whether live or fallback data won. */
+export async function withFallbackSource<T>(
+  label: string,
+  snapshot: T,
+  fetchLive: () => Promise<T>
+): Promise<GitHubDataResult<T>> {
   try {
-    return await fetchLive();
+    return { data: await fetchLive(), source: "live" };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.warn(`[github] ${label} failed, using committed fallback: ${message}`);
-    return snapshot;
+    return { data: snapshot, source: "fallback" };
   }
 }
