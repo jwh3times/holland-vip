@@ -53,6 +53,7 @@ handling.
 | `npm run format:check`             | Check formatting                        |
 | `npm run test:unit`                | Run unit and component tests            |
 | `npm run test:unit:coverage`       | Run the gated V8 coverage suite         |
+| `npm run test:lighthouse`          | Audit the built export against budgets  |
 | `npm test`                         | Run all Playwright projects             |
 | `npm run sync:main`                | Fast-forward public and private `main`  |
 | `npm run sync:agents`              | Regenerate Claude/Codex agent artifacts |
@@ -60,6 +61,10 @@ handling.
 
 Playwright starts its own server. Set `E2E_TARGET=build` after `npm run build` to exercise the same
 static-export target used in CI.
+
+After `npm run build`, `npm run test:lighthouse` runs the versioned performance and best-practices
+budgets against `out/`. It uses Playwright's managed Chromium; install that browser once with
+`npx playwright install chromium` if it is not already available.
 
 ## Architecture
 
