@@ -22,6 +22,7 @@ interface LighthouseConfig {
       numberOfRuns: number;
       chromePath: string;
       puppeteerScript: string;
+      puppeteerLaunchOptions: { args: string[] };
     };
     assert: { assertions: Record<string, Assertion> };
     upload: { target: string; outputDir: string };
@@ -44,6 +45,9 @@ describe("Lighthouse CI budget", () => {
       puppeteerScript: "./scripts/lighthouse-puppeteer.cjs",
     });
     expect(config.ci.collect.chromePath).toContain("chromium");
+    expect(config.ci.collect.puppeteerLaunchOptions.args).toEqual(
+      process.env.CI ? ["--no-sandbox"] : []
+    );
     expect(config.ci.assert.assertions).toMatchObject({
       "categories:performance": ["error", { minScore: 0.85, aggregationMethod: "median-run" }],
       "categories:best-practices": ["error", { minScore: 0.95, aggregationMethod: "median-run" }],

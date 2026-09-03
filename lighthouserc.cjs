@@ -8,6 +8,9 @@ module.exports = {
       numberOfRuns: 5,
       chromePath: chromium.executablePath(),
       puppeteerScript: "./scripts/lighthouse-puppeteer.cjs",
+      puppeteerLaunchOptions: {
+        args: process.env.CI ? ["--no-sandbox"] : [],
+      },
     },
     assert: {
       assertions: {
