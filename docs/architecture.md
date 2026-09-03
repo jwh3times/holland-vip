@@ -87,7 +87,9 @@ asserted through seam tests instead.
 Playwright starts its own server. Local runs cover the configured desktop and mobile projects. CI
 builds once, uploads `out/`, then runs the Chromium-engine projects against that downloaded
 artifact. `tests/global-setup.ts` refuses to run against an unrelated service already listening on
-port 3000.
+port 3000. A separate weekly and manually dispatchable workflow builds one static export, fans out
+Firefox and WebKit into independent jobs, and uploads an engine-specific report from each. This
+adds cross-browser regression coverage without extending routine merge checks.
 
 Cloudflare deployment is independent from GitHub Actions CI. The daily and manually dispatchable
 smoke workflow runs `npm run smoke:production` against the deployed site. That command checks the

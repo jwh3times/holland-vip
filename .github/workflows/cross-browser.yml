@@ -1,0 +1,97 @@
+name: Cross-browser E2E
+
+# Keep Firefox and WebKit coverage outside the merge-time critical path. Scheduled
+# workflows run from the default branch; workflow_dispatch supports targeted reruns.
+on:
+  schedule:
+    - cron: "17 8 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+
+jobs:
+  build:
+    name: Build static export
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Upload static export
+        uses: actions/upload-artifact@v7
+        with:
+          name: cross-browser-static-site
+          path: out/
+          include-hidden-files: true
+          retention-days: 7
+
+  test:
+    name: ${{ matrix.label }} Playwright
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - browser: firefox
+            project: firefox
+            label: Firefox
+          - browser: webkit
+            project: webkit
+            label: WebKit
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download static export
+        uses: actions/download-artifact@v8
+        with:
+          name: cross-browser-static-site
+          path: out
+
+      - name: Install ${{ matrix.label }}
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Run ${{ matrix.label }} tests
+        run: npm run test:e2e -- --project="${{ matrix.project }}"
+
+      - name: Upload ${{ matrix.label }} report
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: playwright-report/
+          retention-days: 7
