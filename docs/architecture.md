@@ -91,6 +91,12 @@ port 3000. A separate weekly and manually dispatchable workflow builds one stati
 Firefox and WebKit into independent jobs, and uploads an engine-specific report from each. This
 adds cross-browser regression coverage without extending routine merge checks.
 
+Lighthouse CI measures the same downloaded static export in a separate advisory merge-time job.
+Its versioned configuration collects five runs through Playwright's managed Chromium and evaluates
+the representative median run against performance, best-practices, paint, blocking-time, and
+layout-shift budgets. The command fails locally when a budget regresses; CI currently allows the
+job to fail without blocking a merge and retains its generated reports for diagnosis.
+
 Cloudflare deployment is independent from GitHub Actions CI. The daily and manually dispatchable
 smoke workflow runs `npm run smoke:production` against the deployed site. That command checks the
 homepage identity, complete security-header contract, public metadata artifacts, RFC 9116 contact,

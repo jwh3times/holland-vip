@@ -12,6 +12,7 @@
 /test-results/
 /blob-report/
 /.playwright/
+/.lighthouseci/
 
 # next.js
 /.next/
