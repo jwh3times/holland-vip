@@ -1,3 +1,4 @@
+/* oxlint-disable react/no-danger -- Next.js requires serialized JSON-LD in a native script. */
 import * as React from "react";
 
 import { Navigation } from "@/components/Navigation";
@@ -17,6 +18,7 @@ import {
 import { surfaceAt, type SectionSurface } from "@/components/ui/section";
 import { getFeaturedReposWithSource } from "@/lib/github";
 import { getContributionsWithSource } from "@/lib/github-contributions";
+import { siteConfig, socialLinks } from "@/lib/site-config";
 
 // Keep the page fully static. Required because the contributions request is a POST,
 // which would otherwise opt the route into dynamic rendering — not allowed under
@@ -24,6 +26,32 @@ import { getContributionsWithSource } from "@/lib/github-contributions";
 // from lib/), so it is the one detail the fetch policy can't own; see the note on
 // `githubFetch` in lib/github-fetch.ts.
 export const dynamic = "force-static";
+
+const personId = `${siteConfig.url}/#person`;
+const homepageStructuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": personId,
+      name: siteConfig.name,
+      url: siteConfig.url,
+      email: `mailto:${siteConfig.email}`,
+      sameAs: socialLinks.map(({ href }) => href),
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteConfig.url}/#website`,
+      name: siteConfig.name,
+      url: siteConfig.url,
+      publisher: { "@id": personId },
+    },
+  ],
+};
+
+// Next.js recommends a native script for JSON-LD and escaping markup-significant
+// characters before injecting the serialized payload.
+const serializedStructuredData = JSON.stringify(homepageStructuredData).replace(/</g, "\\u003c");
 
 export default async function Home() {
   // Resolved at build time (static export). Neither call throws — both go through
@@ -67,6 +95,10 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializedStructuredData }}
+      />
       <Navigation />
 
       <main
