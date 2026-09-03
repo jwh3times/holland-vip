@@ -17,44 +17,18 @@ jobs:
   smoke:
     name: Production smoke check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     # Reaches the live site from a GitHub (datacenter) runner. This works only
     # because Cloudflare Bot Fight Mode is OFF for holland.vip — free-plan Bot
     # Fight Mode 403s datacenter IPs and cannot be skipped by any rule or header.
     steps:
-      - name: Homepage responds and renders expected content
-        run: |
-          set -euo pipefail
-          url="https://holland.vip/"
+      - name: Checkout smoke checker
+        uses: actions/checkout@v7
 
-          echo "GET $url"
-          status=$(curl -sS -L --retry 3 --retry-delay 5 -o body.html -w '%{http_code}' "$url")
-          echo "HTTP $status"
-          if [ "$status" != "200" ]; then
-            echo "::error::Expected HTTP 200 from $url, got $status"
-            exit 1
-          fi
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: ".nvmrc"
 
-          if ! grep -q "Jerry Holland" body.html; then
-            echo "::error::Homepage did not contain expected content 'Jerry Holland'"
-            exit 1
-          fi
-          echo "Homepage status + content OK"
-
-      - name: Security headers are present
-        run: |
-          set -euo pipefail
-          url="https://holland.vip/"
-          headers=$(curl -sS -L -D - -o /dev/null "$url" | tr -d '\r')
-          echo "$headers"
-
-          require_header() {
-            if ! printf '%s\n' "$headers" | grep -iq "^$1:"; then
-              echo "::error::Missing expected response header: $1"
-              exit 1
-            fi
-          }
-          require_header "content-security-policy"
-          require_header "strict-transport-security"
-          require_header "x-content-type-options"
-          require_header "x-frame-options"
-          echo "Security headers OK"
+      - name: Verify the deployed HTTP contract
+        run: npm run smoke:production

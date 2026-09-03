@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "preview": "npx serve out",
+    "smoke:production": "node scripts/check-production-smoke.mjs",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",
     "format": "prettier --write .",
