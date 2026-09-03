@@ -12,6 +12,13 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.0] - 2026-09-02
+
+### Added
+
+- Published a static schema.org `Person` and `WebSite` graph on the homepage so search engines and
+  AI systems can connect the portfolio's canonical identity, contact address, and social profiles.
+
 ## [1.3.3] - 2026-09-02
 
 ### Added
