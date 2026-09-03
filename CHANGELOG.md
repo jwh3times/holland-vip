@@ -12,6 +12,19 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.2] - 2026-09-03
+
+### Added
+
+- Added a reproducible five-run Lighthouse command with versioned performance and best-practices
+  budgets against the static export, plus an advisory CI job that retains diagnostic reports.
+
+### Fixed
+
+- Made Lighthouse collection portable across Windows and Linux by using Playwright's managed
+  Chromium through Puppeteer, while overriding stale CLI transitive dependencies with audited
+  versions.
+
 ## [1.4.1] - 2026-09-02
 
 ### Added
