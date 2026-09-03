@@ -30,6 +30,36 @@ test.describe("SEO & Metadata", () => {
     await expect(twitterTitle).toHaveAttribute("content", /Jerry Holland/);
   });
 
+  test("should publish canonical Person and WebSite structured data", async ({ page }) => {
+    const scripts = page.locator('script[type="application/ld+json"]');
+    await expect(scripts).toHaveCount(1);
+
+    const structuredData = JSON.parse((await scripts.textContent()) ?? "") as {
+      "@context": string;
+      "@graph": Record<string, unknown>[];
+    };
+    expect(structuredData["@context"]).toBe("https://schema.org");
+
+    const person = structuredData["@graph"].find((entry) => entry["@type"] === "Person");
+    expect(person).toEqual({
+      "@type": "Person",
+      "@id": "https://holland.vip/#person",
+      name: "Jerry Holland",
+      url: "https://holland.vip",
+      email: "mailto:jerry@holland.vip",
+      sameAs: ["https://github.com/jwh3times", "https://www.linkedin.com/in/jerryhollandiii"],
+    });
+
+    const website = structuredData["@graph"].find((entry) => entry["@type"] === "WebSite");
+    expect(website).toEqual({
+      "@type": "WebSite",
+      "@id": "https://holland.vip/#website",
+      name: "Jerry Holland",
+      url: "https://holland.vip",
+      publisher: { "@id": "https://holland.vip/#person" },
+    });
+  });
+
   test("should have canonical viewport meta", async ({ page }) => {
     const viewport = page.locator('meta[name="viewport"]');
     await expect(viewport).toHaveAttribute("content", /width=device-width/);

@@ -22,7 +22,8 @@ have been filtered, preventing a missing section from shifting every later surfa
 
 Portfolio prose lives in typed modules under `content/`. Section components import and render
 those records, which keeps a resume edit independent from layout code. Contact identity and social
-URLs live in `lib/site-config.ts`; metadata lives in `app/layout.tsx`.
+URLs live in `lib/site-config.ts`; metadata lives in `app/layout.tsx`. The homepage emits a static
+schema.org `Person` and `WebSite` graph from that shared identity configuration in `app/page.tsx`.
 
 `components/ui/section.tsx` owns the section shell, vertical rhythm, headings, surfaces, and typed
 anchor registry. `SECTION_IDS` lists anchorable sections and `NAV_SECTION_IDS` selects the
