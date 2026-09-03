@@ -12,6 +12,23 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.3.3] - 2026-09-02
+
+### Added
+
+- Added a locally reproducible production smoke command that verifies the homepage, complete
+  security-header contract, public metadata and security artifacts, 404 behavior, and www-to-apex
+  redirect with retries and contract-specific diagnostics.
+- Expanded the daily and manually dispatchable production smoke workflow to run the complete
+  deployed HTTP contract.
+
+## [1.3.2] - 2026-09-02
+
+### Security
+
+- Updated the transitive development dependency `fast-uri` from 3.1.5 to 3.1.7 to incorporate its
+  security fixes.
+
 ## [1.3.1] - 2026-09-02
 
 ### Added

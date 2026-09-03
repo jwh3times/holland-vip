@@ -88,11 +88,14 @@ builds once, uploads `out/`, then runs the Chromium-engine projects against that
 artifact. `tests/global-setup.ts` refuses to run against an unrelated service already listening on
 port 3000.
 
-Cloudflare deployment is independent from GitHub Actions CI. The scheduled smoke workflow checks
-the deployed site. The refresh workflow calls the Cloudflare Pages deploy hook, polls the returned
-deployment ID through the Pages API until it succeeds or fails, then verifies both that deployment's
-URL and the production homepage report live GitHub data. Release tags and changelog prediction
-follow [ADR 0001](adr/0001-release-and-ship.md).
+Cloudflare deployment is independent from GitHub Actions CI. The daily and manually dispatchable
+smoke workflow runs `npm run smoke:production` against the deployed site. That command checks the
+homepage identity, complete security-header contract, public metadata artifacts, RFC 9116 contact,
+404 behavior, and www-to-apex redirect, with contract-specific diagnostics. The refresh workflow
+calls the Cloudflare Pages deploy hook, polls the returned deployment ID through the Pages API until
+it succeeds or fails, then verifies both that deployment's URL and the production homepage report
+live GitHub data. Release tags and changelog prediction follow
+[ADR 0001](adr/0001-release-and-ship.md).
 
 ## Agent and private-workspace boundaries
 
