@@ -12,6 +12,18 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.1] - 2026-09-02
+
+### Added
+
+- Added weekly and manually dispatchable Firefox and WebKit end-to-end coverage against one
+  reusable static export, with independent browser jobs and engine-specific diagnostic reports.
+
+### Fixed
+
+- Kept the skip link first in WebKit keyboard navigation by declaring its intended tab stop
+  explicitly.
+
 ## [1.4.0] - 2026-09-02
 
 ### Added
