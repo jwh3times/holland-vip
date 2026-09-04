@@ -1,21 +1,24 @@
-# Issue tracker: GitHub
+# Work tracking: GitHub
 
-Public and private work use separate GitHub Issue trackers. Use the `gh` CLI for all operations and
-route by disclosure boundary before reading or writing details.
+GitHub is the canonical destination and source for every work item. Issues are the unit of work,
+the [Holland.VIP board](https://github.com/users/jwh3times/projects/8) is the single cross-repository
+view over them, and draft security advisories carry undisclosed vulnerabilities. Use the `gh` CLI
+for all operations and route by disclosure boundary before reading or writing details.
 
 | Information                                          | Destination                                     |
 | ---------------------------------------------------- | ----------------------------------------------- |
 | Public code, architecture, and contributor guidance  | Public repository                               |
-| Durable private prose and session handoffs           | Private companion repository                    |
+| Durable private prose                                | Private companion repository                    |
 | Public task or defect                                | `jwh3times/holland-vip` Issue                   |
 | Confidential task, decision, or infrastructure check | `jwh3times/holland-vip-workspace` Issue         |
 | Genuine undisclosed vulnerability                    | `jwh3times/holland-vip` draft security advisory |
 | Credential or recovery code                          | 1Password                                       |
 | Deployed credential copy                             | GitHub or Cloudflare secret store               |
 
-GitHub Projects are optional views over Issues, never the only copy of a task or decision.
-`private/CURRENT.md` links to active Issues but does not duplicate their bodies or maintain a second
-backlog.
+No Markdown file in either repository holds a backlog, a next action, an active-Issue list, or a
+status summary. A hand-maintained mirror of Issue state goes stale within a day and then competes
+with the tracker it was meant to summarize. To learn what is in flight, query GitHub; do not read a
+document about it.
 
 ## Conventions
 
@@ -33,6 +36,39 @@ acceptable only when the active repository and disclosure boundary are already u
 On Windows, run authenticated `gh` operations outside the native elevated sandbox so the CLI can
 use the host credential manager. Never run `gh auth token`, print a token, copy one into the
 workspace, or transfer the CLI login into 1Password manually.
+
+## Project board
+
+The private user-level Project [Holland.VIP](https://github.com/users/jwh3times/projects/8)
+(`--owner jwh3times`, number `8`) spans both repositories. It is a view, not a second store: every
+item is a real Issue, and closing the Issue closes the item. Add each new Issue in either repository
+to the board so one query answers what is in flight.
+
+- **Add an Issue**: `gh project item-add 8 --owner jwh3times --url <issue url>`
+- **List the board**: `gh project item-list 8 --owner jwh3times --format json --jq '.items[] | "\(.status // "-")\t\(.content.url)\t\(.title)"'`
+- **Read the fields**: `gh project field-list 8 --owner jwh3times`
+
+`Status` carries five options. `Todo` means genuinely startable, so an item that cannot proceed
+takes one of the two parked states instead and states its trigger in the Issue body:
+
+| Status        | Meaning                                              |
+| ------------- | ---------------------------------------------------- |
+| `Todo`        | Ready to start                                       |
+| `In Progress` | Actively being worked                                |
+| `Blocked`     | Cannot proceed until an external dependency resolves |
+| `Deferred`    | Parked by decision; revisit on a stated trigger      |
+| `Done`        | Shipped or resolved                                  |
+
+Setting `Status` needs the GraphQL mutation `updateProjectV2ItemFieldValue` with the project id,
+item id, field id, and the target option id; `gh project field-list` and `item-list` supply them.
+
+## Security tickets
+
+A genuine undisclosed vulnerability never becomes an Issue or a board item. Open a draft security
+advisory on the public repository (`gh api repos/jwh3times/holland-vip/security-advisories`), which
+keeps the report private until publication and can mint a CVE. Dependabot and CodeQL alerts are
+already GitHub-native surfaces; triage them in place rather than transcribing them into Issues.
+`SECURITY.md` states the reporter-facing process.
 
 ## Pull requests as a triage surface
 

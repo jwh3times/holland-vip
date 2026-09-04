@@ -90,4 +90,6 @@ const clone = spawnSync("git", ["clone", "--", cloneUrl, privateRoot], {
 if (clone.status !== 0 || !existsSync(join(privateRoot, ".git"))) {
   throw new Error("The private companion clone did not complete successfully.");
 }
-console.log("Private companion installed at private/. Read private/CURRENT.md next.");
+console.log(
+  "Private companion installed at private/. Read private/README.md, then the Holland.VIP board on GitHub."
+);

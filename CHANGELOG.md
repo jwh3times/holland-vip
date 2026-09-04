@@ -12,6 +12,21 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.5] - 2026-09-04
+
+### Changed
+
+- Made GitHub the canonical destination and source for every work item: Issues are the unit of
+  work, a private cross-repository Project board is the single aggregating view, and draft security
+  advisories carry undisclosed vulnerabilities. Recorded the decision in ADR 0004 and rewrote the
+  work-tracking guide around it.
+
+### Removed
+
+- Removed the private handoff file that mirrored active Issues, the next action, and last verified
+  commits, along with the guidance and bootstrap output that pointed at it. The mirror drifted from
+  the tracker within a day; querying GitHub replaces it.
+
 ## [1.4.2] - 2026-09-03
 
 ### Added
