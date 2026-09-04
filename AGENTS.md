@@ -8,8 +8,8 @@ Authoritative guidance for coding agents working in this repository.
 - Read [Architecture](docs/architecture.md) when changing page composition, content ownership,
   theming, GitHub build data, testing topology, deployment, releases, or agent synchronization.
 - Read [CONTEXT.md](CONTEXT.md) before naming or changing portfolio domain concepts.
-- Route work through [Issue tracker](docs/agents/issue-tracker.md); its public/private boundary is
-  authoritative.
+- Route work through [Work tracking](docs/agents/issue-tracker.md); GitHub owns all work state and
+  its public/private boundary is authoritative.
 - This Next.js version may differ from training data. Read the relevant guide under
   `node_modules/next/dist/docs/` before changing Next.js behavior.
 
@@ -101,8 +101,11 @@ projects against `out/`. `tests/global-setup.ts` rejects a foreign server alread
   copying the architecture.
 - `CONTEXT.md`: domain glossary only.
 - `CHANGELOG.md`: shipped release history.
-- GitHub Issues: all live backlog and decisions requiring action; Markdown plans are not backlogs.
-- `private/README.md` and `private/CURRENT.md`: confidential storage contract and current handoff.
+- GitHub: the canonical destination and source for every work item. Issues are the unit of work,
+  the private [Holland.VIP board](https://github.com/users/jwh3times/projects/8) is the single
+  cross-repository view, and draft security advisories carry undisclosed vulnerabilities. No
+  Markdown file holds a backlog, a next action, an active-Issue list, or a status summary.
+- `private/README.md`: confidential storage contract.
 
 Update the owning document when its contract changes. `/ship` invokes `docs-updater` for branch
 changes and writes the changelog entry. Run `npm run format` before agent synchronization.

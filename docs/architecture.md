@@ -111,3 +111,7 @@ live GitHub data. Release tags and changelog prediction follow
 Agent skill and subagent artifacts follow [ADR 0002](adr/0002-agent-artifact-sync.md). The public
 repository/private companion boundary follows [ADR 0003](adr/0003-private-workspace.md); machine
 recovery steps live in [Workspace bootstrap](agents/workspace-bootstrap.md).
+
+Work state is not documented in this repository. Issues, the cross-repository `Holland.VIP` board,
+and draft security advisories own it, per [ADR 0004](adr/0004-github-canonical-work-tracking.md) and
+[Work tracking](agents/issue-tracker.md).

@@ -115,11 +115,18 @@ Install the exact public dependencies:
 npm ci
 ```
 
-Read the private storage contract and current handoff:
+Read the private storage contract:
 
 ```powershell
 Get-Content -Raw private\README.md
-Get-Content -Raw private\CURRENT.md
+```
+
+Live work state is never in a file. Read it from GitHub:
+
+```powershell
+gh project item-list 8 --owner jwh3times
+gh issue list -R jwh3times/holland-vip --state open
+gh issue list -R jwh3times/holland-vip-workspace --state open
 ```
 
 If the private repository contains a sanitized machine-settings example and those permissions are

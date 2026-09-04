@@ -89,12 +89,12 @@ delete any that this session proved wrong.
 `private/` is ignored by the public repository but is itself the independent
 `jwh3times/holland-vip-workspace` repository. Route private output by job:
 
-- Durable private decisions, research, and operating instructions go under `decisions/`,
-  `research/`, and `runbooks/`.
-- Detailed live work goes to private Issues, not a Markdown backlog.
-- `private/CURRENT.md` stays short: objective, next action, active Issue links, blockers, and last
-  verified commits. Update it only when that handoff changed; never copy Issue bodies into it.
+- Durable private decisions and research go under `decisions/` and `research/`.
+- Dated recovery and verification evidence goes under `verification/`.
 - Point-in-time records go under `archive/` and do not become current again.
+- All live work state — objective, next action, active Issues, blockers, status — belongs to GitHub
+  Issues and the [Holland.VIP board](https://github.com/users/jwh3times/projects/8). Never write it
+  into a Markdown file in either repository, and never open a session by reading one.
 
 Durable domain vocabulary and hard-to-reverse decisions are not `private/` material — terms belong
 in `CONTEXT.md` and decisions in `docs/adr/`, both maintained through `/domain-modeling`. Note the
@@ -182,6 +182,6 @@ at `/handoff` — it writes the portable conversation summary this skill deliber
 
 - Ship. `/end-session` records and tidies; `/ship` is what pushes and opens PRs.
 - Push the private repository. Report its publish state and wait for explicit authorization.
-- Duplicate Issue bodies in `private/CURRENT.md`; link the source-of-truth Issue instead.
+- Record work state in any Markdown file. Open or update the Issue and its board item instead.
 - Put a credential value in a repository, Issue, command argument, or report; 1Password owns it.
 - Delete a path outside the scratchpad before the user has seen it listed.
