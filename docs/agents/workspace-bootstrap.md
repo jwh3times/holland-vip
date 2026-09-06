@@ -60,6 +60,13 @@ different field, and `--service-account-reference` (or the
 service-account token to retry with when the interactive identity cannot read the item. Only the
 locator is ever read; the token never leaves the child process.
 
+Supported locators are `https://github.com/<owner>/<repository>` (with an optional `.git`
+suffix or explicit default port `443`) and `git@github.com:<owner>/<repository>`. HTTPS scheme
+and hostname casing are normalized before Git runs. Plain HTTP, credentials in the URL,
+unexpected ports, query strings, fragments, and malformed owner/repository paths are rejected.
+Explicit invalid `--url` values invoke neither Git nor 1Password; locators read from 1Password
+pass the same validation before Git runs.
+
 The companion name is intentionally public, so the equivalent manual clone is:
 
 ```powershell

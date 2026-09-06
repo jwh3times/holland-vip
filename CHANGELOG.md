@@ -12,6 +12,14 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.7] - 2026-09-06
+
+### Security
+
+- Require a supported GitHub HTTPS or SSH locator before cloning the private companion, rejecting
+  plain HTTP, embedded credentials, unexpected ports, query strings, fragments, and malformed
+  repository paths. Normalize accepted HTTPS locators before passing them to Git.
+
 ## [1.4.6] - 2026-09-05
 
 ### Security
