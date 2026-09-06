@@ -13,6 +13,10 @@ function urlOf(input: string | URL | Request): string {
 function repoPayload(slug: string) {
   return {
     name: slug,
+    private: false,
+    visibility: "public",
+    owner: { login: "jwh3times" },
+    full_name: `jwh3times/${slug}`,
     description: `Description for ${slug}`,
     language: "TypeScript",
     stargazers_count: 3,
@@ -120,4 +124,32 @@ describe("refreshGithubSnapshots", () => {
     expect(fetchImpl).not.toHaveBeenCalled();
     expect(writer).not.toHaveBeenCalled();
   });
+});
+
+it.each([
+  { private: true, visibility: "private" },
+  { private: false, visibility: "internal" },
+  { private: undefined, visibility: undefined },
+  { full_name: "someone-else/moved-repository" },
+  { html_url: "https://github.com/someone-else/moved-repository" },
+])("never writes rejected metadata or authenticates REST requests: %j", async (changes) => {
+  const fetchImpl = vi.fn<FetchImpl>(async (input) =>
+    urlOf(input).endsWith("/graphql")
+      ? response(contributionsPayload())
+      : response({
+          ...repoPayload(urlOf(input).split("/").pop() ?? ""),
+          ...changes,
+          description: "SYNTHETIC CONFIDENTIAL",
+        })
+  );
+  const writer = vi.fn();
+  await expect(
+    refreshGithubSnapshots({ fetchImpl, token: "synthetic-token", writer })
+  ).rejects.toThrow();
+  expect(writer).not.toHaveBeenCalled();
+  for (const [url, init] of fetchImpl.mock.calls) {
+    expect(new Headers(init?.headers).get("Authorization")).toBe(
+      urlOf(url).endsWith("/graphql") ? "Bearer synthetic-token" : null
+    );
+  }
 });

@@ -1,9 +1,10 @@
-import { githubFetch, withFallbackSource, type GitHubDataResult } from "./github-fetch";
+import { githubFetch, GitHubResponseError, type GitHubDataResult } from "./github-fetch";
 import {
   FEATURED_REPO_SLUGS as RAW_FEATURED_REPO_SLUGS,
   GITHUB_USER,
   parseRepos as parseRepoContract,
   toRepo,
+  RepositoryDisclosureError,
 } from "./github-repos-contract.mjs";
 import fallbackData from "./github-fallback.json";
 
@@ -53,28 +54,22 @@ const fallbackRepos: Repo[] = parseRepos(fallbackData) ?? [];
 
 /** The subset of GitHub's `/repos/{owner}/{repo}` payload we consume. */
 async function fetchRepo(slug: string): Promise<Repo> {
-  // The token is optional here — it only lifts the 60 req/hr unauthenticated
-  // limit. The REST repo API serves public repos anonymously.
   const json = await githubFetch(`https://api.github.com/repos/${GITHUB_USER}/${slug}`, {
+    anonymous: true,
     label: `GitHub API for ${GITHUB_USER}/${slug}`,
     headers: {
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
     },
   });
-  return toRepo(json) as Repo;
+  return toRepo(json, slug) as Repo;
 }
 
 /**
  * Returns the featured repos with live GitHub data, resolved at build time.
  *
- * Never throws: if any repo fetch fails (offline, rate-limited, 404), it degrades
- * to the committed `github-fallback.json` so `npm run build` always succeeds.
- *
- * Note the request count and its failure mode: this issues one request per entry
- * in `FEATURED_REPO_SLUGS` (currently 4) via `Promise.all`, so a single failing
- * repo discards the whole batch and the committed snapshot is used for *all* of
- * them. `getContributions()` issues one request by comparison.
+ * Never throws. Transient failures use reviewed snapshots per repository;
+ * unavailable or disclosure-ineligible responses omit that repository entirely.
  */
 export async function getFeaturedRepos(): Promise<Repo[]> {
   return (await getFeaturedReposWithSource()).data;
@@ -82,7 +77,22 @@ export async function getFeaturedRepos(): Promise<Repo[]> {
 
 /** Returns featured repositories and the build-time source selected for them. */
 export async function getFeaturedReposWithSource(): Promise<GitHubDataResult<Repo[]>> {
-  return withFallbackSource("live repo fetch", fallbackRepos, () =>
-    Promise.all(FEATURED_REPO_SLUGS.map(fetchRepo))
-  );
+  const results = await Promise.allSettled(FEATURED_REPO_SLUGS.map(fetchRepo));
+  const failed = results.some((result) => result.status === "rejected");
+  if (failed)
+    console.warn("[github] live repo fetch incomplete; using eligible committed fallback only");
+  const data = results.flatMap((result, index): Repo[] => {
+    if (result.status === "fulfilled") return [result.value];
+    const error: unknown = result.reason;
+    if (
+      error instanceof RepositoryDisclosureError ||
+      (error instanceof GitHubResponseError && [404, 410].includes(error.status))
+    )
+      return [];
+    const slug = FEATURED_REPO_SLUGS[index];
+    return fallbackRepos.filter(
+      (repo) => repo.name === slug && repo.url === `https://github.com/${GITHUB_USER}/${slug}`
+    );
+  });
+  return { data, source: failed ? "fallback" : "live" };
 }
