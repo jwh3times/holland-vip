@@ -53,8 +53,10 @@ Authoritative guidance for coding agents working in this repository.
 ## GitHub build data
 
 `app/page.tsx` loads featured repositories and contribution history at build time. The shared
-policy in `lib/github-fetch.ts` adds the build User-Agent, optionally authenticates with
-`GITHUB_TOKEN`, and degrades to committed snapshots. `parseRepos()` and `parseCalendar()` validate
+policy in `lib/github-fetch.ts` adds the build User-Agent. Repository requests are anonymous;
+contribution requests use `GITHUB_TOKEN`. Only verified public repository identities reach live
+output. Unavailable or rejected repositories omit their snapshots; transient failures use reviewed
+committed data. `parseRepos()` and `parseCalendar()` validate
 snapshots; malformed snapshots degrade to empty data instead of failing the build.
 
 Keep this path non-throwing and compatible with tokenless builds. The shared repository and

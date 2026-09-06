@@ -59,12 +59,26 @@ expected hydration warning.
 ## Build-time GitHub data
 
 The homepage resolves featured repositories and contribution history during the build.
-`lib/github-fetch.ts` owns the shared request policy: build User-Agent, optional bearer token,
-force-cache behavior, non-OK failure, and warn-once fallback.
+`lib/github-fetch.ts` owns the shared request policy: build User-Agent, explicit anonymous access,
+optional bearer token, force-cache behavior, non-OK failure, and fallback support.
 
 `lib/github.ts` and `lib/github-contributions.ts` validate their committed snapshots before use.
-An upstream failure uses the validated snapshot; an invalid snapshot degrades further to empty
-data. This makes public, CI, and offline builds independent from credentials and GitHub uptime.
+Repository REST requests are anonymous even when a build token exists; only contribution GraphQL
+requests use that credential. The shared repository normalizer requires `private: false`, public
+visibility when supplied, and the requested owner, name, full name, and canonical HTTPS GitHub URL.
+API read access alone does not establish public disclosure eligibility.
+
+Repository fallback is selected per allowlisted repository. A 404/410 or a rejected live payload
+omits that repository, including its old snapshot; a transient network, rate-limit, or server
+failure uses its reviewed committed record. Partial or rejected results mark the build source as
+`fallback`. Snapshot refresh aborts without writing either file if any repository is rejected.
+Before making a featured repository private, remove it from both the allowlist and committed
+snapshot: offline builds cannot discover a visibility change, and old public artifacts/history
+are not erased by a subsequent build.
+
+Contribution failures use the validated contribution snapshot. An invalid snapshot degrades to
+empty data. These fallbacks keep public, CI, and offline builds independent from credentials and
+GitHub uptime.
 
 The repository allowlist/normalizer and contribution query/normalizer live in plain `.mjs` modules
 so the standalone Node refresh script imports the production contracts without a TypeScript build

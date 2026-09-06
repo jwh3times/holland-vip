@@ -34,14 +34,14 @@ export async function fetchGithubSnapshots({ fetchImpl = fetch, token }) {
       `https://api.github.com/repos/${GITHUB_USER}/${slug}`,
       {
         headers: {
-          ...headers,
+          "User-Agent": USER_AGENT,
           Accept: "application/vnd.github+json",
           "X-GitHub-Api-Version": "2022-11-28",
         },
       },
       `GitHub API for ${GITHUB_USER}/${slug}`
     );
-    return toRepo(payload);
+    return toRepo(payload, slug);
   });
   const contributionsRequest = requestJson(
     fetchImpl,

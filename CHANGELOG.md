@@ -12,6 +12,15 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.6] - 2026-09-05
+
+### Security
+
+- Fetch featured repository metadata anonymously and require an explicitly public response with
+  the expected GitHub identity before including it in the portfolio or refreshed snapshots.
+- Omit unavailable or rejected repositories without restoring their old snapshots, while retaining
+  reviewed fallback data for transient failures and preserving non-throwing static builds.
+
 ## [1.4.5] - 2026-09-04
 
 ### Changed
@@ -26,6 +35,18 @@ No unreleased changes.
 - Removed the private handoff file that mirrored active Issues, the next action, and last verified
   commits, along with the guidance and bootstrap output that pointed at it. The mirror drifted from
   the tracker within a day; querying GitHub replaces it.
+
+## [1.4.4] - 2026-09-04
+
+### Changed
+
+- Updated `next` from 16.3.3 to 16.3.4.
+
+## [1.4.3] - 2026-09-03
+
+### Changed
+
+- Updated `lucide-react` from 1.37.0 to 1.38.0.
 
 ## [1.4.2] - 2026-09-03
 
