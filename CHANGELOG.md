@@ -12,6 +12,14 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.8] - 2026-09-06
+
+### Changed
+
+- Recorded the decision to keep Lighthouse budgets advisory after reviewing 60 measurements from
+  12 CI runs, including the evidence, maintainer report-review responsibility, and criteria for
+  reconsidering merge enforcement. Existing budgets and workflow behavior remain unchanged.
+
 ## [1.4.7] - 2026-09-06
 
 ### Security

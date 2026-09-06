@@ -111,6 +111,48 @@ the representative median run against performance, best-practices, paint, blocki
 layout-shift budgets. The command fails locally when a budget regresses; CI currently allows the
 job to fail without blocking a merge and retains its generated reports for diagnosis.
 
+### Lighthouse merge policy
+
+Keep Lighthouse advisory, with the existing budgets and five-run collection unchanged. A budget
+failure can merge; the maintainer accepts responsibility for inspecting the retained report and
+triaging a repeatable regression. Lighthouse is not a required branch-protection check. This
+separates an actionable performance signal from a merge guarantee.
+
+The decision for [#146](https://github.com/jwh3times/holland-vip/issues/146) used 12 retained CI
+artifacts from September 3–6, 2026: 60 measurements, all within every configured budget. The
+selected representative runs ranged as follows:
+
+| Metric                   | Representative range | Budget at decision |
+| ------------------------ | -------------------- | ------------------ |
+| Performance score        | 0.92–0.94            | ≥ 0.85             |
+| Best-practices score     | 0.96                 | ≥ 0.95             |
+| First contentful paint   | 911–920 ms           | ≤ 2000 ms          |
+| Largest contentful paint | 3154–3219 ms         | ≤ 3500 ms          |
+| Total blocking time      | 60–131 ms            | ≤ 300 ms           |
+| Cumulative layout shift  | 0                    | ≤ 0.1              |
+
+The sample comprises runs `33764693002`, `33776404124`, `33776686492`, `33797707336`,
+`33856815187`, `33907264077`, `33907461839`, `33907891920`, `33908412143`, `34002630530`,
+`34003716243`, and `34030312479`. The range above records decision evidence; `lighthouserc.cjs`
+remains authoritative for budgets. For example, the
+[latest sampled run](https://github.com/jwh3times/holland-vip/actions/runs/34030312479)
+retains its report under the workflow's artifact retention policy.
+
+This is encouraging evidence, not an observed flaky gate: no sampled measurement failed. However,
+the sample covers only a short period and mostly maintenance changes. Across individual runs,
+performance ranged from 0.89 to 0.94, LCP reached 3305 ms, and blocking time reached 255 ms.
+Representative selection reduces variation; it does not prove behavior across future runner or
+browser changes. The nearest representative LCP is about 281 ms below its limit and the
+best-practices score is 0.01 above its floor. Those margins do not justify widening budgets or
+claiming long-term merge-gate reliability from this sample.
+
+Reconsider enforcement if advisory review misses a confirmed regression, or when a longer baseline
+covers substantive page changes and runner/browser updates. Promotion must both remove the
+workflow allowance and add the Lighthouse job to required branch-protection checks; changing only
+`continue-on-error` would not prevent merges under the current required-check configuration.
+
+### Deployment and release checks
+
 Cloudflare deployment is independent from GitHub Actions CI. The daily and manually dispatchable
 smoke workflow runs `npm run smoke:production` against the deployed site. That command checks the
 homepage identity, complete security-header contract, public metadata artifacts, RFC 9116 contact,
