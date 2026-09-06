@@ -72,16 +72,26 @@ if (!cloneUrl) {
 }
 if (/\r|\n/u.test(cloneUrl)) throw new Error("The clone URL must be a single line.");
 
-if (/^https?:\/\//iu.test(cloneUrl)) {
-  const parsed = new URL(cloneUrl);
-  if (parsed.hostname.toLowerCase() !== "github.com" || parsed.username || parsed.password) {
-    throw new Error(
-      "The HTTPS clone URL must target github.com and contain no embedded credential."
-    );
-  }
-} else if (!/^git@github\.com:[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:\.git)?$/u.test(cloneUrl)) {
-  throw new Error("The clone URL must be a credential-free GitHub HTTPS or SSH URL.");
+// Validate the original spelling before URL parsing can normalize dot segments,
+// backslashes, or encoded path characters into a different repository locator.
+const httpsLocator = /^https:\/\/github\.com(?::443)?\/([^/]+)\/([^/]+)$/iu.exec(cloneUrl);
+const sshLocator = /^git@github\.com:([^/]+)\/([^/]+)$/u.exec(cloneUrl);
+const locator = httpsLocator ?? sshLocator;
+const owner = locator?.[1] ?? "";
+const repo = locator?.[2] ?? "";
+const repoName = repo.replace(/\.git$/u, "");
+if (
+  !locator ||
+  !/^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$/u.test(owner) ||
+  !/^[A-Za-z0-9_.-]+$/u.test(repoName) ||
+  /^\.+$/u.test(repoName)
+) {
+  throw new Error(
+    "The clone URL must be a credential-free GitHub HTTPS or SSH owner/repository locator " +
+      "without an unexpected port, query, fragment, or malformed path."
+  );
 }
+if (httpsLocator) cloneUrl = `https://github.com/${owner}/${repo}`;
 
 const clone = spawnSync("git", ["clone", "--", cloneUrl, privateRoot], {
   stdio: "inherit",
