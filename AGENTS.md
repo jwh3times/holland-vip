@@ -85,7 +85,8 @@ projects against `out/`. `tests/global-setup.ts` rejects a foreign server alread
 ## CI, releases, and deployment
 
 - `.github/workflows/ci.yml` owns lint/build, coverage, static-export Playwright, advisory
-  Lighthouse budgets, and changelog validation.
+  Lighthouse budgets, and changelog validation. The advisory decision and report-review
+  responsibility are recorded in `docs/architecture.md` under Lighthouse merge policy.
 - `.github/workflows/version.yml` tags every merge to `main`; `scripts/next-version.mjs` is the
   version source of truth.
 - `.github/workflows/smoke.yml` checks the deployed site. Cloudflare Bot Fight Mode must stay off

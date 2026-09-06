@@ -99,6 +99,8 @@ jobs:
     name: Lighthouse Budget (advisory)
     runs-on: ubuntu-latest
     needs: build
+    # Deliberately advisory: the short baseline does not establish long-term gate reliability.
+    # Evidence and accepted trade-off: docs/architecture.md, Lighthouse merge policy (#146).
     continue-on-error: true
     timeout-minutes: 15
 
