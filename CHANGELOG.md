@@ -12,6 +12,16 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.9] - 2026-09-07
+
+### Changed
+
+- Required human actions left behind by agent work now have a fixed home: a `ready-for-human`
+  Issue on the private Holland.VIP board plus a step-by-step runbook page in the private wiki,
+  linked from the Issue. The rule lives in the work-tracking guide, and the docs-updater agent
+  along with the end-session, ship, wizard, and handoff skills file or verify both records instead
+  of leaving the action in a report, handoff, changelog line, or Markdown to-do.
+
 ## [1.4.8] - 2026-09-06
 
 ### Changed
