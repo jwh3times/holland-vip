@@ -42,3 +42,4 @@ Hold the bar the template sets: open the URL before asking for its value, use `a
 - `chmod +x <script>`.
 - Don't run it end-to-end yourself — it opens browsers and blocks on human input. Trace it statically instead: every value from step 1 is captured and lands where step 1 said, and every `set_secret` name exactly matches a `secrets.*` reference in CI.
 - Tell the user how to run it. If it's a repeatable setup path, commit it and link it from the README so the next person runs the script instead of asking an AI.
+- The wizard is not the record. Because its stages are human actions left behind by agent work, file them per "Human follow-up actions" in `docs/agents/issue-tracker.md`: a private `ready-for-human` Issue on the Holland.VIP board and a `Runbook-<slug>` page in the private wiki carrying the same step-by-step instructions in prose, linking the script if it was committed. Reference credentials by 1Password item and field, never by value.

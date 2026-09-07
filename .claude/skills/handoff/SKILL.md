@@ -14,4 +14,6 @@ Do not duplicate content already captured in other artifacts (specs, plans, ADRs
 
 Redact any sensitive information, such as API keys, passwords, or personally identifiable information.
 
+A handoff document is not a tracker. Any required human action the session leaves behind must already be a private `ready-for-human` Issue with a wiki runbook (see "Human follow-up actions" in `docs/agents/issue-tracker.md`); file any that are missing before writing the handoff, then reference the Issue by URL.
+
 If the user passed arguments, treat them as a description of what the next session will focus on and tailor the doc accordingly.

@@ -25,6 +25,7 @@ belongs in exactly one of them:
 | Public work                                                       | `jwh3times/holland-vip` Issues                   |
 | Confidential work, decisions, or infrastructure checks            | `jwh3times/holland-vip-workspace` Issues         |
 | Genuine undisclosed vulnerability                                 | Public repository draft security advisory        |
+| Required human action left by this session's agent work           | Private `ready-for-human` Issue + wiki runbook   |
 | Credentials, recovery codes, and canonical private locator        | 1Password                                        |
 | User preferences or harness hints that aid the next local session | Project memory (`MEMORY.md` + one file per fact) |
 | Scratch files, half-finished edits, stray branches                | The local workspace                              |
@@ -56,8 +57,8 @@ Then walk the conversation itself for the things git cannot show: decisions take
 out, corrections the user gave you, gotchas discovered, work deliberately left unfinished.
 
 Produce one list of session items and tag each with its destination — **public repo**, **private
-repo**, **public issue**, **private issue**, **advisory**, **1Password**, **memory**, **workspace**,
-or **drop**. Show the list to the user before acting on it. The step is complete when every item
+repo**, **public issue**, **private issue**, **human follow-up**, **advisory**, **1Password**,
+**memory**, **workspace**, or **drop**. Show the list to the user before acting on it. The step is complete when every item
 carries a destination; steps 2–5 then execute that list, and an item with no destination means the
 stock-take is not finished.
 
@@ -131,6 +132,11 @@ For each session item tagged **issue**:
 - **A public discovery** → create or update a public Issue.
 - **A confidential task, decision, or infrastructure check** → create or update a private
   companion Issue. Durable reasoning belongs in private Markdown; the Issue owns work state.
+- **A required human action** (a credential to rotate, a setting to toggle, a dashboard step, a
+  manual verification) → follow "Human follow-up actions" in the issue-tracker doc: a private
+  `ready-for-human` Issue on the board **and** a `Runbook-<slug>` page in the private wiki with
+  step-by-step instructions, linked from the Issue. Check first that the skill or subagent that
+  discovered the action did not already file both; if it did, verify rather than duplicate.
 - **A genuine undisclosed vulnerability** → use a draft security advisory, not either ordinary
   Issue tracker.
 - **Work that landed** → close it with a comment naming the PR (`gh issue close <n> --comment …`).
@@ -184,5 +190,6 @@ at `/handoff` — it writes the portable conversation summary this skill deliber
 - Ship. `/end-session` records and tidies; `/ship` is what pushes and opens PRs.
 - Push the private repository. Report its publish state and wait for explicit authorization.
 - Record work state in any Markdown file. Open or update the Issue and its board item instead.
+- Leave a required human action in the report alone. It needs its private Issue and wiki runbook.
 - Put a credential value in a repository, Issue, command argument, or report; 1Password owns it.
 - Delete a path outside the scratchpad before the user has seen it listed.

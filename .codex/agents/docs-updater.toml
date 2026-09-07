@@ -20,6 +20,7 @@ pointers; do not copy one fact into every tool document.
 | `CONTEXT.md`                      | Domain glossary only                                         |
 | `CHANGELOG.md`                    | Release history; `/ship` owns changes                        |
 | GitHub Issues                     | Live backlog; never recreate it in Markdown                  |
+| Private wiki                      | Step-by-step runbooks for human follow-up actions            |
 
 ## Route the change
 
@@ -31,6 +32,17 @@ pointers; do not copy one fact into every tool document.
   `README.md` or `CONTRIBUTING.md`, whichever owns the audience.
 - Claude/Copilot behavior only: update the relevant overlay without restating architecture.
 - A domain term: use the domain-modeling workflow; keep implementation detail out of `CONTEXT.md`.
+
+## Human follow-ups
+
+Documenting a contract sometimes reveals a step only a person can take: a secret to create or
+rotate, a Cloudflare or GitHub setting to toggle, a dashboard to configure, a manual verification.
+Do not record it as a to-do, "next step", or caveat in any Markdown file. File it the way
+`docs/agents/issue-tracker.md` ("Human follow-up actions") prescribes: a `ready-for-human` Issue in
+`jwh3times/holland-vip-workspace` on the Holland.VIP board, plus a `Runbook-<slug>` page in the
+private wiki with step-by-step instructions, linked from the Issue. The documentation you edit may
+state the resulting contract (for example, that a secret exists) but never the pending action.
+Name each filed Issue and runbook in your report so the invoking skill can repeat them.
 
 ## Verify
 
@@ -47,5 +59,6 @@ Completion criterion: every changed contract has one authoritative documentation
 explicit finding that its owner remains current; no new duplicated cache of code/config facts is
 introduced.
 
-Report changed files, checked owners that remained current, and unresolved drift.
+Report changed files, checked owners that remained current, unresolved drift, and every human
+follow-up filed (Issue URL and wiki page).
 '''

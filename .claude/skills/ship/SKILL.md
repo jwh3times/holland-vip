@@ -108,7 +108,11 @@ Use `origin/main`, not `main` — a clone that only fetched the feature branch h
 
 Tell it exactly what changed and let it update the docs it owns (`CLAUDE.md`, `README.md`,
 `AGENTS.md`). It does **not** own `CHANGELOG.md` — **you** write that in step 6, so tell it to
-leave `CHANGELOG.md` alone.
+leave `CHANGELOG.md` alone. Tell it which human actions the branch leaves behind (a secret to add
+to GitHub or Cloudflare, a setting to change, a manual verification) so it files each one as a
+private `ready-for-human` Issue and wiki runbook per "Human follow-up actions" in
+`docs/agents/issue-tracker.md`. If the subagent reports none but you know of one, file it yourself
+before step 9. A required human action must never live only in the changelog or the PR body.
 
 ### 6. Write the CHANGELOG entry
 
@@ -191,7 +195,8 @@ gh pr list --head "$(git branch --show-current)" --state open --json number -q '
 ### 10. Report
 
 Give the user: the PR URL, the major/minor/build-only classification with its reason, the version
-this merge will mint, and anything the fast checks or backfill surfaced. State plainly that tests
+this merge will mint, every human follow-up filed (private Issue URL and wiki runbook), and
+anything the fast checks or backfill surfaced. State plainly that tests
 run in CI, not locally — do not imply the branch is verified beyond the fast checks.
 
 ## Do not
