@@ -106,8 +106,10 @@ projects against `out/`. `tests/global-setup.ts` rejects a foreign server alread
 - `CHANGELOG.md`: shipped release history.
 - GitHub: the canonical destination and source for every work item. Issues are the unit of work,
   the private [Holland.VIP board](https://github.com/users/jwh3times/projects/8) is the single
-  cross-repository view, and draft security advisories carry undisclosed vulnerabilities. No
-  Markdown file holds a backlog, a next action, an active-Issue list, or a status summary.
+  cross-repository view, and draft security advisories carry undisclosed vulnerabilities. Any
+  human action an agent's work leaves behind becomes a private `ready-for-human` Issue on the
+  board plus a step-by-step runbook in the private wiki (see Work tracking). No Markdown file
+  holds a backlog, a next action, an active-Issue list, or a status summary.
 - `private/README.md`: confidential storage contract.
 
 Update the owning document when its contract changes. `/ship` invokes `docs-updater` for branch
