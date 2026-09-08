@@ -25,6 +25,11 @@ those records, which keeps a resume edit independent from layout code. Contact i
 URLs live in `lib/site-config.ts`; metadata lives in `app/layout.tsx`. The homepage emits a static
 schema.org `Person` and `WebSite` graph from that shared identity configuration in `app/page.tsx`.
 
+The portfolio intentionally has no notes or blog section. `Currently exploring` communicates
+active learning without implying a publication cadence, and a stale, sparsely maintained blog
+would weaken that signal. Reconsider a publishing section only when the owner wants one and can
+sustain a defined cadence.
+
 `components/ui/section.tsx` owns the section shell, vertical rhythm, headings, surfaces, and typed
 anchor registry. `SECTION_IDS` lists anchorable sections and `NAV_SECTION_IDS` selects the
 navigable subset. Navigation labels form a total record over that subset so missing or invented
