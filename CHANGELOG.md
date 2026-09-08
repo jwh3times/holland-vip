@@ -12,6 +12,34 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.13] - 2026-09-08
+
+### Changed
+
+- Recorded the decision to keep the portfolio focused without a notes or blog section until the
+  owner wants one and can sustain a defined publication cadence; the existing `Currently
+exploring` content remains the signal for active learning.
+
+## [1.4.12] - 2026-09-08
+
+### Changed
+
+- Updated `@playwright/test` from 1.62.1 to 1.63.0.
+
+## [1.4.11] - 2026-09-07
+
+### Changed
+
+- Updated `vitest` from 4.1.9 to 5.0.0 and `@vitest/coverage-v8` from 4.1.11 to 5.0.0.
+
+## [1.4.10] - 2026-09-07
+
+### Changed
+
+- Updated `lucide-react` from 1.38.0 to 1.41.0, `@testing-library/user-event` from 14.6.6 to
+  14.6.7, `@types/node` from 26.4.0 to 26.4.1, `@types/react-dom` from 19.2.5 to 19.2.7, and
+  `oxlint` from 1.80.0 to 1.81.0.
+
 ## [1.4.9] - 2026-09-07
 
 ### Changed
