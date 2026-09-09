@@ -64,10 +64,11 @@ stock-take is not finished.
 ### 2. Update project memory
 
 Memory lives outside the repo, in the project memory directory the harness names in your system
-prompt — `~/.claude/projects/<project-slug>/memory/`, where this repo's slug is
-`C--Users-jerry-OneDrive-Documents-VSCodeProjects-holland-vip`. One fact per file, frontmatter with
-`name` / `description` / `metadata.type` (`user`, `feedback`, `project`, `reference`), plus a
-one-line pointer in `MEMORY.md`. Link related memories with `[[name]]`.
+prompt. That path contains a slug derived from the absolute path of the checkout, so it differs per
+machine and per worktree; always use the directory the system prompt gives you rather than a
+remembered one. One fact per file, frontmatter with `name` / `description` / `metadata.type`
+(`user`, `feedback`, `project`, `reference`), plus a one-line pointer in `MEMORY.md`. Link related
+memories with `[[name]]`.
 
 Write a memory when the session produced:
 

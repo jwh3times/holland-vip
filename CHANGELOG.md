@@ -12,6 +12,20 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.16] - 2026-09-09
+
+### Fixed
+
+- Removed the hard-coded project memory directory slug from the `end-session` skill, which named
+  one Windows checkout and was therefore wrong on any other machine, path, or git worktree. The
+  skill now relies solely on the memory directory the harness names in the session's system prompt.
+
+## [1.4.15] - 2026-09-08
+
+### Changed
+
+- Bumped the transitive `baseline-browser-mapping` dependency from 2.10.24 to 2.11.21.
+
 ## [1.4.14] - 2026-09-08
 
 ### Fixed
