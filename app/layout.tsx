@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { siteConfig, yearsOfExperience } from "@/lib/site-config";
@@ -87,13 +86,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="antialiased">
-        {/* Cloudflare Web Analytics */}
-        <Script
-          src="https://static.cloudflareinsights.com/beacon.min.js"
-          strategy="afterInteractive"
-          data-cf-beacon='{"token": "3a0baab3867e43ca98f5c11091fe22af"}'
-        />
-
         {/* Skip to main content link for accessibility */}
         <a
           href="#main-content"
