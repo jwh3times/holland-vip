@@ -167,6 +167,12 @@ it succeeds or fails, then verifies both that deployment's URL and the productio
 live GitHub data. Release tags and changelog prediction follow
 [ADR 0001](adr/0001-release-and-ship.md).
 
+The scheduled production smoke workflow also opens the deployed homepage in Chromium. It rejects
+browser errors, failed requests, duplicate or manually embedded Cloudflare Web Analytics scripts,
+and missing RUM delivery. Cloudflare Pages owns the single Analytics injection; application code
+does not embed a second beacon. This browser check covers edge transformations that are absent from
+the static build artifact and invisible to the HTTP-only smoke assertions.
+
 ## Agent and private-workspace boundaries
 
 Agent skill and subagent artifacts follow [ADR 0002](adr/0002-agent-artifact-sync.md). The public

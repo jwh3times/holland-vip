@@ -12,6 +12,18 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.14] - 2026-09-08
+
+### Fixed
+
+- Removed the manually embedded Cloudflare Web Analytics beacon so Cloudflare Pages supplies the
+  site's single beacon instead of producing duplicate real-user monitoring submissions.
+
+### Added
+
+- Added a scheduled Chromium production check that rejects duplicate or manually embedded
+  Analytics scripts, missing RUM delivery, browser errors, and failed requests.
+
 ## [1.4.13] - 2026-09-08
 
 ### Changed
