@@ -47,6 +47,7 @@ handling.
 | `npm run build`                    | Build the static export into `out/`     |
 | `npm run preview`                  | Serve the built static export           |
 | `npm run smoke:production`         | Verify the deployed HTTP contract       |
+| `npm run smoke:production:browser` | Verify the deployed browser contract    |
 | `npm run lint`                     | Run Oxlint                              |
 | `npm run lint:fix`                 | Apply safe Oxlint fixes                 |
 | `npm run format`                   | Format the repository with Prettier     |
