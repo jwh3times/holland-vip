@@ -137,8 +137,9 @@ setting up a machine, restoring credentials, or checking portability. Public wor
 have separate Issues, histories, commits, and pushes.
 
 Workflow skills under `.agents/skills/` are authoritative for their flows. Use `/ask-matt` to
-choose an engineering workflow, `/ship` when a branch is ready for review, and user-invoked
-`/end-session` to record and tidy a session without pushing.
+choose an engineering workflow, `/ship` when a branch is ready for review, `/end-session` to record
+and tidy a session without pushing, and `/handoff` / `/lets-go` to move a session between machines
+through Proton Drive.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

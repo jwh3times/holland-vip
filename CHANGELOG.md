@@ -12,6 +12,40 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.19] - 2026-09-15
+
+### Added
+
+- A `/lets-go` skill that resumes this repository's active handoff from Proton Drive, marks it
+  consumed in `handoff_map.json`, brings the checkout to the branch the handoff names, and continues
+  from its next step.
+- `scripts/handoff-map.mjs`, which locates the Proton Drive Handoffs folder on Windows and Linux
+  (overridable with `HANDOFF_DIR`) and reads, records, or clears a repository's active handoff while
+  preserving the other entries.
+
+### Changed
+
+- `/handoff` now moves a session between machines: it alerts on uncommitted, stashed, unpushed, or
+  unmerged work in both repositories, writes the handoff document to Proton Drive instead of the OS
+  temporary directory, registers it in `handoff_map.json`, and closes out with `end-session`.
+- `end-session` can now be invoked by agents and other skills, and routes conversation reasoning
+  for the next machine to the Proton Drive handoff document.
+
+## [1.4.18] - 2026-09-14
+
+### Changed
+
+- Bumped `react` and `react-dom` from 19.2.8 to 19.3.0, `lucide-react` from 1.42.0 to 1.44.0,
+  `@types/react` from 19.2.18 to 19.3.0, `@types/react-dom` from 19.2.7 to 19.3.0, and
+  `@types/node` from 26.5.0 to 26.5.1.
+
+## [1.4.17] - 2026-09-11
+
+### Changed
+
+- Bumped `lucide-react` from 1.41.0 to 1.42.0, `@types/node` from 26.4.1 to 26.5.0, and `oxlint`
+  from 1.81.0 to 1.82.0.
+
 ## [1.4.16] - 2026-09-09
 
 ### Fixed
