@@ -100,7 +100,7 @@ function childDirectory(base, name) {
 }
 
 /**
- * @param {{ env?: NodeJS.ProcessEnv, home?: string }} [options]
+ * @param {{ env?: Record<string, string | undefined>, home?: string }} [options]
  * @returns {string}
  */
 export function findHandoffsDir({ env = process.env, home = os.homedir() } = {}) {
@@ -203,7 +203,7 @@ function currentRepoName(cwd) {
 
 /**
  * @param {readonly string[]} argv
- * @param {{ cwd?: string, env?: NodeJS.ProcessEnv, home?: string, now?: Date, log?: (line: string) => void }} [options]
+ * @param {{ cwd?: string, env?: Record<string, string | undefined>, home?: string, now?: Date, log?: (line: string) => void }} [options]
  */
 export function main(argv, options = {}) {
   const {
