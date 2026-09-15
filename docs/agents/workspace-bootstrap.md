@@ -114,6 +114,15 @@ The command refuses dirty worktrees and divergent branches rather than stashing 
 creating merge commits. If the private companion is not installed, it reports and skips it. Use
 `npm run sync:main -- --skip-private` when only the public checkout should be updated.
 
+## Move a session between machines
+
+`/handoff` writes the session's handoff document to Proton Drive under
+`My Files/Documents/Handoffs`, records it as this repository's active entry in `handoff_map.json`,
+and closes out with `/end-session`. On the other machine, `/lets-go` reads the active document,
+sets the entry back to `null`, and resumes. Both use
+[`scripts/handoff-map.mjs`](../../scripts/handoff-map.mjs), which finds the folder under
+`~/Proton Drive`; set `HANDOFF_DIR` when the drive is mounted elsewhere.
+
 ## Restore the working environment
 
 Install the exact public dependencies:

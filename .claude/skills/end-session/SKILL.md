@@ -1,8 +1,7 @@
 ---
 # GENERATED — do not edit. Source: .agents/skills/end-session/SKILL.md. Regenerate: npm run sync:agents
 name: end-session
-description: End the work session cleanly — record durable outcomes, reconcile both repositories and their Issues, then clean up the workspace.
-disable-model-invocation: true
+description: End the work session cleanly — record durable outcomes, reconcile both repositories and their Issues, then clean up the workspace. Use when the user wraps up a session or when /handoff closes one.
 ---
 
 # End Session
@@ -21,7 +20,8 @@ belongs in exactly one of them:
 | Residue                                                           | Home                                             |
 | ----------------------------------------------------------------- | ------------------------------------------------ |
 | Public architecture, conventions, or collaborator guidance        | Public repository                                |
-| Durable private prose, decisions, research, runbooks, handoffs    | Independent nested repository under `private/`   |
+| Durable private prose, decisions, research, runbooks              | Independent nested repository under `private/`   |
+| Conversation reasoning the next machine's session needs           | Proton Drive handoff document (`/handoff`)       |
 | Public work                                                       | `jwh3times/holland-vip` Issues                   |
 | Confidential work, decisions, or infrastructure checks            | `jwh3times/holland-vip-workspace` Issues         |
 | Genuine undisclosed vulnerability                                 | Public repository draft security advisory        |
@@ -183,8 +183,10 @@ touched (with repository and number), what was deleted, both branch/upstream sta
 deliberately dropped. State explicitly whether private work is uncommitted or unpushed. Finish with
 the one thing the next session should pick up first.
 
-When the next session needs the _reasoning_ of this one rather than its outcomes, say so and point
-at `/handoff` — it writes the portable conversation summary this skill deliberately does not.
+When `/handoff` invoked this skill, name its handoff document as the pickup point and `/lets-go` as
+the way in. Otherwise, when the next session needs the _reasoning_ of this one rather than its
+outcomes, say so and point at `/handoff` — it writes the portable conversation summary this skill
+deliberately does not.
 
 ## Do not
 
