@@ -10,7 +10,11 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 ## [Unreleased]
 
-No unreleased changes.
+### Changed
+
+- `/handoff` and `/lets-go` now work without the Proton Drive desktop client: on a machine with only
+  the `proton-drive` CLI, `HANDOFF_DIR` is a local mirror that the skills pull from and push to the
+  cloud Handoffs folder at the points where the map or a document is read or written.
 
 ## [1.4.19] - 2026-09-15
 

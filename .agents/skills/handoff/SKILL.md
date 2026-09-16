@@ -13,6 +13,23 @@ Linux and owns every map read and write.
 If the user passed arguments, treat them as a description of what the next session will focus on
 and tailor the document accordingly.
 
+## Transport
+
+Decide once, at the start, how the Handoffs folder reaches the cloud on this machine:
+
+- **Desktop client** — `~/Proton Drive` exists and the Proton Drive client keeps it in sync. Every
+  step marked _(CLI mirror only)_ is skipped.
+- **CLI mirror** — `command -v proton-drive` succeeds and `~/Proton Drive` is absent (Fedora: Proton
+  ships no Linux sync client). `HANDOFF_DIR` names a local mirror of the cloud folder
+  `/my-files/Documents/Handoffs`; nothing syncs it, so the skill pulls the map before reading it and
+  pushes the map and document after writing them. If `HANDOFF_DIR` is unset, ask the user for the
+  mirror folder (for example `~/Documents/Handoffs`), `mkdir -p` it, and export the variable for
+  this session; suggest they add it to their shell profile.
+
+Every `proton-drive` command must name a conflict strategy — the CLI prompts otherwise, and a prompt
+hangs an agent. Output containing `You need to login first` means the CLI session lapsed: ask the
+user to run `proton-drive auth login` themselves, then retry the command.
+
 ## 1. Audit unmerged work
 
 Only what reaches `origin/main` — or at least `origin` — is visible on the other machine. Check both
@@ -49,13 +66,24 @@ reference the Issue by URL.
 
 ## 3. Write the document
 
+**Pull** _(CLI mirror only)_ — refresh the local map from the cloud before reading it:
+
+```bash
+proton-drive filesystem download -f remove /my-files/Documents/Handoffs/handoff_map.json "$HANDOFF_DIR"
+```
+
+Complete when the transfer summary lists the map as downloaded and `$HANDOFF_DIR/handoff_map.json`
+exists. Then:
+
 ```bash
 node scripts/handoff-map.mjs get
 ```
 
 The JSON names the Handoffs `dir`, this repository's map `key`, and the currently `active` document.
 If `active` is not `null`, an earlier handoff was never picked up: tell the user, read it, and carry
-forward whatever is still true. Leave the old file in place.
+forward whatever is still true. When `exists` is `false` on the CLI mirror, download that one
+document first with the same `filesystem download -f remove` command, naming
+`/my-files/Documents/Handoffs/<active>`. Leave the old file in place.
 
 Write the new document straight into `dir` as `<key>-handoff-<YYYY-MM-DD>.md`, appending
 `-<focus-slug>` when that name is taken. It contains:
@@ -78,6 +106,15 @@ node scripts/handoff-map.mjs set <file-name>
 ```
 
 The step is complete when the output shows `active` equal to the new file name and `exists: true`.
+
+**Push** _(CLI mirror only)_ — the document and the updated map go to the cloud, or the other
+machine never sees them:
+
+```bash
+proton-drive filesystem upload -f create-new-revision -t "$HANDOFF_DIR/<file-name>" "$HANDOFF_DIR/handoff_map.json" /my-files/Documents/Handoffs
+```
+
+Complete when the transfer summary lists both files as uploaded.
 
 ## 5. Close out
 
