@@ -132,11 +132,33 @@ describe("findHandoffsDir", () => {
     );
   });
 
-  it("honours HANDOFF_DIR and reports a missing map", () => {
+  it("honours HANDOFFS_DIR and reports a missing map", () => {
+    const { handoffs } = driveHome();
+    expect(findHandoffsDir({ env: { HANDOFFS_DIR: handoffs }, home: tempDir() })).toBe(handoffs);
+    expect(() => findHandoffsDir({ env: { HANDOFFS_DIR: tempDir() } })).toThrow(
+      /^HANDOFFS_DIR does not contain/u
+    );
+    expect(() => findHandoffsDir({ env: {}, home: tempDir() })).toThrow(/set HANDOFFS_DIR/u);
+  });
+
+  it("prefers HANDOFFS_DIR over the older HANDOFF_DIR", () => {
+    const { handoffs } = driveHome();
+    const legacy = driveHome().handoffs;
+    expect(
+      findHandoffsDir({ env: { HANDOFFS_DIR: handoffs, HANDOFF_DIR: legacy }, home: tempDir() })
+    ).toBe(handoffs);
+    expect(() =>
+      findHandoffsDir({ env: { HANDOFFS_DIR: tempDir(), HANDOFF_DIR: legacy } })
+    ).toThrow(/^HANDOFFS_DIR does not contain/u);
+  });
+
+  it("falls back to HANDOFF_DIR when HANDOFFS_DIR is unset", () => {
     const { handoffs } = driveHome();
     expect(findHandoffsDir({ env: { HANDOFF_DIR: handoffs }, home: tempDir() })).toBe(handoffs);
-    expect(() => findHandoffsDir({ env: { HANDOFF_DIR: tempDir() } })).toThrow(/HANDOFF_DIR/u);
-    expect(() => findHandoffsDir({ env: {}, home: tempDir() })).toThrow(/set HANDOFF_DIR/u);
+    expect(findHandoffsDir({ env: { HANDOFFS_DIR: "", HANDOFF_DIR: handoffs } })).toBe(handoffs);
+    expect(() => findHandoffsDir({ env: { HANDOFF_DIR: tempDir() } })).toThrow(
+      /^HANDOFF_DIR does not contain/u
+    );
   });
 });
 

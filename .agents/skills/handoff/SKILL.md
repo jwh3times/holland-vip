@@ -20,11 +20,12 @@ Decide once, at the start, how the Handoffs folder reaches the cloud on this mac
 - **Desktop client** — `~/Proton Drive` exists and the Proton Drive client keeps it in sync. Every
   step marked _(CLI mirror only)_ is skipped.
 - **CLI mirror** — `command -v proton-drive` succeeds and `~/Proton Drive` is absent (Fedora: Proton
-  ships no Linux sync client). `HANDOFF_DIR` names a local mirror of the cloud folder
+  ships no Linux sync client). `HANDOFFS_DIR` names a local mirror of the cloud folder
   `/my-files/Documents/Handoffs`; nothing syncs it, so the skill pulls the map before reading it and
-  pushes the map and document after writing them. If `HANDOFF_DIR` is unset, ask the user for the
-  mirror folder (for example `~/Documents/Handoffs`), `mkdir -p` it, and export the variable for
-  this session; suggest they add it to their shell profile.
+  pushes the map and document after writing them. If only the older `HANDOFF_DIR` is set, export
+  `HANDOFFS_DIR` from it. If both are unset, ask the user for the mirror folder (for example
+  `~/Documents/Handoffs`), `mkdir -p` it, and export `HANDOFFS_DIR` for this session; suggest they
+  add it to their shell profile.
 
 Every `proton-drive` command must name a conflict strategy — the CLI prompts otherwise, and a prompt
 hangs an agent. Output containing `You need to login first` means the CLI session lapsed: ask the
@@ -69,10 +70,10 @@ reference the Issue by URL.
 **Pull** _(CLI mirror only)_ — refresh the local map from the cloud before reading it:
 
 ```bash
-proton-drive filesystem download -f remove /my-files/Documents/Handoffs/handoff_map.json "$HANDOFF_DIR"
+proton-drive filesystem download -f remove /my-files/Documents/Handoffs/handoff_map.json "$HANDOFFS_DIR"
 ```
 
-Complete when the transfer summary lists the map as downloaded and `$HANDOFF_DIR/handoff_map.json`
+Complete when the transfer summary lists the map as downloaded and `$HANDOFFS_DIR/handoff_map.json`
 exists. Then:
 
 ```bash
@@ -111,7 +112,7 @@ The step is complete when the output shows `active` equal to the new file name a
 machine never sees them:
 
 ```bash
-proton-drive filesystem upload -f create-new-revision -t "$HANDOFF_DIR/<file-name>" "$HANDOFF_DIR/handoff_map.json" /my-files/Documents/Handoffs
+proton-drive filesystem upload -f create-new-revision -t "$HANDOFFS_DIR/<file-name>" "$HANDOFFS_DIR/handoff_map.json" /my-files/Documents/Handoffs
 ```
 
 Complete when the transfer summary lists both files as uploaded.

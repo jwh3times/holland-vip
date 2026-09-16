@@ -11,9 +11,9 @@
  *
  * The Handoffs directory is discovered under `~/Proton Drive/[account/]My
  * Files/Documents/Handoffs` with case-insensitive segments, so the same command
- * works on Windows and Linux. Set `HANDOFF_DIR` when the drive is mounted
- * elsewhere. The map key defaults to the `origin` repository name, matched
- * against existing keys ignoring case and punctuation. Every command prints a
+ * works on Windows and Linux. Set `HANDOFFS_DIR` (or the older `HANDOFF_DIR`)
+ * when the drive is mounted elsewhere. The map key defaults to the `origin`
+ * repository name, matched against existing keys ignoring case and punctuation. Every command prints a
  * JSON description of the key's handoff; `set` and `clear` also report the
  * value they replaced. Other keys and the file's line endings are preserved.
  */
@@ -25,6 +25,8 @@ import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 
 export const MAP_FILE = "handoff_map.json";
+const DIR_ENV = "HANDOFFS_DIR";
+const LEGACY_DIR_ENV = "HANDOFF_DIR";
 const DRIVE_ROOTS = ["Proton Drive", "ProtonDrive"];
 const HANDOFF_SEGMENTS = ["my files", "documents", "handoffs"];
 
@@ -104,9 +106,11 @@ function childDirectory(base, name) {
  * @returns {string}
  */
 export function findHandoffsDir({ env = process.env, home = os.homedir() } = {}) {
-  if (env.HANDOFF_DIR) {
-    if (existsSync(path.join(env.HANDOFF_DIR, MAP_FILE))) return env.HANDOFF_DIR;
-    throw new Error(`HANDOFF_DIR does not contain ${MAP_FILE}: ${env.HANDOFF_DIR}`);
+  const variable = [DIR_ENV, LEGACY_DIR_ENV].find((name) => env[name]);
+  if (variable) {
+    const directory = /** @type {string} */ (env[variable]);
+    if (existsSync(path.join(directory, MAP_FILE))) return directory;
+    throw new Error(`${variable} does not contain ${MAP_FILE}: ${directory}`);
   }
 
   for (const rootName of DRIVE_ROOTS) {
@@ -122,7 +126,7 @@ export function findHandoffsDir({ env = process.env, home = os.homedir() } = {})
 
   throw new Error(
     `No ${MAP_FILE} under ~/Proton Drive/[account/]My Files/Documents/Handoffs; ` +
-      "sync Proton Drive or set HANDOFF_DIR to the Handoffs directory"
+      "sync Proton Drive or set HANDOFFS_DIR to the Handoffs directory"
   );
 }
 
