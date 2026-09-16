@@ -12,6 +12,26 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.22] - 2026-09-16
+
+### Changed
+
+- `/handoff` and `/lets-go` now work without the Proton Drive desktop client: on a machine with only
+  the `proton-drive` CLI, `HANDOFF_DIR` is a local mirror that the skills pull from and push to the
+  cloud Handoffs folder at the points where the map or a document is read or written.
+
+## [1.4.21] - 2026-09-16
+
+### Changed
+
+- Bumped `tailwind-merge` from 3.6.0 to 3.7.0 (Dependabot).
+
+## [1.4.20] - 2026-09-15
+
+### Changed
+
+- Bumped `next` from 16.3.4 to 16.3.5 and `lucide-react` from 1.44.0 to 1.45.0 (Dependabot).
+
 ## [1.4.19] - 2026-09-15
 
 ### Added

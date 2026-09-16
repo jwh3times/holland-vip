@@ -121,7 +121,10 @@ creating merge commits. If the private companion is not installed, it reports an
 and closes out with `/end-session`. On the other machine, `/lets-go` reads the active document,
 sets the entry back to `null`, and resumes. Both use
 [`scripts/handoff-map.mjs`](../../scripts/handoff-map.mjs), which finds the folder under
-`~/Proton Drive`; set `HANDOFF_DIR` when the drive is mounted elsewhere.
+`~/Proton Drive`; set `HANDOFF_DIR` when the drive is mounted elsewhere. On a machine with no Proton
+Drive desktop client (Fedora), `HANDOFF_DIR` is a local mirror that both skills pull from and push to
+the cloud folder `/my-files/Documents/Handoffs` through the `proton-drive` CLI; export it in a shell
+profile and keep the CLI logged in with `proton-drive auth login`.
 
 ## Restore the working environment
 
