@@ -12,6 +12,14 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.23] - 2026-09-16
+
+### Changed
+
+- The handoff mirror is now configured with `HANDOFFS_DIR`, the name every repository shares.
+  `scripts/handoff-map.mjs` reads `HANDOFFS_DIR` first and still falls back to `HANDOFF_DIR`, and
+  `/handoff`, `/lets-go`, and the workspace bootstrap guide name `HANDOFFS_DIR`.
+
 ## [1.4.22] - 2026-09-16
 
 ### Changed
