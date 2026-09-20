@@ -12,6 +12,19 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.30] - 2026-09-20
+
+### Changed
+
+- The workspace bootstrap guide now describes what the script actually does with a 1Password
+  service-account token: it is held by the bootstrap process itself, not confined to an `op` child,
+  and clearing the local copies afterwards is tidiness rather than erasure. Nothing prints it or
+  writes it to disk.
+- The guide also states that the already-installed shortcut checks presence, not identity — a
+  re-run over a wrong or renamed companion still reports success — and gives the one-line remote
+  check to confirm a recovery. Adding that check to the script is deliberately declined, because
+  the shortcut's value is running before any credential read.
+
 ## [1.4.29] - 2026-09-20
 
 ### Security

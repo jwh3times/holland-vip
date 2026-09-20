@@ -8,8 +8,14 @@
 //   npm run bootstrap:private -- --service-account-reference "op://<vault>/<item>/<field>"
 //
 // The clone URL is read from 1Password (default reference below) so the locator never has to be
-// typed or stored in the public tree; `--url` bypasses 1Password. Only the URL is ever read —
-// credentials stay in the git credential manager. See docs/agents/workspace-bootstrap.md.
+// typed or stored in the public tree; `--url` bypasses 1Password. Git credentials stay in the git
+// credential manager and are never read here.
+//
+// The locator is the only value this script keeps. A `--service-account-reference` token, when one
+// is used, is captured into *this* process via spawnSync().stdout and passed to a second `op`
+// child in its environment — it is never printed or written to disk, but clearing the local copies
+// below is tidiness, not erasure, since the captured stdout string outlives them. See
+// docs/agents/workspace-bootstrap.md.
 
 import { existsSync, readdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";

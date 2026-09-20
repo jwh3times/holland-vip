@@ -54,11 +54,40 @@ npm run bootstrap:private
 `op://holland-vip/holland-vip-workspace/private_repo_url`, rejects any URL that is not a
 credential-free `github.com` HTTPS/SSH locator, clones it into `private/`, and exits 0 without
 touching anything if `private/.git` already exists (it refuses to overwrite a non-empty `private/`
-that is not a repository). `--url <locator>` bypasses 1Password, `--op-reference` points at a
-different field, and `--service-account-reference` (or the
-`HOLLAND_VIP_OP_SERVICE_ACCOUNT_REFERENCE` environment variable) names a field holding a 1Password
-service-account token to retry with when the interactive identity cannot read the item. Only the
-locator is ever read; the token never leaves the child process.
+that is not a repository).
+
+`--url <locator>` bypasses 1Password, `--op-reference` points at a different field, and
+`--service-account-reference` (or the `HOLLAND_VIP_OP_SERVICE_ACCOUNT_REFERENCE` environment
+variable) names a field holding a 1Password service-account token to retry with when the
+interactive identity cannot read the item.
+
+### What the already-installed shortcut proves
+
+It checks **presence, not identity**. It confirms a Git worktree is there; it does not confirm the
+installed companion is the expected repository, has the expected remote, or is still private, so a
+re-run over a wrong or renamed companion still reports success. This supports idempotence; it is
+not recovery attestation.
+
+Verifying identity is deliberately not done there. The shortcut runs before any 1Password read and
+spawns no subprocess at all — that is what makes a re-run instant, offline, and credential-free —
+and comparing the remote against an expected locator would cost exactly the work the path exists to
+skip. After a recovery, confirm it yourself:
+
+```powershell
+git -C private remote get-url origin
+```
+
+### Where the service-account token lives
+
+The locator is the only value the script keeps. The service-account token, when one is used, is
+read by an `op` child process and captured into the **bootstrap process** through
+`spawnSync().stdout`, then passed to a second `op` child in its environment. Nothing prints it and
+nothing writes it to disk, but the bootstrap process does hold it: the script clears its local
+copies afterwards, and that is tidiness rather than a guarantee, since the captured `stdout` string
+stays reachable until the process exits. Treat the token's blast radius as the lifetime of the
+bootstrap process, not the lifetime of an `op` child.
+
+### Accepted locators
 
 Supported locators are `https://github.com/<owner>/<repository>` (with an optional `.git`
 suffix or explicit default port `443`) and `git@github.com:<owner>/<repository>`. HTTPS scheme
