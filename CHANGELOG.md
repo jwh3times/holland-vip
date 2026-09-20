@@ -12,6 +12,20 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.29] - 2026-09-20
+
+### Security
+
+- The daily production check now compares the deployed Content-Security-Policy directive by
+  directive against the policy declared in `public/_headers`, instead of testing for two
+  substrings. A response that kept `default-src 'self'` while opening `script-src` to a wildcard
+  previously passed; it now fails, naming the widened directive. Because the comparison reads the
+  repository's own policy, a deployment serving something other than what the repository declares
+  also fails.
+- The same check now verifies the live `security.txt` carries a contact, canonical URL, policy
+  link, and an expiry still in the future, rather than matching a single line. An expiry lapses
+  without any deploy to notice it.
+
 ## [1.4.28] - 2026-09-20
 
 ### Security
