@@ -23,6 +23,9 @@ Authoritative guidance for coding agents working in this repository.
   `next.config.ts` is ignored for this export.
 - Keep CodeQL in GitHub default setup; do not add an advanced CodeQL workflow.
 - Keep `.nvmrc` and `package.json#engines.node` aligned.
+- Keep symlinks out of `.agents/skills/`, `.claude/agents/`, `.claude/skills/`, and
+  `.codex/agents/`; `agent-sync.mjs` refuses to follow one and fails the sync build instead of
+  copying its target's bytes across the tree.
 
 ## Code and content boundaries
 
@@ -127,7 +130,8 @@ npm run sync:agents
 node scripts/sync-agents.mjs --check
 ```
 
-The generator owns `.claude/skills/` and `.codex/`; do not replace these trees with symlinks.
+The generator owns `.claude/skills/` and `.codex/` (see Non-negotiable constraints for the
+symlink rule that guards both these and the authored trees).
 
 ## Private workspace
 

@@ -12,6 +12,15 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.25] - 2026-09-20
+
+### Security
+
+- Agent artifact generation now refuses to follow a symlink in either the authored or the generated
+  tree, failing with the offending path instead of copying the link target's bytes. A link under
+  `.agents/skills/` or `.claude/agents/` previously had its target read and republished into
+  `.claude/skills/` or `.codex/`, which could carry a file across the private/public boundary.
+
 ## [1.4.23] - 2026-09-16
 
 ### Changed
