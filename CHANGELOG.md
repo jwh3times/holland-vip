@@ -12,6 +12,25 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.25] - 2026-09-20
+
+### Security
+
+- Every GitHub Actions reference in CI is now pinned to an immutable full commit SHA with a
+  trailing version comment, so a retagged or compromised upstream action can no longer reach a
+  workflow run. `actions/dependency-review-action` had been resolving through a mutable `v5`
+  branch rather than a tag; it now names the commit behind `v5.0.0`. Dependabot continues to
+  propose updates, refreshing each SHA and its version comment together.
+- A check now fails the build if any workflow reference reverts to a mutable tag or branch, so the
+  pinning cannot regress unnoticed.
+
+## [1.4.24] - 2026-09-18
+
+### Changed
+
+- Dependency maintenance: `lucide-react` 1.45.0 to 1.46.0, `oxlint` 1.82.0 to 1.83.0, and
+  `vitest` with `@vitest/coverage-v8` 5.0.0 to 5.0.1.
+
 ## [1.4.23] - 2026-09-16
 
 ### Changed
