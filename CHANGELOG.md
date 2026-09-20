@@ -12,6 +12,19 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.27] - 2026-09-20
+
+### Security
+
+- Contribution snapshots are now validated by value, not just by shape. Totals and daily counts
+  must be finite non-negative integers within a sane bound, and each day must carry an ISO
+  `YYYY-MM-DD` date naming a real calendar day, so negative, fractional, `NaN`, `Infinity`, and
+  impossible-date values can no longer reach the contribution heatmap.
+- Build-time GitHub requests now carry a 10-second deadline. A stalled connection degrades to the
+  reviewed committed snapshot through the existing fallback path instead of holding the build open
+  until CI's own timeout. A timed-out repository keeps its committed data rather than being dropped,
+  which remains reserved for repositories GitHub reports as gone or ineligible.
+
 ## [1.4.26] - 2026-09-20
 
 ### Security
