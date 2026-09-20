@@ -95,6 +95,19 @@ node scripts/next-version.mjs
 This prints a bare version (e.g. `1.1.5`) — no `v` prefix. It is the single source of truth;
 `version.yml` and the `changelog` CI job call the same script. Do not compute it yourself.
 
+It reads local tags, so it is only as fresh as your last fetch. If a merge landed moments ago,
+`version.yml` may not have minted that tag yet, and the script will hand you a version that is
+already taken — the `changelog` job then fails at merge time. After any merge, confirm the tag
+exists before trusting the number:
+
+```bash
+git fetch --tags -q origin
+git tag -l "v*" --sort=-v:refname | head -1
+```
+
+If the newest tag is older than the merge you just made, wait for `version.yml` to finish and
+fetch again.
+
 ### 5. Refresh the docs
 
 Invoke the `docs-updater` subagent, scoped to **this branch's diff only** — not a full audit:
