@@ -17,6 +17,9 @@ Authoritative guidance for coding agents working in this repository.
 
 - Preserve `output: "export"`; every route and feature must work as a static export.
 - Keep runtime environment variables, API routes, server-only behavior, and SSR out of the app.
+- Never write a resolved credential value into `.env`; `.gitignore` ignores every env file except
+  `.env.example`/`.env.tpl`, and captured secrets route to a secret store or an unresolved
+  1Password reference (see `.agents/skills/wizard/SKILL.md`).
 - Keep images compatible with `images.unoptimized: true`.
 - Put static assets in `public/` and reference them with root paths.
 - Define Cloudflare Pages security headers only in `public/_headers`; `headers()` in
