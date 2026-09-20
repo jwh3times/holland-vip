@@ -65,7 +65,11 @@ expected hydration warning.
 
 The homepage resolves featured repositories and contribution history during the build.
 `lib/github-fetch.ts` owns the shared request policy: build User-Agent, explicit anonymous access,
-optional bearer token, force-cache behavior, non-OK failure, and fallback support.
+optional bearer token, force-cache behavior, a per-request timeout, non-OK failure, and fallback
+support. The timeout matters because fallback only engages once a request settles or rejects, so
+without a deadline a stalled connection would hold the build rather than degrade. Its
+`GitHubTimeoutError` is intentionally distinct from the status-bearing response error, keeping a
+timeout on the transient side of the classification below.
 
 `lib/github.ts` and `lib/github-contributions.ts` validate their committed snapshots before use.
 Repository REST requests are anonymous even when a build token exists; only contribution GraphQL
@@ -74,8 +78,8 @@ visibility when supplied, and the requested owner, name, full name, and canonica
 API read access alone does not establish public disclosure eligibility.
 
 Repository fallback is selected per allowlisted repository. A 404/410 or a rejected live payload
-omits that repository, including its old snapshot; a transient network, rate-limit, or server
-failure uses its reviewed committed record. Partial or rejected results mark the build source as
+omits that repository, including its old snapshot; a transient network, timeout, rate-limit, or
+server failure uses its reviewed committed record. Partial or rejected results mark the build source as
 `fallback`. Snapshot refresh aborts without writing either file if any repository is rejected.
 Before making a featured repository private, remove it from both the allowlist and committed
 snapshot: offline builds cannot discover a visibility change, and old public artifacts/history

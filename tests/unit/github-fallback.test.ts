@@ -139,4 +139,64 @@ describe("parseCalendar", () => {
   it("accepts an empty calendar", () => {
     expect(parseCalendar({ totalContributions: 0, weeks: [] })).not.toBeNull();
   });
+
+  /**
+   * A bare `typeof x === "number"` admits values that cannot be a contribution
+   * count but still reach the heatmap's sizing and colour maths.
+   */
+  describe("numeric bounds", () => {
+    const withCount = (count: unknown) => ({
+      totalContributions: 1,
+      weeks: [[{ date: "2026-01-01", count, level: 1 }]],
+    });
+
+    it.each([
+      ["negative", -1],
+      ["fractional", 1.5],
+      ["NaN", Number.NaN],
+      ["Infinity", Number.POSITIVE_INFINITY],
+      ["absurdly large", 1_000_001],
+    ])("rejects a %s day count", (_label, count) => {
+      expect(parseCalendar(withCount(count))).toBeNull();
+    });
+
+    it.each([
+      ["negative", -1],
+      ["fractional", 0.5],
+      ["NaN", Number.NaN],
+      ["Infinity", Number.POSITIVE_INFINITY],
+    ])("rejects a %s total", (_label, total) => {
+      expect(parseCalendar({ totalContributions: total, weeks: [] })).toBeNull();
+    });
+
+    it("still accepts a large but plausible real total", () => {
+      expect(parseCalendar({ totalContributions: 50_000, weeks: [] })).not.toBeNull();
+    });
+  });
+
+  describe("date validation", () => {
+    const withDate = (date: unknown) => ({
+      totalContributions: 1,
+      weeks: [[{ date, count: 1, level: 1 }]],
+    });
+
+    it.each([
+      ["a non-date string", "not a date"],
+      ["a US-ordered date", "01/02/2026"],
+      ["a missing zero pad", "2026-1-1"],
+      ["a timestamp suffix", "2026-01-01T00:00:00Z"],
+      ["a non-string", 20260101],
+    ])("rejects %s", (_label, date) => {
+      expect(parseCalendar(withDate(date))).toBeNull();
+    });
+
+    it("rejects a well-shaped but impossible day", () => {
+      // A regex alone accepts this, and `Date` rolls it into March.
+      expect(parseCalendar(withDate("2026-02-31"))).toBeNull();
+    });
+
+    it("accepts a real leap day", () => {
+      expect(parseCalendar(withDate("2024-02-29"))).not.toBeNull();
+    });
+  });
 });

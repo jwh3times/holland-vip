@@ -19,7 +19,34 @@ export class GitHubResponseError extends Error {
   }
 }
 
+/**
+ * A request that never settled within its deadline.
+ *
+ * Deliberately *not* a `GitHubResponseError`: callers classify 404/410 as
+ * "this repository is gone, omit its snapshot", whereas a timeout says nothing
+ * about the resource and must keep the reviewed committed data. Keeping the
+ * types distinct makes that distinction visible at the call site rather than
+ * depending on a missing status field.
+ */
+export class GitHubTimeoutError extends Error {
+  constructor(
+    label: string,
+    readonly timeoutMs: number
+  ) {
+    super(`${label} timed out after ${timeoutMs}ms`);
+  }
+}
+
 const USER_AGENT = "holland-vip-build";
+
+/**
+ * Build-time request deadline.
+ *
+ * The documented fallback only engages once a request settles or rejects, so
+ * without a deadline a stalled connection holds the build until the CI job's
+ * own timeout kills it — turning a degradable failure into a red build.
+ */
+const DEFAULT_TIMEOUT_MS = 10_000;
 
 export type GitHubDataSource = "live" | "fallback";
 
@@ -40,11 +67,15 @@ export interface GitHubDataResult<T> {
  *   `export const dynamic = "force-static"` — see `app/page.tsx`.
  * - **Throws** on a non-OK response. Callers select eligible fallback data
  *   using the preserved response status.
+ * - **Throws** `GitHubTimeoutError` if the request does not settle within
+ *   `timeoutMs`, so a stalled connection degrades through the normal fallback
+ *   path instead of hanging the build.
  *
  * @param label Human-readable request name, used in the thrown error message.
  * @param anonymous When true, never reads or sends the build token.
  * @param requireToken When true, throws if `GITHUB_TOKEN` is absent (the
  *   GraphQL API is auth-only; the REST repo API is not).
+ * @param timeoutMs Request deadline; defaults to `DEFAULT_TIMEOUT_MS`.
  */
 export async function githubFetch(
   url: string,
@@ -55,6 +86,7 @@ export async function githubFetch(
     method = "GET",
     headers = {},
     body,
+    timeoutMs = DEFAULT_TIMEOUT_MS,
   }: {
     label: string;
     requireToken?: boolean;
@@ -62,6 +94,7 @@ export async function githubFetch(
     method?: "GET" | "POST";
     headers?: Record<string, string>;
     body?: string;
+    timeoutMs?: number;
   }
 ): Promise<unknown> {
   const token = anonymous ? undefined : process.env.GITHUB_TOKEN;
@@ -75,12 +108,27 @@ export async function githubFetch(
   };
   if (token) finalHeaders.Authorization = `Bearer ${token}`;
 
-  const res = await fetch(url, {
-    method,
-    headers: finalHeaders,
-    ...(body === undefined ? {} : { body }),
-    cache: "force-cache",
-  });
+  // Passing a signal opts this request out of Next.js per-render fetch
+  // memoization. That costs nothing here: every URL this module requests is
+  // fetched once per render pass (one contributions call, and one call per
+  // distinct repository slug), so there are no duplicate requests to dedupe.
+  // The persistent `force-cache` entry that keeps the route statically
+  // generatable is a separate mechanism and is unaffected.
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method,
+      headers: finalHeaders,
+      ...(body === undefined ? {} : { body }),
+      cache: "force-cache",
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+  } catch (error) {
+    if (error instanceof Error && error.name === "TimeoutError") {
+      throw new GitHubTimeoutError(label, timeoutMs);
+    }
+    throw error;
+  }
 
   if (!res.ok) {
     throw new GitHubResponseError(label, res.status);
