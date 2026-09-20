@@ -15,6 +15,10 @@
 // Output is deterministic (LF line endings, no timestamps) so regeneration
 // never churns and --check is stable across platforms.
 //
+// Neither walk follows symlinks: an authored or generated tree containing one
+// fails the run instead of copying the link target's bytes into generated
+// output. See assertNotSymlink.
+//
 // INTERFACE: `syncAll` is the entry point — it is what scripts/sync-agents.mjs
 // calls and the only export a consumer needs. The pure transforms below
 // (parseFrontmatter, deriveSandboxMode, tomlBasicString, agentMarkdownToToml,
@@ -136,11 +140,38 @@ const DEFAULT_PATHS = {
   codexAgents: join(REPO_ROOT, ".codex", "agents"),
 };
 
+/**
+ * Refuse a symlink encountered during either walk.
+ *
+ * Generation copies file *contents* verbatim between two trees the project
+ * documents as a private/public boundary, so a link is not a file that happens
+ * to point elsewhere — it is an instruction to read whatever it targets and
+ * publish those bytes under the generated tree. `Dirent.isDirectory()` reports
+ * false for a symlink regardless of its target, so without this check a link
+ * lands in the file list and `readFileSync` resolves it.
+ *
+ * Failing loudly beats skipping: a silent skip would make a link look merely
+ * absent from generated output, which reads as a generator bug rather than a
+ * rejected input.
+ */
+function assertNotSymlink(dir, entry) {
+  if (!entry.isSymbolicLink()) return;
+  throw new Error(
+    `agent sync refuses to follow a symlink: ${join(dir, entry.name).replace(/\\/g, "/")}\n` +
+      `Generation copies file contents verbatim, so a link can carry data across the ` +
+      `private/public boundary. Replace it with a real file, or keep it out of the ` +
+      `authored and generated trees.`
+  );
+}
+
 /** Immediate subdirectory names of `dir` (empty if `dir` is absent). */
 function listDirs(dir) {
   if (!existsSync(dir)) return [];
   return readdirSync(dir, { withFileTypes: true })
-    .filter((e) => e.isDirectory())
+    .filter((e) => {
+      assertNotSymlink(dir, e);
+      return e.isDirectory();
+    })
     .map((e) => e.name);
 }
 
@@ -149,6 +180,7 @@ function listFiles(dir, prefix = "") {
   if (!existsSync(dir)) return [];
   const out = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    assertNotSymlink(dir, entry);
     const rel = prefix ? join(prefix, entry.name) : entry.name;
     if (entry.isDirectory()) out.push(...listFiles(join(dir, entry.name), rel));
     else out.push(rel);

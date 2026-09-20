@@ -1,6 +1,14 @@
 // @vitest-environment node
 import { describe, it, expect, afterEach } from "vitest";
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync } from "node:fs";
+import {
+  mkdtempSync,
+  mkdirSync,
+  writeFileSync,
+  readFileSync,
+  existsSync,
+  rmSync,
+  symlinkSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { syncAll } from "../../scripts/lib/agent-sync.mjs";
@@ -136,6 +144,93 @@ describe("syncAll", () => {
     // And a CRLF working-tree copy of the generated file is still "in sync",
     // so --check doesn't fail on a Windows checkout.
     writeFileSync(join(paths.claudeSkills, "demo", "SKILL.md"), generated.replace(/\n/g, "\r\n"));
+    expect(syncAll({ paths, check: true }).changed).toEqual([]);
+  });
+});
+
+/**
+ * Probe whether a link of `type` can be created here. A *file* symlink needs
+ * elevation or Developer Mode on Windows, and this repo is developed there with
+ * `core.symlinks=false`, so those cases skip locally and run on Linux CI. A
+ * directory *junction* needs no privilege and Node's `lstat` reports it as a
+ * symlink, so the directory case runs everywhere.
+ */
+function canLink(type: "file" | "junction"): boolean {
+  const probe = mkdtempSync(join(tmpdir(), "agent-sync-link-probe-"));
+  try {
+    const target = join(probe, "target");
+    if (type === "junction") mkdirSync(target);
+    else writeFileSync(target, "x\n");
+    symlinkSync(target, join(probe, "link"), type);
+    return true;
+  } catch {
+    return false;
+  } finally {
+    rmSync(probe, { recursive: true, force: true });
+  }
+}
+
+/** Directory links use a junction on Windows so the case is not skipped there. */
+const DIR_LINK = process.platform === "win32" ? "junction" : "dir";
+
+describe("syncAll symlink containment", () => {
+  it.skipIf(!canLink("file"))(
+    "refuses a symlinked file in an authored skill instead of copying its target",
+    () => {
+      const paths = makeFixture();
+
+      // A secret living outside the authored tree — the boundary the generator
+      // must not cross. Written under the fixture root so cleanup removes it.
+      const secret = join(paths.repoRoot, "confidential.txt");
+      writeFileSync(secret, "PRIVATE VALUE\n");
+      symlinkSync(secret, join(paths.skillSources, "demo", "reference.txt"), "file");
+
+      expect(() => syncAll({ paths })).toThrow(/refuses to follow a symlink/);
+
+      // The target's bytes never reached the generated tree.
+      expect(existsSync(join(paths.claudeSkills, "demo", "reference.txt"))).toBe(false);
+    }
+  );
+
+  it.skipIf(!canLink(DIR_LINK === "junction" ? "junction" : "file"))(
+    "refuses a symlinked directory in an authored skill and names the path",
+    () => {
+      const paths = makeFixture();
+      const outside = join(paths.repoRoot, "secretdir");
+      mkdirSync(outside, { recursive: true });
+      writeFileSync(join(outside, "confidential.txt"), "PRIVATE VALUE\n");
+      symlinkSync(outside, join(paths.skillSources, "demo", "linked"), DIR_LINK);
+
+      // Named, not silently skipped — a skip would read as a generator bug.
+      expect(() => syncAll({ paths })).toThrow(/refuses to follow a symlink/);
+      expect(() => syncAll({ paths })).toThrow(/demo\/linked/);
+      expect(existsSync(join(paths.claudeSkills, "demo", "linked"))).toBe(false);
+    }
+  );
+
+  it.skipIf(!canLink(DIR_LINK === "junction" ? "junction" : "file"))(
+    "refuses a symlinked directory in the generated tree",
+    () => {
+      const paths = makeFixture();
+      syncAll({ paths }); // establish a clean mirror first
+
+      const outside = join(paths.repoRoot, "elsewhere");
+      mkdirSync(outside, { recursive: true });
+      writeFileSync(join(outside, "note.txt"), "PRIVATE VALUE\n");
+      symlinkSync(outside, join(paths.claudeSkills, "linked-dir"), DIR_LINK);
+
+      // The destination walk feeds stale-file pruning, so an unguarded run
+      // would have reached through the link to decide what to delete.
+      expect(() => syncAll({ paths, check: true })).toThrow(/refuses to follow a symlink/);
+      expect(existsSync(join(outside, "note.txt"))).toBe(true);
+    }
+  );
+
+  it("does not false-positive on a tree whose entries are all real", () => {
+    const paths = makeFixture();
+    mkdirSync(join(paths.skillSources, "demo", "nested"), { recursive: true });
+    writeFileSync(join(paths.skillSources, "demo", "nested", "reference.md"), "ref body\n");
+    expect(() => syncAll({ paths })).not.toThrow();
     expect(syncAll({ paths, check: true }).changed).toEqual([]);
   });
 });
