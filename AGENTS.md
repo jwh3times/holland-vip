@@ -23,7 +23,10 @@ Authoritative guidance for coding agents working in this repository.
 - Keep images compatible with `images.unoptimized: true`.
 - Put static assets in `public/` and reference them with root paths.
 - Define Cloudflare Pages security headers only in `public/_headers`; `headers()` in
-  `next.config.ts` is ignored for this export.
+  `next.config.ts` is ignored for this export. Editing the CSP here changes a deployment contract
+  the daily production smoke check enforces directive by directive (see
+  `docs/architecture.md`); the edit and the Cloudflare Pages redeploy from `main` must be
+  sequenced, since smoke fails against the still-old deployed policy until that redeploy lands.
 - Keep CodeQL in GitHub default setup; do not add an advanced CodeQL workflow.
 - Pin every `uses:` reference in `.github/workflows/` to a full commit SHA with a trailing
   `# vX.Y.Z` comment, never a mutable tag or branch; Dependabot's `github-actions` ecosystem in

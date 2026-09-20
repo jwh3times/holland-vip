@@ -1,9 +1,18 @@
 # Security headers, served by Cloudflare Pages (this file is the live source of truth).
-# NOTE: 'unsafe-inline' in script-src is required and intentional — next-themes and
-# Next.js emit inline bootstrap scripts, and a static export has no server to issue
-# CSP nonces. Removing it would need per-build script hashing (brittle), so we accept
-# it: securityheaders.com grades this an A. There is no XSS vector on this static,
-# input-free site for it to matter in practice.
+# The daily production smoke check compares the deployed CSP against this file
+# directive by directive, so an edit here is a deployment contract change.
+#
+# NOTE: 'unsafe-inline' in script-src is an accepted limitation, not a proof of safety.
+# next-themes and Next.js emit inline bootstrap scripts, and a static export has no
+# server to issue per-request nonces; per-build script hashing is the alternative and
+# is brittle across builds. So the risk is accepted rather than eliminated.
+#
+# Being static and form-free shrinks the request-time attack surface but does not make
+# injection impossible: the build still bakes in external GitHub metadata and the page
+# loads a third-party analytics script. An external grade measures header presence, not
+# the absence of a vector, so it is not a justification. base-uri, object-src, and
+# form-action are set below to close the sinks that 'unsafe-inline' would otherwise
+# leave reachable; no <form>, <base>, <object>, or <embed> exists in any built route.
 /*
   X-DNS-Prefetch-Control: on
   X-Frame-Options: SAMEORIGIN
@@ -11,4 +20,4 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cloudflareinsights.com; frame-ancestors 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cloudflareinsights.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'none'

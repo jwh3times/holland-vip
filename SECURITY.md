@@ -3,8 +3,16 @@
 ## Supported Versions
 
 This repository powers a single, continuously deployed static site
-(<https://holland.vip>). Only the currently deployed version (the `main` branch) is
-supported — there are no released versions, tags, or backports.
+(<https://holland.vip>). **Only the currently deployed `main` branch is supported.**
+
+Every merge to `main` mints a `v<major>.<minor>.<build>` tag and a GitHub release, so released
+versions do exist — but they are markers of what shipped, not separately maintained lines. There
+are no backports: a fix reaches users by landing on `main` and deploying, and the only version
+that is ever "patched" is the one currently live.
+
+When reporting, identify the affected version by the deployed site or by the newest tag rather
+than by a range. An advisory against this repository applies to the deployed site at the time it
+is published.
 
 ## Reporting a Vulnerability
 

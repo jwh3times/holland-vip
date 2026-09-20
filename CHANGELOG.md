@@ -12,6 +12,23 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.31] - 2026-09-20
+
+### Added
+
+- The Content-Security-Policy now sets `base-uri 'self'`, `object-src 'none'`, and
+  `form-action 'none'`, closing the injection sinks that an inline-script allowance would otherwise
+  leave reachable. No route contains a form, base, object, or embed element, so nothing changes for
+  visitors.
+
+### Changed
+
+- `SECURITY.md` no longer claims the project has no released versions or tags; every merge to
+  `main` mints one. It now says only the deployed `main` is supported, that tags mark what shipped
+  rather than separately maintained lines, and how a reporter should identify an affected version.
+- `public/_headers` no longer asserts that the site has no XSS vector or cites an external grade as
+  justification. It describes `'unsafe-inline'` as an accepted limitation with its actual cause.
+
 ## [1.4.30] - 2026-09-20
 
 ### Changed
