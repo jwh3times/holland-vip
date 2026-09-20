@@ -164,8 +164,17 @@ workflow allowance and add the Lighthouse job to required branch-protection chec
 
 Cloudflare deployment is independent from GitHub Actions CI. The daily and manually dispatchable
 smoke workflow runs `npm run smoke:production` against the deployed site. That command checks the
-homepage identity, complete security-header contract, public metadata artifacts, RFC 9116 contact,
-404 behavior, and www-to-apex redirect, with contract-specific diagnostics. The refresh workflow
+homepage identity, security headers, public metadata artifacts, RFC 9116 security.txt, 404 behavior,
+and www-to-apex redirect, with contract-specific diagnostics.
+
+The Content-Security-Policy is compared directive by directive against the policy declared in
+`public/_headers`, which stays the single source of truth: a missing directive, an undeclared one,
+and a widened source list each fail, and reordering or case does not. Comparing whole directives
+rather than testing for substrings is what lets the check see a response that keeps
+`default-src 'self'` while opening `script-src`. The remaining headers are still substring
+assertions, which suits their fixed single values. The security.txt assertions cover the live
+`Contact`, `Canonical`, `Policy`, and an unexpired `Expires` — an expiry lapses with no deploy to
+notice it, so the daily run is what catches it. The refresh workflow
 calls the Cloudflare Pages deploy hook, polls the returned deployment ID through the Pages API until
 it succeeds or fails, then verifies both that deployment's URL and the production homepage report
 live GitHub data. Release tags and changelog prediction follow
