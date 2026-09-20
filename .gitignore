@@ -32,7 +32,14 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+#
+# `.env*.local` alone left `.env` and `.env.production` committable, which is
+# the file a wizard or a hurried setup step is most likely to create. Ignore
+# every env file and re-admit only the ones that carry names, not values.
+.env
+.env.*
+!.env.example
+!.env.tpl
 
 # vercel
 .vercel

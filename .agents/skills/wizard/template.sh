@@ -27,6 +27,7 @@ ENV_FILE="${ENV_FILE:-.env}"
 WRITTEN_ENV=()    # KEYs written to ENV_FILE this run
 WRITTEN_SECRET=() # secret NAMEs set this run
 SKIPPED=()        # things we couldn't do (e.g. gh missing)
+_SECRET_KEYS=()   # KEYs captured by ask_secret — write_env refuses these
 
 # _clear — wipe the terminal so only the current step is on screen. No-op when
 # output isn't a terminal, so piped logs stay readable.
@@ -61,6 +62,8 @@ say()  { printf '  %s\n' "$1"; }
 step() { printf '  %s•%s %s\n' "$BLUE" "$RESET" "$1"; }
 note() { printf '  %s%s%s\n' "$DIM" "$1" "$RESET"; }
 warn() { printf '  %s⚠ %s%s\n' "$YELLOW" "$1" "$RESET"; }
+# fail "..." — stop the wizard on an authoring mistake that must not proceed.
+fail() { printf '\n  %s✗ %s%s\n\n' "$RED" "$1" "$RESET" >&2; exit 1; }
 
 # open_url URL — open in the human's browser, cross-platform incl. WSL.
 open_url() {
@@ -110,25 +113,57 @@ ask() {
   printf -v "$key" '%s' "$input"
 }
 
-# ask_secret KEY "Prompt" — like ask, but input is hidden.
+# _secret_exists NAME — true when a GitHub Actions secret of that name is set.
+# Secret values are write-only, so this checks presence, never the value.
+_secret_exists() {
+  command -v gh >/dev/null 2>&1 || return 1
+  gh auth status >/dev/null 2>&1 || return 1
+  gh secret list 2>/dev/null | awk '{print $1}' | grep -qx "$1"
+}
+
+# ask_secret KEY "Prompt" — like ask, but input is hidden and the value is
+# marked secret for the rest of the run.
+#
+# Unlike `ask`, this never offers the current ENV_FILE value as a default:
+# secrets do not live in ENV_FILE, so there is nothing to read back. On a
+# re-run where the GitHub secret already exists, Enter keeps it.
 ask_secret() {
-  local key="$1" prompt="$2" current input
-  current=$(_existing "$key" || true)
-  if [[ -n "$current" ]]; then
-    printf '  %s%s%s %s[Enter keeps current]%s ' "$BOLD" "$prompt" "$RESET" "$DIM" "$RESET"
+  local key="$1" prompt="$2" input
+  _SECRET_KEYS+=("$key")
+  if _secret_exists "$key"; then
+    printf '  %s%s%s %s[Enter keeps the secret already set in GitHub]%s ' \
+      "$BOLD" "$prompt" "$RESET" "$DIM" "$RESET"
   else
     printf '  %s%s%s ' "$BOLD" "$prompt" "$RESET"
   fi
   read -rs input || true
   printf '\n'
-  [[ -z "$input" && -n "$current" ]] && input="$current"
   printf -v "$key" '%s' "$input"
 }
 
+# _is_secret KEY — true when KEY was captured with ask_secret.
+_is_secret() {
+  local candidate
+  for candidate in ${_SECRET_KEYS[@]+"${_SECRET_KEYS[@]}"}; do
+    [[ "$candidate" == "$1" ]] && return 0
+  done
+  return 1
+}
+
 # write_env KEY VALUE — upsert KEY=VALUE into ENV_FILE (creates it; replaces
-# any existing line). Idempotent.
+# any existing line). Idempotent. Non-secret configuration only.
+#
+# Refuses a key captured by ask_secret. The project's storage contract keeps
+# credential values in 1Password or a deployed secret store and prohibits
+# resolved .env files, and a plaintext secret here is one `git add` from being
+# committed. Route the value to set_secret, write_env_ref, or both.
 write_env() {
   local key="$1" value="$2" tmp
+  if _is_secret "$key"; then
+    fail "refusing to write $key to $ENV_FILE: it was captured as a secret.
+    Use set_secret $key to store it, and write_env_ref $key 'op://<vault>/<item>/<field>'
+    if a command needs to resolve it at run time."
+  fi
   touch "$ENV_FILE"
   tmp=$(mktemp)
   grep -vE "^${key}=" "$ENV_FILE" > "$tmp" || true
@@ -138,10 +173,34 @@ write_env() {
   printf '  %s✓ wrote%s %s → %s\n' "$GREEN" "$RESET" "$key" "$ENV_FILE"
 }
 
+# write_env_ref KEY OP_REFERENCE — upsert an *unresolved* 1Password reference
+# into ENV_FILE, e.g. write_env_ref GITHUB_TOKEN "op://Private/holland-vip/GITHUB_TOKEN".
+#
+# The file stays safe to read and safe to commit: it names where the value
+# lives, never the value. Commands resolve it at run time with `op run`.
+write_env_ref() {
+  local key="$1" reference="$2" tmp
+  [[ "$reference" == op://* ]] ||
+    fail "write_env_ref $key expects an op:// reference, got: $reference"
+  touch "$ENV_FILE"
+  tmp=$(mktemp)
+  grep -vE "^${key}=" "$ENV_FILE" > "$tmp" || true
+  printf '%s=%s\n' "$key" "$reference" >> "$tmp"
+  mv "$tmp" "$ENV_FILE"
+  WRITTEN_ENV+=("$key")
+  printf '  %s✓ wrote%s %s reference → %s\n' "$GREEN" "$RESET" "$key" "$ENV_FILE"
+}
+
 # set_secret NAME VALUE — set a GitHub Actions repo secret via gh. Falls back
 # to a warning (and records it) if gh is unavailable or unauthenticated.
 set_secret() {
   local name="$1" value="$2"
+  # Empty means the human pressed Enter at an ask_secret prompt for a secret
+  # GitHub already holds. Writing "" would silently blank a working secret.
+  if [[ -z "$value" ]]; then
+    note "kept the GitHub secret $name already set"
+    return
+  fi
   if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
     if printf '%s' "$value" | gh secret set "$name" >/dev/null 2>&1; then
       WRITTEN_SECRET+=("$name")
@@ -190,15 +249,23 @@ banner "Stripe setup"
 
 # ── Example stage: replace with your real steps ───────────────────────────
 stage "Stripe — API keys"
-say "We'll grab your Stripe test keys and store them for local dev + CI."
+say "We'll grab your Stripe test keys and put each one where it belongs."
 open_url "https://dashboard.stripe.com/test/apikeys"
+
+# A publishable key is not a credential: plain value, plain write.
 step "On the API keys page, copy the Publishable key (starts pk_test_)."
 ask STRIPE_PUBLISHABLE_KEY "Paste the publishable key:"
+write_env STRIPE_PUBLISHABLE_KEY "$STRIPE_PUBLISHABLE_KEY"
+
+# A secret key is. It goes to the secret store, and ENV_FILE gets only a
+# reference to where it lives. `write_env STRIPE_SECRET_KEY "$..."` would
+# abort the wizard — that is the point.
 step "Click 'Reveal test key' on the Secret key row, then copy it."
 ask_secret STRIPE_SECRET_KEY "Paste the secret key:"
-write_env STRIPE_PUBLISHABLE_KEY "$STRIPE_PUBLISHABLE_KEY"
-write_env STRIPE_SECRET_KEY "$STRIPE_SECRET_KEY"
-set_secret STRIPE_SECRET_KEY "$STRIPE_SECRET_KEY"   # CI needs this one
+set_secret STRIPE_SECRET_KEY "$STRIPE_SECRET_KEY"
+step "Save the same key in 1Password as item 'Stripe', field 'secret_key'."
+pause "Saved it?"
+write_env_ref STRIPE_SECRET_KEY "op://Private/Stripe/secret_key"
 # ──────────────────────────────────────────────────────────────────────────
 
 finish
