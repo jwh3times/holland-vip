@@ -12,6 +12,18 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.28] - 2026-09-20
+
+### Security
+
+- Generated setup wizards no longer write captured credentials into a plaintext `.env`. A value
+  entered at a hidden prompt is marked secret for the run, and the wizard now aborts rather than
+  persisting it as text, directing it to a GitHub secret or to 1Password with only an unresolved
+  `op://` reference written to `.env`. Hidden prompts also stopped offering a stored value as
+  their default, which had read a saved secret back out of the file.
+- The repository now ignores every `.env` file, re-admitting only `.env.example` and `.env.tpl`.
+  The previous `.env*.local` rule left `.env` and `.env.production` committable.
+
 ## [1.4.27] - 2026-09-20
 
 ### Security
