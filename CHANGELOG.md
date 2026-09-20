@@ -21,6 +21,8 @@ No unreleased changes.
   workflow run. `actions/dependency-review-action` had been resolving through a mutable `v5`
   branch rather than a tag; it now names the commit behind `v5.0.0`. Dependabot continues to
   propose updates, refreshing each SHA and its version comment together.
+- A check now fails the build if any workflow reference reverts to a mutable tag or branch, so the
+  pinning cannot regress unnoticed.
 
 ## [1.4.24] - 2026-09-18
 
