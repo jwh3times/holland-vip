@@ -158,10 +158,12 @@ describe("Content-Security-Policy verification", () => {
   });
 
   it("rejects a directive the intended policy does not declare", async () => {
-    const urls = await productionFixture({ csp: `${INTENDED_CSP}; object-src *` });
+    // `worker-src` is absent from the policy, so it is covered by `default-src`
+    // today; declaring it at the edge would silently widen that fallback.
+    const urls = await productionFixture({ csp: `${INTENDED_CSP}; worker-src *` });
 
     await expect(runProductionSmoke({ ...urls, logger: () => {} })).rejects.toThrow(
-      /unexpected directive object-src/
+      /unexpected directive worker-src/
     );
   });
 
