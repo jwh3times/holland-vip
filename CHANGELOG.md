@@ -12,6 +12,14 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.32] - 2026-09-20
+
+### Changed
+
+- The workspace bootstrap guide now loads credentials from one reference-only template per task,
+  so a command receives what it uses and nothing else. The combined template it previously named
+  resolved every stored credential into every command that used it.
+
 ## [1.4.31] - 2026-09-20
 
 ### Added

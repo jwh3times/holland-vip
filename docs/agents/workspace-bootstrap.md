@@ -188,17 +188,22 @@ Machine-specific settings are optional and are never required for the public bui
 
 ## Load credentials for one process
 
-The private template contains only 1Password secret references:
+The private companion carries one reference-only template per task, so a command receives the
+credentials it uses and no others:
 
 ```powershell
-op run --env-file private/config/holland-vip.env.tpl -- <command>
+op run --env-file private/config/github-snapshots.env.tpl -- npm run refresh:github-snapshots
+op run --env-file private/config/cloudflare-verify.env.tpl -- node scripts/verify-cloudflare-deployment.mjs
 ```
 
-For example:
+A process boundary limits how long an injected value persists; it does not stop that process, or
+anything it spawns, from reading every value handed to it. That is why there is no combined
+template to reach for. `private/README.md` lists the templates and which credentials each resolves;
+add a new one when a new task needs a different set rather than widening an existing one.
 
-```powershell
-op run --env-file private/config/holland-vip.env.tpl -- npm run refresh:github-snapshots
-```
+`SYNC_PAT` and the Cloudflare deploy-hook URL are not in any template — both are read only by
+GitHub Actions, so they go straight into the secret store (`op read ... | gh secret set ...`)
+without passing through a local shell.
 
 The refresh fetches and validates both public fallback snapshots before replacing either one.
 Review and verify the generated pair together:
