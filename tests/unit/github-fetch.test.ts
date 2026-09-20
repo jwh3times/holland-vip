@@ -1,6 +1,11 @@
 /* oxlint-disable typescript/no-unnecessary-type-assertion, typescript/only-throw-error, typescript/require-await -- intentional test doubles and non-Error throw coverage */
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { githubFetch, withFallback, withFallbackSource } from "@/lib/github-fetch";
+import {
+  githubFetch,
+  withFallback,
+  withFallbackSource,
+  GitHubTimeoutError,
+} from "@/lib/github-fetch";
 
 function okResponse(body: unknown = { ok: true }): Response {
   return { ok: true, status: 200, json: async () => body } as unknown as Response;
@@ -96,6 +101,88 @@ describe("githubFetch", () => {
     await expect(githubFetch("https://api.github.com/x", { label: "GitHub API" })).rejects.toThrow(
       "GitHub API responded 403"
     );
+  });
+
+  it("passes an abort signal carrying the request deadline", async () => {
+    const fetchMock = vi.fn(async () => okResponse());
+    vi.stubGlobal("fetch", fetchMock);
+
+    await githubFetch("https://api.github.com/x", { label: "test" });
+
+    expect(initOf(fetchMock.mock.calls[0]).signal).toBeInstanceOf(AbortSignal);
+  });
+
+  it("throws GitHubTimeoutError when the request outlives its deadline", async () => {
+    // A request that never settles on its own: only the signal can end it.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        (_url: string, init: RequestInit) =>
+          new Promise<Response>((_resolve, reject) => {
+            init.signal?.addEventListener("abort", () => {
+              reject((init.signal as AbortSignal).reason as Error);
+            });
+          })
+      )
+    );
+
+    await expect(
+      githubFetch("https://api.github.com/x", { label: "GitHub API", timeoutMs: 10 })
+    ).rejects.toThrow(GitHubTimeoutError);
+  });
+
+  it("names the label and deadline in the timeout message", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        (_url: string, init: RequestInit) =>
+          new Promise<Response>((_resolve, reject) => {
+            init.signal?.addEventListener("abort", () => {
+              reject((init.signal as AbortSignal).reason as Error);
+            });
+          })
+      )
+    );
+
+    await expect(
+      githubFetch("https://api.github.com/x", { label: "GitHub API", timeoutMs: 10 })
+    ).rejects.toThrow("GitHub API timed out after 10ms");
+  });
+
+  it("does not disguise an ordinary network failure as a timeout", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new TypeError("fetch failed");
+      })
+    );
+
+    const promise = githubFetch("https://api.github.com/x", { label: "GitHub API" });
+    await expect(promise).rejects.toThrow("fetch failed");
+    await expect(promise).rejects.not.toBeInstanceOf(GitHubTimeoutError);
+  });
+
+  it("degrades a timeout to committed data instead of failing the build", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        (_url: string, init: RequestInit) =>
+          new Promise<Response>((_resolve, reject) => {
+            init.signal?.addEventListener("abort", () => {
+              reject((init.signal as AbortSignal).reason as Error);
+            });
+          })
+      )
+    );
+
+    // The whole point of the deadline: the documented fallback only engages
+    // once a request settles or rejects.
+    await expect(
+      withFallbackSource("timing out fetch", "snapshot", () =>
+        githubFetch("https://api.github.com/x", { label: "GitHub API", timeoutMs: 10 })
+      )
+    ).resolves.toEqual({ data: "snapshot", source: "fallback" });
   });
 });
 
