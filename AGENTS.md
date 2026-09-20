@@ -22,6 +22,9 @@ Authoritative guidance for coding agents working in this repository.
 - Define Cloudflare Pages security headers only in `public/_headers`; `headers()` in
   `next.config.ts` is ignored for this export.
 - Keep CodeQL in GitHub default setup; do not add an advanced CodeQL workflow.
+- Pin every `uses:` reference in `.github/workflows/` to a full commit SHA with a trailing
+  `# vX.Y.Z` comment, never a mutable tag or branch; Dependabot's `github-actions` ecosystem in
+  `.github/dependabot.yml` keeps the SHA and comment in sync.
 - Keep `.nvmrc` and `package.json#engines.node` aligned.
 - Keep symlinks out of `.agents/skills/`, `.claude/agents/`, `.claude/skills/`, and
   `.codex/agents/`; `agent-sync.mjs` refuses to follow one and fails the sync build instead of

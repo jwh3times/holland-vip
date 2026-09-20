@@ -16,9 +16,11 @@ describe("scheduled cross-browser workflow", () => {
     expect(workflow).toContain("browser: webkit");
     expect(workflow).toContain("project: webkit");
     expect(workflow).toContain("needs: build");
-    expect(workflow).toContain("actions/upload-artifact@v7");
+    // Matched on the pinned SHA form, not a literal tag, so a Dependabot SHA
+    // bump does not break this test. The major line still has to hold.
+    expect(workflow).toMatch(/uses: actions\/upload-artifact@[0-9a-f]{40} # v7\./);
     expect(workflow).toContain("include-hidden-files: true");
-    expect(workflow).toContain("actions/download-artifact@v8");
+    expect(workflow).toMatch(/uses: actions\/download-artifact@[0-9a-f]{40} # v8\./);
     expect(workflow).toContain("npx playwright install --with-deps ${{ matrix.browser }}");
     expect(workflow).toContain('npm run test:e2e -- --project="${{ matrix.project }}"');
     expect(workflow).toContain("playwright-report-${{ matrix.browser }}");
