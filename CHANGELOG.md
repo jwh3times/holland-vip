@@ -12,6 +12,21 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.33] - 2026-09-20
+
+### Security
+
+- The agent-sync workflow no longer keeps its push credential in the workspace while dependencies
+  install and artifacts regenerate. The checkout no longer persists a credential at all, and the
+  token is supplied to the push step alone, through a credential helper that reads it from the
+  environment so the value never reaches a command line.
+
+### Changed
+
+- The `ship` skill now warns that the version script reads local tags, so a merge that landed
+  moments earlier may not have minted its tag yet — and shows how to confirm before trusting the
+  number.
+
 ## [1.4.32] - 2026-09-20
 
 ### Changed

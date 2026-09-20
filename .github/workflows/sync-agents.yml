@@ -30,12 +30,18 @@ jobs:
         if: env.HAS_PAT != 'true'
         run: echo "SYNC_PAT secret is not set — skipping auto-sync. Add it to enable."
 
+      # This repository is public, so the clone needs no credential at all.
+      # SYNC_PAT exists only so the pushed commit re-triggers checks, which a
+      # push made with the default GITHUB_TOKEN does not — so it belongs to the
+      # push step alone. persist-credentials: false keeps the default token out
+      # of .git/config too, so neither credential is sitting in the workspace
+      # while `npm ci` and the generator run.
       - name: Checkout PR branch
         if: env.HAS_PAT == 'true'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.head_ref }}
-          token: ${{ secrets.SYNC_PAT }}
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -55,13 +61,28 @@ jobs:
 
       - name: Commit and push drift
         if: env.HAS_PAT == 'true'
+        env:
+          # The credential is present for this step only. The helper below is
+          # stored as the literal text `$SYNC_PAT`, which git expands from the
+          # environment when it invokes the helper — so the value never appears
+          # in argv, where `ps` and a failing command's output could expose it.
+          SYNC_PAT: ${{ secrets.SYNC_PAT }}
+          # Branch names reach the shell as data, never as interpolated script.
+          HEAD_REF: ${{ github.head_ref }}
         run: |
           if [ -n "$(git status --porcelain .claude/skills .codex)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add .claude/skills .codex
             git commit -m "chore: sync generated agent artifacts"
-            git push
+            # The empty value resets any inherited helper list: without it a
+            # globally configured helper answers first and this one is never
+            # consulted. Verified locally, where exactly that happened.
+            git config --local credential.helper ""
+            git config --local --add credential.helper \
+              '!f() { printf "username=x-access-token\npassword=%s\n" "$SYNC_PAT"; }; f'
+            git push origin "HEAD:refs/heads/$HEAD_REF"
+            git config --local --unset-all credential.helper
           else
             echo "Generated agent artifacts already in sync."
           fi
