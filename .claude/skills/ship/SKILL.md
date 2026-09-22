@@ -219,3 +219,5 @@ run in CI, not locally — do not imply the branch is verified beyond the fast c
 - Run the full test suites — that is CI's job and it makes this skill slow.
 - Invent the exact version number. Classify the release impact, then call
   `node scripts/next-version.mjs` after the release line is settled.
+
+<!-- sync verification 2026-09-22: deliberate drift, PR closes unmerged -->
