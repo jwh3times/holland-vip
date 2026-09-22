@@ -16,8 +16,13 @@
 // child in its environment — it is never printed or written to disk, but clearing the local copies
 // below is tidiness, not erasure, since the captured stdout string outlives them. See
 // docs/agents/workspace-bootstrap.md.
+//
+// Every run, including the already-installed one, also installs the companion's gitleaks pre-commit
+// hook. `.git/hooks` is not versioned, so each machine needs its own copy; the hook is written
+// without spawning anything and fails closed when gitleaks is missing. A different existing hook is
+// reported and left in place.
 
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
@@ -25,6 +30,32 @@ import { spawnSync } from "node:child_process";
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const privateRoot = join(repositoryRoot, "private");
 const defaultReference = "op://holland-vip/holland-vip-workspace/private_repo_url";
+const hookScript = [
+  "#!/bin/sh",
+  "# Installed by `npm run bootstrap:private`: refuse commits whose staged changes hold a credential.",
+  "command -v gitleaks >/dev/null 2>&1 || {",
+  '  echo "pre-commit: gitleaks is not installed; see https://github.com/gitleaks/gitleaks/releases" >&2',
+  "  exit 1",
+  "}",
+  "exec gitleaks git --pre-commit --staged --redact --no-banner",
+  "",
+].join("\n");
+
+function installSecretScanHook() {
+  const hooksRoot = join(privateRoot, ".git", "hooks");
+  const hookPath = join(hooksRoot, "pre-commit");
+  if (existsSync(hookPath)) {
+    if (readFileSync(hookPath, "utf8") === hookScript) return;
+    console.warn(
+      "private/.git/hooks/pre-commit already exists with different contents; left unchanged. " +
+        "Replace it to enable the gitleaks secret scan."
+    );
+    return;
+  }
+  mkdirSync(hooksRoot, { recursive: true });
+  writeFileSync(hookPath, hookScript, { mode: 0o755 });
+  console.log("Installed the gitleaks pre-commit hook in private/.");
+}
 
 let explicitUrl = null;
 let reference = defaultReference;
@@ -44,6 +75,7 @@ for (let index = 2; index < process.argv.length; index += 1) {
 
 if (existsSync(join(privateRoot, ".git"))) {
   console.log("The optional private companion is already installed at private/.");
+  installSecretScanHook();
   process.exit(0);
 }
 if (existsSync(privateRoot) && readdirSync(privateRoot).length > 0) {
@@ -106,6 +138,7 @@ const clone = spawnSync("git", ["clone", "--", cloneUrl, privateRoot], {
 if (clone.status !== 0 || !existsSync(join(privateRoot, ".git"))) {
   throw new Error("The private companion clone did not complete successfully.");
 }
+installSecretScanHook();
 console.log(
   "Private companion installed at private/. Read private/README.md, then the Holland.VIP board on GitHub."
 );

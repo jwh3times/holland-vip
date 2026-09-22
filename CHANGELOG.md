@@ -12,6 +12,32 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.36] - 2026-09-22
+
+### Security
+
+- `npm run bootstrap:private` now installs a `gitleaks` pre-commit hook in the private companion,
+  which refuses any commit whose staged changes contain a credential. GitHub offers no secret
+  scanning for a personally owned private repository, so this local hook is that repository's scan.
+  Git does not version hooks, so the bootstrap writes one on every run, including over an existing
+  checkout: re-run it on each machine to add the hook. The hook refuses every commit when `gitleaks`
+  is not installed rather than silently skipping the scan. A different existing `pre-commit` hook is
+  reported and left in place.
+
+## [1.4.35] - 2026-09-22
+
+### Changed
+
+- Bumped `@types/node` from 26.6.1 to 26.6.2 (Dependabot).
+
+## [1.4.34] - 2026-09-21
+
+### Changed
+
+- Bumped `lucide-react` from 1.46.0 to 1.47.0, `@types/node` from 26.5.1 to 26.6.1, `jsdom` from
+  30.0.1 to 30.1.0, `oxlint-tsgolint` from 7.0.2001 to 7.0.2002, and `prettier` from 3.9.6 to 3.9.8
+  (Dependabot).
+
 ## [1.4.33] - 2026-09-20
 
 ### Security

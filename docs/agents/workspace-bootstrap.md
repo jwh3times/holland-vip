@@ -13,6 +13,8 @@ Install:
 - GitHub CLI (`gh`)
 - 1Password desktop with CLI integration enabled
 - 1Password CLI (`op`)
+- [`gitleaks`](https://github.com/gitleaks/gitleaks/releases) on `PATH`, for the companion's
+  pre-commit secret scan
 
 ## Authenticate
 
@@ -55,6 +57,15 @@ npm run bootstrap:private
 credential-free `github.com` HTTPS/SSH locator, clones it into `private/`, and exits 0 without
 touching anything if `private/.git` already exists (it refuses to overwrite a non-empty `private/`
 that is not a repository).
+
+Every run — the already-installed one included — also writes the companion's secret-scan hook to
+`private/.git/hooks/pre-commit`. GitHub does not offer secret scanning on a personally owned private
+repository, so this local hook is the scan: it runs
+`gitleaks git --pre-commit --staged --redact --no-banner` and refuses the commit on a finding.
+`.git/hooks` is not versioned, which is why each machine installs its own; re-run the bootstrap on
+an existing checkout to add it. The hook fails closed when `gitleaks` is missing, and the script
+writes it without spawning anything, so the already-installed path stays offline and
+credential-free. A different existing `pre-commit` hook is reported and left in place.
 
 `--url <locator>` bypasses 1Password, `--op-reference` points at a different field, and
 `--service-account-reference` (or the `HOLLAND_VIP_OP_SERVICE_ACCOUNT_REFERENCE` environment
