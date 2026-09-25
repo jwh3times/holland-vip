@@ -12,6 +12,19 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.38] - 2026-09-25
+
+### Changed
+
+- The agent-artifact generator is now the shared cross-repository `scripts/sync-agents.mjs`, with
+  its `node:test` suite `scripts/sync-agents.test.mjs` running in CI beside the drift check. It
+  replaces `scripts/lib/agent-sync.mjs` and its Vitest tests. Generated banners now read
+  `regenerate with 'node scripts/sync-agents.mjs'`. A generated Codex agent carries
+  `sandbox_mode = "read-only"` only when its `tools:` list names no writing tool; otherwise the line is
+  omitted and Codex uses the session sandbox, so `docs-updater` no longer pins `workspace-write`.
+  Quoted frontmatter values are unquoted before being written to TOML. `npm run sync:agents:check`
+  runs the drift check.
+
 ## [1.4.36] - 2026-09-22
 
 ### Security

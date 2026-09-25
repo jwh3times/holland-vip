@@ -33,7 +33,7 @@ Authoritative guidance for coding agents working in this repository.
   `.github/dependabot.yml` keeps the SHA and comment in sync.
 - Keep `.nvmrc` and `package.json#engines.node` aligned.
 - Keep symlinks out of `.agents/skills/`, `.claude/agents/`, `.claude/skills/`, and
-  `.codex/agents/`; `agent-sync.mjs` refuses to follow one and fails the sync build instead of
+  `.codex/agents/`; `scripts/sync-agents.mjs` refuses to follow one and fails the sync build instead of
   copying its target's bytes across the tree.
 
 ## Code and content boundaries
@@ -141,7 +141,10 @@ node scripts/sync-agents.mjs --check
 ```
 
 The generator owns `.claude/skills/` and `.codex/` (see Non-negotiable constraints for the
-symlink rule that guards both these and the authored trees).
+symlink rule that guards both these and the authored trees). `scripts/sync-agents.mjs` and its
+`node:test` suite `scripts/sync-agents.test.mjs` are shared verbatim across repositories: copy
+changes in from the canonical source rather than editing them here (Prettier ignores both). Run the
+suite with `node --test scripts/sync-agents.test.mjs`.
 
 ## Private workspace
 

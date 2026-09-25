@@ -58,6 +58,7 @@ handling.
 | `npm test`                         | Run all Playwright projects             |
 | `npm run sync:main`                | Fast-forward public and private `main`  |
 | `npm run sync:agents`              | Regenerate Claude/Codex agent artifacts |
+| `npm run sync:agents:check`        | Verify generated agent artifacts        |
 | `npm run refresh:github-snapshots` | Refresh both validated GitHub fallbacks |
 
 Playwright starts its own server. Set `E2E_TARGET=build` after `npm run build` to exercise the same

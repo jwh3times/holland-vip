@@ -1,5 +1,5 @@
 ---
-# GENERATED — do not edit. Source: .agents/skills/end-session/SKILL.md. Regenerate: npm run sync:agents
+# GENERATED — do not edit. Source: .agents/skills/end-session/SKILL.md — regenerate with 'node scripts/sync-agents.mjs'.
 name: end-session
 description: End the work session cleanly — record durable outcomes, reconcile both repositories and their Issues, then clean up the workspace. Use when the user wraps up a session or when /handoff closes one.
 ---

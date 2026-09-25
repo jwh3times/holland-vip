@@ -18,6 +18,11 @@ coverage/
 .claude/skills/
 .codex/
 
+# Shared verbatim across repositories — copied byte-for-byte from the canonical source, so the
+# local Prettier config must not reformat them.
+scripts/sync-agents.mjs
+scripts/sync-agents.test.mjs
+
 # Agent scratch — untracked working files, not project source. Prettier does not read
 # nested .gitignore files, so without this /ship's format:check fails on them.
 .superpowers/

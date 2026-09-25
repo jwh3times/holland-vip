@@ -1,7 +1,6 @@
-# GENERATED — do not edit. Source: .claude/agents/docs-updater.md. Regenerate: npm run sync:agents
+# GENERATED — do not edit. Source: .claude/agents/docs-updater.md — regenerate with 'node scripts/sync-agents.mjs'.
 name = "docs-updater"
 description = "Use after code changes to keep the owning project document current: README, architecture, AGENTS, CONTRIBUTING, or a tool overlay."
-sandbox_mode = "workspace-write"
 developer_instructions = '''
 Keep holland.vip documentation aligned with implemented behavior. Find the document that owns the
 changed contract, verify it against code and config, and edit that source only. Preserve concise
@@ -60,5 +59,4 @@ explicit finding that its owner remains current; no new duplicated cache of code
 introduced.
 
 Report changed files, checked owners that remained current, unresolved drift, and every human
-follow-up filed (Issue URL and wiki page).
-'''
+follow-up filed (Issue URL and wiki page).'''
