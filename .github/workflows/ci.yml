@@ -39,7 +39,9 @@ jobs:
         run: npm run format:check
 
       - name: Verify generated agent artifacts are in sync
-        run: node scripts/sync-agents.mjs --check
+        run: |
+          node --test scripts/sync-agents.test.mjs
+          node scripts/sync-agents.mjs --check
 
       - name: Build project
         run: npm run build
