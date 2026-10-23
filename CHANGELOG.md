@@ -12,6 +12,139 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.57] - 2026-10-22
+
+### Security
+
+- `npm audit` reports no vulnerabilities again. `package.json#overrides` now pins `compression` to
+  `^1.8.2` (GHSA-vc2v-76pw-4v95) and `basic-ftp` to `^6.2.3` (GHSA-c475-qrg2-pj4r), because no
+  upstream release reaches either fix: `serve@14.2.6` pins `compression@1.8.1`, and every `get-uri`
+  release, which `@lhci/cli` reaches through `proxy-agent`, still requires `basic-ftp@^5`. The
+  transitive `fast-uri` (3.1.9) and `ip-address` (10.7.4) also move to patched releases. Both
+  overridden packages are confined to Lighthouse CI and the local `serve` of `out/`; the deployed
+  static site is unchanged.
+
+## [1.4.56] - 2026-10-22
+
+### Changed
+
+- Bumped `vite` from 8.0.16 to 8.3.5 (Dependabot).
+
+## [1.4.55] - 2026-10-22
+
+### Changed
+
+- Bumped `lucide-react` from 1.56.0 to 1.58.0, `next` from 16.4.0 to 16.4.2, `react` and
+  `react-dom` from 19.3.0 to 19.3.1, `@axe-core/playwright` from 4.13.0 to 4.14.0,
+  `@playwright/test` from 1.64.0 to 1.64.1, `@vitest/coverage-v8` and `vitest` from 5.0.4 to 5.0.5,
+  `jsdom` from 30.1.2 to 30.1.3, and `oxlint` from 1.87.0 to 1.88.0 (Dependabot).
+
+## [1.4.54] - 2026-10-16
+
+### Changed
+
+- Bumped `lucide-react` from 1.55.0 to 1.56.0, `@testing-library/user-event` from 14.6.7 to
+  14.6.8, and `@vitest/coverage-v8` and `vitest` from 5.0.3 to 5.0.4 (Dependabot).
+
+## [1.4.53] - 2026-10-14
+
+### Changed
+
+- Bumped `lucide-react` from 1.54.0 to 1.55.0, `oxlint-tsgolint` from 7.0.2003 to 7.0.2004, and
+  `prettier` from 3.9.9 to 3.9.10 (Dependabot).
+
+## [1.4.52] - 2026-10-13
+
+### Changed
+
+- Bumped `lucide-react` from 1.52.0 to 1.54.0, `next` from 16.3.8 to 16.4.0, `@playwright/test`
+  from 1.63.0 to 1.64.0, and `@types/node` from 26.6.4 to 26.6.5 (Dependabot).
+
+## [1.4.51] - 2026-10-13
+
+### Changed
+
+- Bumped the pinned GitHub Actions `actions/setup-node` from 7.0.0 to 7.1.0,
+  `actions/upload-artifact` from 7.0.1 to 7.0.2, and `actions/download-artifact` from 8.0.1 to
+  8.0.2 (Dependabot).
+
+## [1.4.50] - 2026-10-09
+
+### Changed
+
+- Bumped `@vitejs/plugin-react` from 6.1.1 to 6.1.2 and `oxlint` from 1.86.0 to 1.87.0
+  (Dependabot).
+
+## [1.4.49] - 2026-10-08
+
+### Changed
+
+- Bumped `lucide-react` from 1.51.0 to 1.52.0 and `jsdom` from 30.1.1 to 30.1.2 (Dependabot).
+
+## [1.4.48] - 2026-10-07
+
+### Changed
+
+- Bumped the transitive `sharp` from 0.35.4 to 0.35.5, with its bundled libvips from 1.3.3 to
+  1.3.4 (Dependabot).
+
+## [1.4.47] - 2026-10-07
+
+### Changed
+
+- Bumped the transitive `source-map-js` from 1.2.1 to 1.2.2 (Dependabot).
+
+## [1.4.46] - 2026-10-07
+
+### Changed
+
+- Bumped the transitive `proxy-addr` from 2.0.7 to 2.0.8 (Dependabot).
+
+## [1.4.45] - 2026-10-07
+
+### Changed
+
+- Bumped `lucide-react` from 1.49.0 to 1.51.0 (Dependabot).
+
+## [1.4.44] - 2026-10-05
+
+### Changed
+
+- Bumped `lucide-react` from 1.48.0 to 1.49.0, `next` from 16.3.7 to 16.3.8, `@types/node` from
+  26.6.3 to 26.6.4, and `@vitest/coverage-v8` and `vitest` from 5.0.2 to 5.0.3 (Dependabot).
+
+## [1.4.43] - 2026-10-02
+
+### Changed
+
+- Bumped `next` from 16.3.6 to 16.3.7 and `oxlint` from 1.85.0 to 1.86.0 (Dependabot).
+
+## [1.4.42] - 2026-09-30
+
+### Changed
+
+- Bumped the transitive `brace-expansion` from 1.1.18 to 1.1.21 (Dependabot).
+
+## [1.4.41] - 2026-09-30
+
+### Changed
+
+- Bumped the transitive `ip-address` from 10.7.0 to 10.7.2 (Dependabot).
+
+## [1.4.40] - 2026-09-29
+
+### Changed
+
+- Bumped `@types/node` from 26.6.2 to 26.6.3 (Dependabot).
+
+## [1.4.39] - 2026-09-28
+
+### Changed
+
+- Bumped `lucide-react` from 1.47.0 to 1.48.0, `next` from 16.3.5 to 16.3.6,
+  `@vitest/coverage-v8` and `vitest` from 5.0.1 to 5.0.2, `oxlint-tsgolint` from 7.0.2002 to
+  7.0.2003, and `prettier` from 3.9.8 to 3.9.9 (Dependabot).
+
 ## [1.4.38] - 2026-09-25
 
 ### Changed
@@ -24,6 +157,12 @@ No unreleased changes.
   omitted and Codex uses the session sandbox, so `docs-updater` no longer pins `workspace-write`.
   Quoted frontmatter values are unquoted before being written to TOML. `npm run sync:agents:check`
   runs the drift check.
+
+## [1.4.37] - 2026-09-25
+
+### Changed
+
+- Bumped `jsdom` from 30.1.0 to 30.1.1 and `oxlint` from 1.83.0 to 1.85.0 (Dependabot).
 
 ## [1.4.36] - 2026-09-22
 
