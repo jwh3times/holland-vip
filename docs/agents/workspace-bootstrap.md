@@ -156,15 +156,17 @@ creating merge commits. If the private companion is not installed, it reports an
 
 ## Move a session between machines
 
-`/handoff` writes the session's handoff document to Proton Drive under
-`My Files/Documents/Handoffs`, records it as this repository's active entry in `handoff_map.json`,
-and closes out with `/end-session`. On the other machine, `/lets-go` reads the active document,
-sets the entry back to `null`, and resumes. Both use
-[`scripts/handoff-map.mjs`](../../scripts/handoff-map.mjs), which finds the folder under
-`~/Proton Drive`; set `HANDOFFS_DIR` when the drive is mounted elsewhere. On a machine with no Proton
-Drive desktop client (Fedora), `HANDOFFS_DIR` is a local mirror that both skills pull from and push to
-the cloud folder `/my-files/Documents/Handoffs` through the `proton-drive` CLI; export it in a shell
-profile and keep the CLI logged in with `proton-drive auth login`.
+`/handoff` writes the session's handoff document into the Handoffs folder, records it as this
+repository's active entry in `handoff_map.json`, and closes out with `/end-session`. On the other
+machine, `/lets-go` reads the active document, sets the entry back to `null`, and resumes. Both use
+the `handoff-map.mjs` helper installed with the `handoff` skill, which reads how the folder reaches
+this machine from the machine config `~/.config/handoffs/config` (`HANDOFFS_TRANSPORT`,
+`HANDOFFS_DIR`, `HANDOFFS_REMOTE`; an exported variable of the same name overrides a line). Each
+skill's first run on a machine proposes that config: `folder` when a sync client such as the Proton
+Drive desktop app keeps the Handoffs folder synced, or `proton-cli` on a machine with no Proton
+Drive desktop client (Fedora), where `HANDOFFS_DIR` is a local mirror the helper pulls from and
+pushes to the cloud folder through the `proton-drive` CLI. Keep that CLI logged in with
+`proton-drive auth login`.
 
 ## Restore the working environment
 
@@ -246,6 +248,7 @@ Run the fast gates:
 npm run lint
 npm run format:check
 node scripts/sync-agents.mjs --check
+npm run lint:agents
 npm run test:unit:coverage
 npm run build
 ```
@@ -263,5 +266,6 @@ git status -sb
 git -C private status -sb
 ```
 
-Public `/ship` does not commit or push the private repository. Commit and push intended private
-changes separately with explicit authorization, then confirm both branches match their upstreams.
+Public `/ship` commits or pushes the private repository only with explicit authorization (the
+`Companion commit policy` in [Workspace](workspace.md)). Commit and push intended private changes
+separately, then confirm both branches match their upstreams.
