@@ -38,10 +38,11 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
-      - name: Verify generated agent artifacts are in sync
+      - name: Verify generated agent artifacts are in sync and tool-neutral
         run: |
-          node --test scripts/sync-agents.test.mjs
+          node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs
           node scripts/sync-agents.mjs --check
+          npm run lint:agents
 
       - name: Build project
         run: npm run build
