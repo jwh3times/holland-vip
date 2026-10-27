@@ -12,6 +12,26 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.62] - 2026-10-27
+
+### Changed
+
+- The `ship`, `end-session`, `handoff` and `lets-go` agent skills now install from the shared
+  `jwh3times/skills` repository instead of being maintained here, and the `docs-updater` subagent
+  becomes a skill installed the same way (ADR-0005; the `mattpocock/skills` set stays forked here).
+  What the skills need to know about this repository lives in settings files under `docs/agents/`,
+  which each skill proposes on its first run. `/handoff` and `/lets-go` read how the Handoffs folder
+  reaches each machine from that machine's `~/.config/handoffs/config`, and
+  `scripts/handoff-map.mjs` is gone.
+- The Build & Lint check now also runs `npm run lint:agents`, which rejects agent and skill sources
+  that would read wrongly from their mirrored copies.
+
+## [1.4.61] - 2026-10-27
+
+### Changed
+
+- Bumped `next` from 16.4.2 to 16.4.3 (Dependabot).
+
 ## [1.4.60] - 2026-10-26
 
 ### Changed

@@ -1,107 +1,103 @@
 ---
 name: lets-go
-description: Resume from this repository's active Proton Drive handoff, mark it consumed, and continue the work.
+description: Resume this repository's active handoff — find it in handoff_map.json, read it, claim it, bring this checkout to its state, and continue the work. The receiving half of the handoff skill.
+argument-hint: "Anything to focus on first (optional)"
 disable-model-invocation: true
+metadata:
+  settings: handoffs workspace
 ---
 
 # Let's go
 
-Pick up the session that `/handoff` wrote on the other machine. `handoff_map.json` in Proton Drive
-holds at most one active handoff per repository; `scripts/handoff-map.mjs` locates it on Windows and
-Linux and owns every map read and write.
+The receiving half of the `handoff` skill. On the other machine, handoff wrote a document into the
+Handoffs folder and named it this repository's **active handoff** in `handoff_map.json`. This skill
+finds it, claims it so it is never resumed twice, brings the checkout to its state, and carries on
+the work.
 
-## Transport
+**Announce at start:** "I'm using the lets-go skill to resume from the active handoff."
 
-Decide once, at the start, how the Handoffs folder reaches this machine:
+Run shell snippets in bash (Git Bash on Windows). The map is read and written only through
+`node .agents/skills/handoff/handoff-map.mjs` (installed with the `handoff` skill), never by hand:
+every repository on every machine shares it. Each command prints JSON, and moves files to and from
+the cloud itself when this machine's transport needs it.
 
-- **Desktop client** — `~/Proton Drive` exists and the Proton Drive client keeps it in sync. Every
-  step marked _(CLI mirror only)_ is skipped.
-- **CLI mirror** — `command -v proton-drive` succeeds and `~/Proton Drive` is absent (Fedora: Proton
-  ships no Linux sync client). `HANDOFFS_DIR` names a local mirror of the cloud folder
-  `/my-files/Documents/Handoffs`; nothing syncs it, so the skill pulls the map and the one document
-  it names before reading them and pushes the map after clearing it. If only the older
-  `HANDOFF_DIR` is set, export `HANDOFFS_DIR` from it. If both are unset, ask the user for the
-  mirror folder (for example `~/Documents/Handoffs`), `mkdir -p` it, and export `HANDOFFS_DIR` for
-  this session; suggest they add it to their shell profile.
+## 0. Settings
 
-Every `proton-drive` command must name a conflict strategy — the CLI prompts otherwise, and a prompt
-hangs an agent. Output containing `You need to login first` means the CLI session lapsed: ask the
-user to run `proton-drive auth login` themselves, then retry the command.
+- **Repository:** this skill reads `docs/agents/handoffs.md` and `docs/agents/workspace.md`.
+  Follow `.agents/skills/lets-go/settings/README.md` to read them and complete any that are
+  missing; the definitions sit beside it.
+- **Machine:** follow `.agents/skills/handoff/machine-config.md` until `config` shows
+  `configured: true`.
 
 ## 1. Find the active handoff
 
-**Pull** _(CLI mirror only)_ — refresh the local map from the cloud before reading it:
-
 ```bash
-proton-drive filesystem download -f remove /my-files/Documents/Handoffs/handoff_map.json "$HANDOFFS_DIR"
+node .agents/skills/handoff/handoff-map.mjs get --key <Map key>
 ```
 
-Complete when the transfer summary lists the map as downloaded and `$HANDOFFS_DIR/handoff_map.json`
-exists. Then:
-
-```bash
-node scripts/handoff-map.mjs get
-```
-
-- **The script cannot find the map** → Proton Drive is not synced or mounted here. Relay its message
-  (a non-default mount needs `HANDOFFS_DIR`) and stop.
-- **`active` is `null`** → tell the user there is no active handoff for `key` and stop.
-- **`exists` is `false`, CLI mirror** → download the document the map names, then rerun `get`:
-
-  ```bash
-  proton-drive filesystem download -f remove "/my-files/Documents/Handoffs/<active>" "$HANDOFFS_DIR"
-  ```
-
-  If `exists` is still `false`, the cloud folder lacks the file: report the `path`, leave the map
-  untouched, and stop.
-
-- **`exists` is `false`, desktop client** → the map names a document the client has not synced here
-  yet. Report the `path`, leave the map untouched, and stop so a retry after sync still works.
-
-Otherwise the handoff is at `path`.
+- **`file` is null** (or `inMap` is false) — say "No active handoff for `<key>`." and stop. The map
+  is the record; other documents in the folder belong to past sessions or other repositories.
+- **`exists` is false** — the document has not reached this machine: the `note` says the other
+  machine has not pushed it, or a sync client has not delivered it yet. Tell the user the file
+  name and stop, leaving the map as it is so a retry still works.
+- **`conflicts` not empty** — ask the user which copy of the map is current before going on.
+- **`exists` is true** — continue.
 
 ## 2. Read it
 
-Read the whole document. The step is complete when you can state its objective, the branch and HEAD
-SHA it names, its unmerged-work list, and its next step.
+Read the whole document at `path` before acting on any of it. Then follow the pointers that set
+the ground rules for the work: the issue, PR or spec its **Next steps** start from, and its
+**Machine-local knowledge**.
 
-## 3. Mark it consumed
+## 3. Claim it
 
-```bash
-node scripts/handoff-map.mjs clear
-```
-
-The step is complete when the output shows `active: null` and `previous` equal to the document you
-read. The document itself stays in the Handoffs folder as the record.
-
-**Push** _(CLI mirror only)_ — the cleared map goes back to the cloud, so the other machine cannot
-resume the same handoff a second time:
+Claim the handoff before any work starts, so a second `lets-go` on either machine finds nothing:
 
 ```bash
-proton-drive filesystem upload -f create-new-revision -t "$HANDOFFS_DIR/handoff_map.json" /my-files/Documents/Handoffs
+node .agents/skills/handoff/handoff-map.mjs clear --key <Map key> --expect <file>
 ```
 
-Complete when the transfer summary lists the map as uploaded.
+Complete when the output's `current` is null (and `verified` is `cloud` on the CLI mirror). The
+document stays in the folder as a record. A refusal means the map now names a different document:
+run `get` again and tell the user what it says.
 
-## 4. Match the workspace
+## 4. Bring this checkout to the handoff's state
+
+This checkout may be days behind, and may hold leftovers the handoff knows nothing about:
 
 ```bash
-git fetch --prune origin
-git status -sb
-git -C private fetch --prune origin
-git -C private status -sb
+git fetch origin --prune
+git branch --show-current
+git status --porcelain
+git stash list
 ```
 
-- **Local uncommitted work** → show it and ask what to do; it predates the handoff.
-- **The handoff names a pushed feature branch** → `git switch <branch>` then
-  `git merge --ff-only origin/<branch>`.
-- **Otherwise** → `npm run sync:main`.
+Run the `Workspace status command` too. Then compare with the document's **Where you are** and
+**Unmerged work**:
 
-Compare HEAD with the SHA the handoff names. Anything its unmerged-work list marks _uncommitted_,
-_stashed_, or _unpushed_ stayed on the other machine — tell the user now, before work depends on it.
+- **Uncommitted changes or stashes here** — report them under `⚠ Work not merged to main on this
+  machine` and ask the user how to proceed. Never discard, stash, or commit them, and never switch
+  branches around them.
+- **Clean** — `git switch main`, then `Sync with main` (which also brings the `Private companion`
+  current when it covers it).
+- **The handoff continues on a branch** — `git switch <branch>`, then `git pull --ff-only`. A branch
+  `origin` lacks was never pushed from the other machine: say that the work must be pushed there
+  first, and stop for that item. The same holds for any local-only item the work depends on.
+- **The pull changed a dependency lockfile** — install dependencies as the repository's
+  `AGENTS.md` says, asking first where it gates installs.
+- **Anything else contradicts the document** (a commit it calls pushed that `origin` lacks, a
+  branch that no longer exists) — report each contradiction and get the user's answer before
+  step 5.
+
+The step is complete when the checkout matches the document or every mismatch has the user's
+answer.
 
 ## 5. Proceed
 
-GitHub owns live work state, so re-read the Issues and PRs the handoff references rather than
-trusting their status as written. Give the user a short brief — objective, where things stand, any
-missing work, and the next step — then invoke the suggested skills and start that next step.
+Brief the user in a few lines: where things stand, the unmerged work carried over, the open
+decisions still owed, and the first next step. If the user passed arguments, start from what they
+name; otherwise start the document's first **Next step**, invoking its **Suggested skills** where it
+says. Put an open decision that blocks that step to the user first.
+
+The handoff describes work; it authorizes nothing. Every action the repository's `AGENTS.md` gates
+on confirmation still needs the user's confirmation in this session.

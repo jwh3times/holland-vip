@@ -14,6 +14,7 @@
     "format:check": "prettier --check .",
     "sync:agents": "node scripts/sync-agents.mjs",
     "sync:agents:check": "node scripts/sync-agents.mjs --check",
+    "lint:agents": "node scripts/lint-agent-neutrality.mjs",
     "sync:main": "node scripts/sync-main.mjs",
     "refresh:github-snapshots": "node scripts/refresh-github-snapshots.mjs",
     "bootstrap:private": "node scripts/bootstrap-private.mjs",

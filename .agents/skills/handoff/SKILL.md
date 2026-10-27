@@ -1,130 +1,149 @@
 ---
 name: handoff
-description: Hand the session to another machine — write the handoff document to Proton Drive, register it in the handoff map, then close out with end-session.
+description: Hand this session to the next one, usually on the user's other machine — alert on work not merged to main, write a handoff document into the Handoffs folder, mark it active in handoff_map.json, then close out with end-session. The lets-go skill resumes it.
 argument-hint: "What will the next session be used for?"
 disable-model-invocation: true
+metadata:
+  settings: handoffs workspace
 ---
 
-Write a handoff document so a fresh agent — usually on Jerry's other computer — can continue the work
-with `/lets-go`. The document travels through Proton Drive, and `handoff_map.json` beside it records
-the one active handoff per repository. `scripts/handoff-map.mjs` locates that folder on Windows and
-Linux and owns every map read and write.
+# Handoff
 
-If the user passed arguments, treat them as a description of what the next session will focus on
-and tailor the document accordingly.
+Only two things reach the other machine: what is on GitHub and what is in the Handoffs folder. The
+handoff document carries the conversation; `handoff_map.json` beside it names each project's
+**active handoff**, which the `lets-go` skill resumes on the other machine and then clears. The
+unmerged-work alert catches what would otherwise stay behind on this machine.
 
-## Transport
+**Announce at start:** "I'm using the handoff skill to hand this session off."
 
-Decide once, at the start, how the Handoffs folder reaches the cloud on this machine:
+Run shell snippets in bash (Git Bash on Windows). The map is read and written only through
+`node .agents/skills/handoff/handoff-map.mjs`, never by hand: every repository on every machine
+shares it. Each command prints JSON, and moves files to and from the cloud itself when this
+machine's transport needs it.
 
-- **Desktop client** — `~/Proton Drive` exists and the Proton Drive client keeps it in sync. Every
-  step marked _(CLI mirror only)_ is skipped.
-- **CLI mirror** — `command -v proton-drive` succeeds and `~/Proton Drive` is absent (Fedora: Proton
-  ships no Linux sync client). `HANDOFFS_DIR` names a local mirror of the cloud folder
-  `/my-files/Documents/Handoffs`; nothing syncs it, so the skill pulls the map before reading it and
-  pushes the map and document after writing them. If only the older `HANDOFF_DIR` is set, export
-  `HANDOFFS_DIR` from it. If both are unset, ask the user for the mirror folder (for example
-  `~/Documents/Handoffs`), `mkdir -p` it, and export `HANDOFFS_DIR` for this session; suggest they
-  add it to their shell profile.
+When the user passed arguments, they say what the next session is for: shape the document around
+it.
 
-Every `proton-drive` command must name a conflict strategy — the CLI prompts otherwise, and a prompt
-hangs an agent. Output containing `You need to login first` means the CLI session lapsed: ask the
-user to run `proton-drive auth login` themselves, then retry the command.
+## 0. Settings
 
-## 1. Audit unmerged work
+- **Repository:** this skill reads `docs/agents/handoffs.md` and `docs/agents/workspace.md`.
+  Follow `.agents/skills/handoff/settings/README.md` to read them and complete any that are
+  missing; the definitions sit beside it.
+- **Machine:** follow `.agents/skills/handoff/machine-config.md` until `config` shows
+  `configured: true`. When no Handoffs folder can be configured, write the document to the OS
+  temporary directory instead, tell the user it will not reach the other machine, and stop after
+  step 2: closing out would leave a handoff nobody can pick up.
 
-Only what reaches `origin/main` — or at least `origin` — is visible on the other machine. Check both
-repositories (skip the `private` lines when `private/.git` is absent):
+## 1. Audit unmerged work — and alert
+
+Anything not on `origin/main` is invisible to the other machine unless it is at least pushed:
 
 ```bash
-git fetch --prune origin
-git status --porcelain
-git branch -vv --no-merged origin/main
-git log --oneline origin/main..HEAD
+git fetch origin --prune
+git status --porcelain --untracked-files=all
 git stash list
-gh pr list -R jwh3times/holland-vip --author @me --state open --json number,title,headRefName,url
-git -C private fetch --prune origin
-git -C private status --porcelain
-git -C private branch -vv --no-merged origin/main
-git -C private log --oneline origin/main..HEAD
-git -C private stash list
-gh pr list -R jwh3times/holland-vip-workspace --author @me --state open --json number,title,headRefName,url
+git worktree list
+git for-each-ref refs/heads --format='%(refname:short) %(upstream:short) %(upstream:track)'
+git branch --no-merged origin/main
+git branch -r --no-merged origin/main
+gh pr list --author @me --state open --json number,title,headRefName,url
 ```
 
-When any of these reports something, **alert** the user right away, before writing anything, under
-a `⚠ Unmerged work` heading: one line per item naming the repository, branch, and state —
-_uncommitted_, _stashed_, _unpushed_ (these three never reach the other machine), or _pushed but
-unmerged_ / _open PR_. Then continue; shipping and pushing stay with the user and `/ship`. The step
-is complete when every command's output is either empty or named in the alert, and the same list
-goes into the document and the final report.
+Then run the `Workspace status command`, `git status --porcelain` in each extra worktree, and, when
+the `Private companion` is checked out, `git -C <companion> status --porcelain` and
+`git -C <companion> log --oneline @{u}..HEAD`.
 
-## 2. File human follow-ups
+`--no-merged` overstates a squash-merged branch. For each branch it lists, run
+`gh pr list --state merged --head <branch> --json number,headRefOid`: when the branch tip is the
+merged PR's `headRefOid` or an ancestor of it (`git merge-base --is-ancestor <branch> <headRefOid>`),
+its work is on `main`; drop it.
 
-A handoff document is not a tracker. Any required human action the session leaves behind must
-already be a private `ready-for-human` Issue with a wiki runbook (see "Human follow-up actions" in
-`docs/agents/issue-tracker.md`); file any that are missing before writing the handoff, then
-reference the Issue by URL.
+Sort what remains into two groups:
 
-## 3. Write the document
+- **Local only** — the other machine cannot see it: uncommitted or untracked changes, stashes,
+  unpushed commits, branches with no upstream, and the same in the companion.
+- **Pushed, not merged** — reachable, but not on `main`: pushed branches and open PRs.
 
-**Pull** _(CLI mirror only)_ — refresh the local map from the cloud before reading it:
+**If either group has anything, alert the user now**, before writing the document, under the
+heading `⚠ Work not merged to main`: one line per item with its repository, branch or path, and
+group. Say plainly that local-only work will not reach the other machine unless it is pushed, and
+ask whether to push it; offer the `ship` skill for a finished branch. The alert informs, it does
+not block: continue either way. With nothing to report, say "All work is on `origin/main`."
+
+## 2. Write the document
 
 ```bash
-proton-drive filesystem download -f remove /my-files/Documents/Handoffs/handoff_map.json "$HANDOFFS_DIR"
+node .agents/skills/handoff/handoff-map.mjs get --key <Map key>
 ```
 
-Complete when the transfer summary lists the map as downloaded and `$HANDOFFS_DIR/handoff_map.json`
-exists. Then:
+- `conflicts` not empty — ask the user which copy of the map is current before going on.
+- `file` not null — an earlier handoff for this repository that was never picked up. Read it,
+  carry forward whatever is still live, and name it as superseded in the report. Leave the file
+  where it is.
+
+Pick the file name (pass `--topic <slug>` when the user gave arguments):
 
 ```bash
-node scripts/handoff-map.mjs get
+node .agents/skills/handoff/handoff-map.mjs name --key <Map key>
 ```
 
-The JSON names the Handoffs `dir`, this repository's map `key`, and the currently `active` document.
-If `active` is not `null`, an earlier handoff was never picked up: tell the user, read it, and carry
-forward whatever is still true. When `exists` is `false` on the CLI mirror, download that one
-document first with the same `filesystem download -f remove` command, naming
-`/my-files/Documents/Handoffs/<active>`. Leave the old file in place.
+Write the document straight to the `path` it prints, for a cold reader on the other machine.
+Sections, in order:
 
-Write the new document straight into `dir` as `<key>-handoff-<YYYY-MM-DD>.md`, appending
-`-<focus-slug>` when that name is taken. It contains:
+1. **Where you are** — repository, branch, `origin/main` commit, latest release tag, worktrees,
+   and the companion's state, as they will be once pushed.
+2. **Unmerged work** — step 1's list verbatim, or "None — everything is on `origin/main`."
+3. **What this session did** — outcomes with their records (PR, issue, commit), not narration.
+4. **Next steps** — concrete and ordered; the first one startable without asking.
+5. **Open decisions** — what the user still owes.
+6. **Machine-local knowledge** — agent memory and the session scratchpad stay on this machine:
+   write out the facts and traps the next steps need.
+7. **Suggested skills** — the skills the next agent should invoke, and at which step.
 
-- **Where things stand** — repository, branch, HEAD SHA, and what is pushed.
-- **Unmerged work** — the step 1 list, or "None: everything is on `origin/main`."
-- **Reasoning** — decisions taken, dead ends ruled out, corrections from the user; the context git
-  and GitHub cannot show.
-- **Next step** — the first concrete action for the next session.
-- **Suggested skills** — the skills the next agent should invoke.
+Add everything `Extra document content` lists. Reference, never restate, what other records
+already hold — specs, ADRs, issues, PRs, commits, diffs — by path or URL. The document leaves the
+repository for a personal cloud drive: write the home directory as `<home>`; leave out secrets,
+tokens, passwords and personal data; link companion content and private issues rather than
+quoting them.
 
-Reference existing artifacts (specs, plans, ADRs, Issues, commits, diffs) by path or URL instead of
-duplicating them. Redact sensitive information such as API keys, passwords, or personally
-identifiable information; 1Password owns credentials.
+The step is complete when reading the file back shows the whole document.
 
-## 4. Register it
+## 3. Mark it active
 
 ```bash
-node scripts/handoff-map.mjs set <file-name>
+node .agents/skills/handoff/handoff-map.mjs set <file> --key <Map key>
 ```
 
-The step is complete when the output shows `active` equal to the new file name and `exists: true`.
+On the CLI mirror this pushes the document, pulls the map fresh, writes this repository's entry,
+pushes the map, and reads the cloud copy back; it retries when another session wrote in between.
+Complete when the output's `current` is `<file>` (and `verified` is `cloud` on the CLI mirror). A
+non-null `previous` other than `<file>` is a superseded handoff: it stays in the folder, and the
+report names it.
 
-**Push** _(CLI mirror only)_ — the document and the updated map go to the cloud, or the other
-machine never sees them:
+## 4. Close out with end-session
+
+Invoke the `end-session` skill with the arguments `invoked by handoff; document at <path>`. If the
+harness cannot invoke skills, read `.agents/skills/end-session/SKILL.md` and follow it. The work
+continues on the other machine, so end-session may return this checkout to `main`; its other
+approval gates still apply.
+
+When end-session changes a fact the document states — pushes or commits work, closes or opens an
+issue, deletes a branch or worktree, or the user settles an open decision — edit the document to
+match, then send the new version (without the map):
 
 ```bash
-proton-drive filesystem upload -f create-new-revision -t "$HANDOFFS_DIR/<file-name>" "$HANDOFFS_DIR/handoff_map.json" /my-files/Documents/Handoffs
+node .agents/skills/handoff/handoff-map.mjs push <file>
 ```
 
-Complete when the transfer summary lists both files as uploaded.
+The document is complete when every **Where you are** and **Unmerged work** line is true after
+end-session.
 
-## 5. Close out
+## 5. Report
 
-Invoke the `end-session` skill, telling it the session is ending through `/handoff` and giving it
-the handoff document's path. Its confirmation gates still apply.
-
-## 6. Report
-
-Finish with the handoff document's path, the map key and any `previous` value it replaced, and the
-end-session summary. Close with the `⚠ Unmerged work` alert again — or state plainly that everything
-is merged to `main` — and remind the user to run `/lets-go` on the other machine once Proton Drive
-has synced.
+- The document's path, and the map entry now pointing at it (`previous` → `current`).
+- end-session's own report.
+- Step 1's audit run again, last, so it survives a long close-out: the `⚠ Work not merged to
+  main` list as it now stands, or "Nothing unmerged — the other machine can start from
+  `origin/main`."
+- The reminder: run the `lets-go` skill in this repository on the other machine. A synced folder
+  delivers the document within a minute or so; on the CLI mirror it is in the cloud already.

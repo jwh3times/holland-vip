@@ -138,3 +138,27 @@ Used by `/wayfinder`. The **map** is a single issue with **child** issues as tic
 - **Frontier query**: list the map's open children (`gh issue list --state open`, scoped to the map's sub-issues / task list), drop any with an open blocker (`issue_dependencies_summary.blocked_by > 0`, or an open issue in the `Blocked by` line) or an assignee; first in map order wins.
 - **Claim**: `gh issue edit <n> --add-assignee @me` — the session's first write.
 - **Resolve**: `gh issue comment <n> --body "<answer>"`, then `gh issue close <n>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
+
+## Public repository
+
+jwh3times/holland-vip
+
+## Private issue repository
+
+jwh3times/holland-vip-workspace — confidential tasks, decisions and infrastructure checks, routed by
+the table above.
+
+## Board
+
+jwh3times 8
+
+## Board fields
+
+- `Status`: `Todo` / `In Progress` / `Blocked` / `Deferred` / `Done`. `Todo` means genuinely
+  startable; a `Blocked` item waits on an external dependency and a `Deferred` one is parked by
+  decision, and either states its trigger in the issue body.
+
+## Security findings
+
+A draft security advisory on `jwh3times/holland-vip`, never an issue or a board item (see
+"Security tickets" above and `SECURITY.md`).

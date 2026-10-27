@@ -22,6 +22,16 @@ coverage/
 # local Prettier config must not reformat them.
 scripts/sync-agents.mjs
 scripts/sync-agents.test.mjs
+scripts/lint-agent-neutrality.mjs
+scripts/lint-agent-neutrality.test.mjs
+
+# Installed from jwh3times/skills and never edited here (ADR-0005): the install's bytes are the
+# source, so the local Prettier config must not reformat them.
+.agents/skills/docs-updater/
+.agents/skills/end-session/
+.agents/skills/handoff/
+.agents/skills/lets-go/
+.agents/skills/ship/
 
 # Agent scratch — untracked working files, not project source. Prettier does not read
 # nested .gitignore files, so without this /ship's format:check fails on them.

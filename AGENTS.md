@@ -58,8 +58,9 @@ workflow skills under `.agents/skills/` are authoritative for their flows.
 
 [Development flow](docs/agents/dev-flow.md) holds the routing table, the code/docs path split, and
 the linking detail. Outside the gated flow, use `/ship` when a branch is ready for review,
-`/end-session` to record and tidy a session without pushing, and `/handoff` / `/lets-go` to move a
-session between machines through Proton Drive.
+`/end-session` to record and tidy a session without pushing, `/handoff` / `/lets-go` to move a
+session between machines through the Handoffs folder, and `/docs-updater` to audit or refresh the
+docs outside `/ship`.
 
 ## Code and content boundaries
 
@@ -108,6 +109,7 @@ Use the narrowest relevant check while working, then run the affected fast gates
 npm run lint
 npm run format:check
 node scripts/sync-agents.mjs --check
+npm run lint:agents
 npm run test:unit:coverage
 npm run build
 ```
@@ -150,26 +152,39 @@ projects against `out/`. `tests/global-setup.ts` rejects a foreign server alread
   holds a backlog, a next action, an active-Issue list, or a status summary.
 - `private/README.md`: confidential storage contract.
 
-Update the owning document when its contract changes. `/ship` invokes `docs-updater` for branch
-changes and writes the changelog entry. Run `npm run format` before agent synchronization.
+Update the owning document when its contract changes. The full map, with each document's update
+trigger, is the `Doc map` in [docs/agents/docs.md](docs/agents/docs.md). `/ship` runs the
+`docs-updater` skill over the branch's changes and writes the changelog entry. Run `npm run format`
+before agent synchronization.
 
 ## Agent artifacts
 
 Skills are authored under `.agents/skills/` and mirrored into generated `.claude/skills/`.
-Subagents are authored under `.claude/agents/` and transformed into generated `.codex/agents/`.
-Edit only the authored side, then run:
+Subagents, when any exist, are authored under `.claude/agents/` and transformed into generated
+`.codex/agents/`. Edit only the authored side, then run:
 
 ```bash
 npm run format
 npm run sync:agents
 node scripts/sync-agents.mjs --check
+npm run lint:agents
 ```
 
+`npm run lint:agents` rejects authored sources that read wrongly from their mirrored copies, such as
+a bare `$0`–`$9` in a `SKILL.md` or a relative link that breaks under `.claude/skills/`.
+
+`end-session`, `handoff`, `lets-go`, `ship` and `docs-updater` are installed from
+`jwh3times/skills` ([ADR 0005](docs/adr/0005-shared-skills-install-from-jwh3times-skills.md)) and
+never edited here: fixes land upstream, and re-running the install recorded in the ADR, then
+`npm run sync:agents`, is the update. What they need to know about this repository lives in their
+settings files under `docs/agents/`.
+
 The generator owns `.claude/skills/` and `.codex/` (see Non-negotiable constraints for the
-symlink rule that guards both these and the authored trees). `scripts/sync-agents.mjs` and its
-`node:test` suite `scripts/sync-agents.test.mjs` are shared verbatim across repositories: copy
-changes in from the canonical source rather than editing them here (Prettier ignores both). Run the
-suite with `node --test scripts/sync-agents.test.mjs`.
+symlink rule that guards both these and the authored trees). `scripts/sync-agents.mjs`,
+`scripts/lint-agent-neutrality.mjs` and their `node:test` suites are shared verbatim across
+repositories: copy changes in from the canonical source rather than editing them here (Prettier
+ignores them). Run the suites with
+`node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs`.
 
 ## Private workspace
 
