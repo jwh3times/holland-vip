@@ -25,7 +25,8 @@ then computes **the version its merge will mint** and writes that changelog entr
 ### 1. Preconditions — stop if any fail
 
 - **Not on `main`.** `main` is protected; work must be on a branch. If on `main`, stop and offer
-  to create one (`git checkout -b agent/<topic>`).
+  to create one named per [Development flow](../../../docs/agents/dev-flow.md):
+  `<type>/<issue#>-<slug>`, or `<type>/<slug>` for exempt work with no Issue.
 - **Clean working tree.** Run `git status --porcelain`. If anything is uncommitted, stop and ask
   the user whether to commit it — do not commit silently.
 - **`gh` authenticated.** `gh auth status` must succeed.
@@ -204,6 +205,10 @@ gh pr list --head "$(git branch --show-current)" --state open --json number -q '
 - **No PR** → `gh pr create --base main` with a title and a body derived from the changelog section
   you just wrote.
 - **PR exists** → `gh pr edit <number>` to refresh the body. Do not open a second PR.
+
+Either way, the body's first line links the Issue from the branch name: `Closes #N` when the PR
+finishes it, `Part of #N` when it is one slice of a spec that stays open. Waived work opens with
+`Flow waived by the user: <reason>` instead. Only exempt work with no Issue omits the line.
 
 ### 10. Report
 

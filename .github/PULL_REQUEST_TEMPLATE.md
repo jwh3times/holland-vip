@@ -1,3 +1,8 @@
+Closes #
+
+<!-- Keep the issue link as the first line: `Closes #N` when this PR finishes the issue, or
+`Part of #N` when it is one slice of a spec that stays open. A number in the title links nothing. -->
+
 <!-- Thanks for contributing! Please fill out the sections below. -->
 
 # Pull Request Template
@@ -27,7 +32,3 @@ What does this PR change, and why?
 ## Screenshots
 
 <!-- For UI changes, include before/after screenshots (light + dark mode). -->
-
-## Related issues
-
-<!-- e.g. Closes #123 -->
