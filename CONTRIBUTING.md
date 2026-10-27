@@ -15,7 +15,8 @@ Follow the [Getting started](./README.md#getting-started) section of the README
 ## Workflow
 
 1. **Open an issue first** for anything non-trivial so we can agree on the approach.
-2. Create a branch and make your change in small, focused commits.
+2. Create a branch named `<type>/<issue#>-<slug>` (for example
+   `fix/215-contribution-timeout`) and make your change in small, focused commits.
 3. Ensure everything is green locally — these mirror the CI jobs:
 
    ```bash

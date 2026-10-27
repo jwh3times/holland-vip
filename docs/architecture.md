@@ -194,4 +194,5 @@ recovery steps live in [Workspace bootstrap](agents/workspace-bootstrap.md).
 
 Work state is not documented in this repository. Issues, the cross-repository `Holland.VIP` board,
 and draft security advisories own it, per [ADR 0004](adr/0004-github-canonical-work-tracking.md) and
-[Work tracking](agents/issue-tracker.md).
+[Work tracking](agents/issue-tracker.md). How a ready Issue becomes a branch and PR is the
+[development flow](agents/dev-flow.md).

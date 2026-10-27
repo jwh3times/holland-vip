@@ -10,6 +10,8 @@ Authoritative guidance for coding agents working in this repository.
 - Read [CONTEXT.md](CONTEXT.md) before naming or changing portfolio domain concepts.
 - Route work through [Work tracking](docs/agents/issue-tracker.md); GitHub owns all work state and
   its public/private boundary is authoritative.
+- Read [Development flow](docs/agents/dev-flow.md) before a code edit, or when routing work
+  without a ready Issue, judging an exemption, or naming a branch or PR.
 - This Next.js version may differ from training data. Read the relevant guide under
   `node_modules/next/dist/docs/` before changing Next.js behavior.
 
@@ -35,6 +37,29 @@ Authoritative guidance for coding agents working in this repository.
 - Keep symlinks out of `.agents/skills/`, `.claude/agents/`, `.claude/skills/`, and
   `.codex/agents/`; `scripts/sync-agents.mjs` refuses to follow one and fails the sync build instead of
   copying its target's bytes across the tree.
+
+## Development flow
+
+The Matt Pocock skill flow is binding; [ask-matt](.agents/skills/ask-matt/SKILL.md) maps it, and
+workflow skills under `.agents/skills/` are authoritative for their flows.
+
+- **Gate:** every code change starts from a ready Issue: a `ready-for-agent` Issue carrying a
+  `/to-spec` spec, a `/to-tickets` ticket, or a `/triage` brief, or a bug Issue worked through
+  `/diagnosing-bugs`. With none, stop before the first edit and route the user. Reading code,
+  running tests, and answering questions need no Issue.
+- **The human starts every phase.** `/wayfinder`, `/grill-with-docs`, `/to-spec`, `/to-tickets`,
+  `/implement`, and `/triage` keep `disable-model-invocation: true`. At a phase boundary, name the
+  next command with a one-line reason and wait. Inside a phase, use `/tdd`, `/code-review`,
+  `/diagnosing-bugs`, `/domain-modeling`, `/codebase-design`, `/prototype`, and `/research`
+  whenever they fit.
+- **Exempt:** dependency bumps, changes touching only docs and agent config, release-prep commits,
+  and an explicit user waiver recorded in the PR body as `Flow waived by the user: <reason>`.
+- **Link:** branch `<type>/<issue#>-<slug>`; the PR body opens with `Closes #N` or `Part of #N`.
+
+[Development flow](docs/agents/dev-flow.md) holds the routing table, the code/docs path split, and
+the linking detail. Outside the gated flow, use `/ship` when a branch is ready for review,
+`/end-session` to record and tidy a session without pushing, and `/handoff` / `/lets-go` to move a
+session between machines through Proton Drive.
 
 ## Code and content boundaries
 
@@ -152,11 +177,6 @@ Maintainers install the ignored independent companion repository with
 `npm run bootstrap:private`. Read [Workspace bootstrap](docs/agents/workspace-bootstrap.md) when
 setting up a machine, restoring credentials, or checking portability. Public work and private work
 have separate Issues, histories, commits, and pushes.
-
-Workflow skills under `.agents/skills/` are authoritative for their flows. Use `/ask-matt` to
-choose an engineering workflow, `/ship` when a branch is ready for review, `/end-session` to record
-and tidy a session without pushing, and `/handoff` / `/lets-go` to move a session between machines
-through Proton Drive.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

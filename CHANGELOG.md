@@ -12,6 +12,33 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.60] - 2026-10-26
+
+### Changed
+
+- The Matt Pocock skill flow is now the binding development process for agents. Every code change
+  starts from a ready Issue (a `ready-for-agent` spec, ticket, or triage brief, or a bug worked
+  through `/diagnosing-bugs`); without one, the agent stops before its first edit and routes the
+  user to the right skill. The flow skills stay user-invoked, so the human starts every phase.
+  Dependency bumps, docs- and agent-config-only changes, release prep, and an explicit user waiver
+  are exempt. `AGENTS.md` states the rules and the new `docs/agents/dev-flow.md` holds routing,
+  exemptions, and which paths count as code.
+- Branches are named `<type>/<issue#>-<slug>`, and PR bodies open with `Closes #N` or `Part of #N`.
+  The PR template, `CONTRIBUTING.md`, and `/ship` now follow that rule.
+
+## [1.4.59] - 2026-10-26
+
+### Changed
+
+- Bumped `lucide-react` from 1.60.0 to 1.61.0 and `oxlint-tsgolint` from 7.0.2004 to 7.0.2005
+  (Dependabot).
+
+## [1.4.58] - 2026-10-25
+
+### Changed
+
+- Bumped `lucide-react` from 1.58.0 to 1.60.0 and `oxlint` from 1.88.0 to 1.89.0 (Dependabot).
+
 ## [1.4.57] - 2026-10-22
 
 ### Security
