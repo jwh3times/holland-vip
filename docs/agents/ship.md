@@ -15,8 +15,9 @@ before its build.
 - only when `app/`, `components/`, `lib/`, `tests/unit/` or `vitest.config.ts` changed:
   `npm run test:unit:coverage` — the 95% thresholds in `vitest.config.ts`
 
-The production build, **Playwright Tests**, **Unit Tests & Coverage**, the advisory Lighthouse
-budget and **CodeQL** run only in CI.
+The unit entry is the **Unit Tests & Coverage** job's command, run here only when its paths
+changed. CI-only: the production build, **Playwright Tests** (a browser against the static build),
+the advisory **Lighthouse Budget** and **CodeQL**.
 
 ## Issue link
 

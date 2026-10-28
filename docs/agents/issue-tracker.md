@@ -77,17 +77,17 @@ the action files both before it reports completion:
 2. **A private wiki runbook** in the repository's GitHub wiki
    (`https://github.com/jwh3times/holland-vip-workspace/wiki`) with step-by-step instructions a
    person can follow cold: each URL to open, what to click, what to copy or type, and how to
-   verify the step worked. Name the page `Runbook-<kebab-slug>` and link it from the
-   `## Human follow-up runbooks` list on `Home`, creating that section if it is absent.
+   verify the step worked. Name a new page `<Topic>-<YYYY-MM-DD>` and link it from the
+   `human-todo` index page, which `Home` links; existing `Runbook-` pages keep their names.
    Reference credentials by their 1Password item and field name, never by value.
 
 The wiki has no `gh` write surface; it is a git repository:
 
 ```bash
 git clone https://github.com/jwh3times/holland-vip-workspace.wiki.git "$SCRATCH/wiki"
-# write $SCRATCH/wiki/Runbook-<slug>.md and add the Home link
+# write $SCRATCH/wiki/<Topic>-<YYYY-MM-DD>.md and link it from human-todo.md
 git -C "$SCRATCH/wiki" add -A
-git -C "$SCRATCH/wiki" commit -m "docs: add runbook for <slug>"
+git -C "$SCRATCH/wiki" commit -m "docs: add runbook for <topic>"
 git -C "$SCRATCH/wiki" push origin master
 gh issue create -R jwh3times/holland-vip-workspace --label ready-for-human \
   --title "Human action: <what>" --body "<summary, done criteria, runbook link>"

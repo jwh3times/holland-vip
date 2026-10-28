@@ -12,6 +12,16 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.65] - 2026-10-28
+
+### Changed
+
+- The shared agent skills are refreshed from `jwh3times/skills`, which gives some settings a shared
+  default: `docs/agents/releases.md` drops the release commit message and `Unreleased` placeholder
+  it no longer needs to state. New human follow-up pages in the private wiki are named
+  `<Topic>-<YYYY-MM-DD>` and indexed from a `human-todo` page linked from `Home`; existing
+  `Runbook-` pages keep their names. `docs/agents/ship.md` names the suites that run only in CI.
+
 ## [1.4.64] - 2026-10-27
 
 ### Changed
