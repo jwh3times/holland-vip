@@ -12,6 +12,21 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.64] - 2026-10-27
+
+### Changed
+
+- The shared agent skills are refreshed from `jwh3times/skills`: `/end-session` records work it
+  discovers as an issue on the board, per the new `New work` setting in
+  `docs/agents/issue-tracker.md`, and `npm run lint:agents`' script also lints another checkout
+  when given its root, and names the root it linted.
+
+## [1.4.63] - 2026-10-27
+
+### Changed
+
+- Bumped `qs` from 6.16.0 to 6.17.0 (Dependabot).
+
 ## [1.4.62] - 2026-10-27
 
 ### Changed
