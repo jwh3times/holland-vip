@@ -22,6 +22,6 @@ prerequisite must resolve first, `Deferred` for a conditional action parked unti
 ## Follow-up wiki
 
 The private companion's wiki, `https://github.com/jwh3times/holland-vip-workspace.wiki.git`
-(default branch `master`). One page per action named `Runbook-<kebab-slug>`, indexed from the
-`## Human follow-up runbooks` list on `Home` (create the section if it is absent). Push without
-asking. Reference credentials by their 1Password item and field name, never by value.
+(default branch `master`), index page `human-todo`, linked from `Home`. New pages take the shared
+`<Topic>-<YYYY-MM-DD>` name; existing `Runbook-` pages keep their names, since issues link to them.
+Push without asking. Reference credentials by their 1Password item and field name, never by value.
