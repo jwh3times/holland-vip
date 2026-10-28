@@ -12,6 +12,13 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.66] - 2026-10-28
+
+### Changed
+
+- The shared agent skills are refreshed from `jwh3times/skills`: code spans that broke across a
+  line in the skills and their settings now stay on one line. No behavior changes.
+
 ## [1.4.65] - 2026-10-28
 
 ### Changed
