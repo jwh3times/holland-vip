@@ -266,6 +266,7 @@ git status -sb
 git -C private status -sb
 ```
 
-Public `/ship` commits or pushes the private repository only with explicit authorization (the
-`Companion commit policy` in [Workspace](workspace.md)). Commit and push intended private changes
-separately, then confirm both branches match their upstreams.
+Public `/ship` commits or pushes the private repository only with explicit authorization (the shared
+skills' companion commit procedure, with this repository's settings in [Workspace](workspace.md)).
+Commit and push intended private changes separately, then confirm both branches match their
+upstreams.
