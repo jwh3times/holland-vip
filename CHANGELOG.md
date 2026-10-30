@@ -12,6 +12,17 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.68] - 2026-10-30
+
+### Changed
+
+- The shared agent skills are refreshed from `jwh3times/skills`, which now give most settings a
+  default, so the ones that matched leave `docs/agents/`. `/end-session` runs the generated-config
+  check every time, not only when agent sources changed, and ends by proving both repositories
+  clean and pushed. `/ship` bumps with `--allow-same-version`, so a re-run lands on the same
+  version; `/handoff` names `npm run bootstrap:private` for a machine without `private/`, and
+  `/lets-go` offers it.
+
 ## [1.4.67] - 2026-10-30
 
 ### Changed

@@ -143,11 +143,6 @@ Used by `/wayfinder`. The **map** is a single issue with **child** issues as tic
 
 jwh3times/holland-vip
 
-## Private issue repository
-
-jwh3times/holland-vip-workspace — confidential tasks, decisions and infrastructure checks, routed by
-the table above.
-
 ## Board
 
 jwh3times 8
@@ -157,12 +152,3 @@ jwh3times 8
 - `Status`: `Todo` / `In Progress` / `Blocked` / `Deferred` / `Done`. `Todo` means genuinely
   startable; a `Blocked` item waits on an external dependency and a `Deferred` one is parked by
   decision, and either states its trigger in the issue body.
-
-## Security findings
-
-A draft security advisory on `jwh3times/holland-vip`, never an issue or a board item (see
-"Security tickets" above and `SECURITY.md`).
-
-## New work
-
-issue

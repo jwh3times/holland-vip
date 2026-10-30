@@ -5,10 +5,6 @@
 `private/` — the independent `jwh3times/holland-vip-workspace` repository, ignored by this one and
 installed with `npm run bootstrap:private` (see `docs/agents/workspace-bootstrap.md`).
 
-## Workspace status command
-
-`git status --short --branch` and `git -C private status --short --branch`
-
 ## Sync with main
 
 `npm run sync:main` — fast-forwards both clean worktrees; `npm run sync:main -- --skip-private`
@@ -37,9 +33,4 @@ none
 ## Generated-config check
 
 `npm run sync:agents:check` (run inside the required **Build & Lint** check), regenerated with
-`npm run format` then `npm run sync:agents` — when agent sources changed (`.agents/skills/`,
-`.claude/agents/`).
-
-## Final portability check
-
-none
+`npm run format` then `npm run sync:agents` — always: it is quick, and it also catches an orphaned mirror.
