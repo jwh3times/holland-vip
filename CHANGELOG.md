@@ -12,6 +12,16 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.67] - 2026-10-30
+
+### Changed
+
+- The shared agent skills are refreshed from `jwh3times/skills`. Agents commit in `private/` only
+  after asking, by one procedure every repository shares, which also confirms the companion is
+  private before pushing; `Companion commit policy` leaves `docs/agents/workspace.md`. `/ship`
+  reports an open PR that claims the same version again, and `/lets-go` installs from a changed
+  lockfile.
+
 ## [1.4.66] - 2026-10-28
 
 ### Changed
