@@ -9,10 +9,6 @@ installed with `npm run bootstrap:private` (see `docs/agents/workspace-bootstrap
 
 `git status --short --branch` and `git -C private status --short --branch`
 
-## Companion commit policy
-
-ask — commit or push the private repository only on the user's explicit authorization.
-
 ## Sync with main
 
 `npm run sync:main` — fast-forwards both clean worktrees; `npm run sync:main -- --skip-private`
