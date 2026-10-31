@@ -12,6 +12,10 @@
   or a CI, release or agent-artifact contract it summarizes changes.
 - `CONTRIBUTING.md` — the contributor workflow and required checks. **When:** the development flow,
   a required check or the PR template changes.
+- `SECURITY.md` — supported versions, the reporting route, scope and response. **When:** the
+  reporting route or the supported version changes, or the site gains a surface the scope omits
+  (a backend, a form, user data); the headers it cites live in `public/_headers`.
+- `CODE_OF_CONDUCT.md`, `LICENSE` — `owner-only`.
 - `CLAUDE.md` — a Claude-only overlay that imports `AGENTS.md`. **When:** only a Claude Code note
   changes.
 - `.github/copilot-instructions.md` — a Copilot-only high-signal overlay. **When:** only a Copilot
@@ -29,8 +33,9 @@
   `jwh3times/skills` (ADR-0005): `frozen` here, fixed upstream. **When:** a skill is added, removed
   or replaced (`.agents/skills/`, `skills-lock.json`): `ask-matt`'s routing and AGENTS.md's
   development-flow paragraph.
-- `.github/PULL_REQUEST_TEMPLATE.md` — the PR body's sections. **When:** the development flow's
-  linking rule changes.
+- `.github/PULL_REQUEST_TEMPLATE.md`, `.github/ISSUE_TEMPLATE/*.md` — the PR body's sections; the
+  bug and feature forms. **When:** the development flow's linking rule changes; the triage labels
+  the forms apply change.
 - `private/**/*.md` — durable private decisions, research and verification evidence in the
   companion; live status belongs in issues. **When:** a private procedure changes.
 

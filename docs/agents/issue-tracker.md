@@ -65,40 +65,10 @@ item id, field id, and the target option id; `gh project field-list` and `item-l
 
 ## Human follow-up actions
 
-Agent work regularly finishes with something only a person can do: rotate or create a credential,
-toggle a Cloudflare or GitHub setting, approve a dashboard change, run a cutover, or verify a
-result the agent cannot reach. Every such action gets two records, and the agent that discovers
-the action files both before it reports completion:
-
-1. **A private Issue** in `jwh3times/holland-vip-workspace`, labelled `ready-for-human`, added to
-   the Holland.VIP board with `Status` `Todo`. The body states what the agent did, why the human
-   step is required, what "done" looks like, and links the wiki runbook. The Issue owns state; the
-   wiki owns the procedure.
-2. **A private wiki runbook** in the repository's GitHub wiki
-   (`https://github.com/jwh3times/holland-vip-workspace/wiki`) with step-by-step instructions a
-   person can follow cold: each URL to open, what to click, what to copy or type, and how to
-   verify the step worked. Name a new page `<Topic>-<YYYY-MM-DD>` and link it from the
-   `human-todo` index page, which `Home` links; existing `Runbook-` pages keep their names.
-   Reference credentials by their 1Password item and field name, never by value.
-
-The wiki has no `gh` write surface; it is a git repository:
-
-```bash
-git clone https://github.com/jwh3times/holland-vip-workspace.wiki.git "$SCRATCH/wiki"
-# write $SCRATCH/wiki/<Topic>-<YYYY-MM-DD>.md and link it from human-todo.md
-git -C "$SCRATCH/wiki" add -A
-git -C "$SCRATCH/wiki" commit -m "docs: add runbook for <topic>"
-git -C "$SCRATCH/wiki" push origin master
-gh issue create -R jwh3times/holland-vip-workspace --label ready-for-human \
-  --title "Human action: <what>" --body "<summary, done criteria, runbook link>"
-gh project item-add 8 --owner jwh3times --url <issue url>
-```
-
-A `/wizard` script may accompany the runbook when the procedure is worth automating, but the
-wiki page is the durable record and the Issue is the only place its status lives. A human action
-that is a public contributor concern still gets its runbook and Issue on the private side; add a
-public Issue only for the public-facing consequence. Never leave a required human action solely
-in a chat report, a handoff file, a changelog line, or a Markdown to-do in either repository.
+Every human action agent work leaves follows [`human-follow-up.md`](./human-follow-up.md): a private
+issue labelled `ready-for-human` on the board, and a private wiki page with the steps, filed before
+the work is reported complete. Never leave one only in a chat report, a handoff file, a changelog
+line, or a Markdown to-do. This heading stays so links to it still land.
 
 ## Security tickets
 

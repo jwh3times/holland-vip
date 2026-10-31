@@ -12,10 +12,7 @@ updates only the public checkout.
 
 ## Safe-to-remove paths
 
-Left in place by default; offer to remove them only when the user asks for a cold tree:
-
 - `.next/`, `out/`, `coverage/`, `playwright-report/`, `test-results/`, `tsconfig.tsbuildinfo`
-- stray scratch files at the repository root or under `private/`, named one by one
 
 ## Never-remove paths
 
@@ -24,7 +21,6 @@ Left in place by default; offer to remove them only when the user asks for a col
   delete confirmed paths with an explicit `rm`
 - `.env`, `.env.*`
 - `.claude/settings.local.json`
-- `.claude/worktrees/` — removing one is the user's decision; it may hold unpushed commits
 
 ## Dev stack
 

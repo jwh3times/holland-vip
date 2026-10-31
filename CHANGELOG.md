@@ -12,6 +12,16 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.69] - 2026-10-30
+
+### Changed
+
+- The doc map now covers `SECURITY.md`, `CODE_OF_CONDUCT.md`, `LICENSE` and the issue templates, so
+  `/docs-updater` audits them too. `/end-session` deletes the build output it lists instead of
+  leaving it by default, and handles worktrees and scratch files through its own rules. The human
+  follow-up section of `docs/agents/issue-tracker.md` points at `human-follow-up.md` instead of
+  restating it.
+
 ## [1.4.68] - 2026-10-30
 
 ### Changed
