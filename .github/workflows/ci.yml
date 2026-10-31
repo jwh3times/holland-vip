@@ -40,9 +40,10 @@ jobs:
 
       - name: Verify generated agent artifacts are in sync and tool-neutral
         run: |
-          node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs
+          node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/check-docs.test.mjs
           node scripts/sync-agents.mjs --check
           npm run lint:agents
+          node scripts/check-docs.mjs
 
       - name: Build project
         run: npm run build
@@ -192,13 +193,4 @@ jobs:
           node-version-file: ".nvmrc"
 
       - name: Verify CHANGELOG top version matches the version this merge will mint
-        run: |
-          expected=$(node scripts/next-version.mjs)
-          top=$(grep -m1 -E '^## \[[0-9]+\.[0-9]+\.[0-9]+\]' CHANGELOG.md \
-            | sed -E 's/^## \[([0-9.]+)\].*/\1/')
-          echo "Expected (next-version): $expected"
-          echo "CHANGELOG top released:  $top"
-          if [ "$expected" != "$top" ]; then
-            echo "::error::CHANGELOG top version '$top' does not match the version this merge will mint ('$expected'). Run /ship to update CHANGELOG.md, or, with no local checkout, add a '## [$expected] - $(date -u +%F)' section above '## [$top]' by hand."
-            exit 1
-          fi
+        run: node scripts/check-changelog.mjs

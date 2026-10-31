@@ -56,4 +56,5 @@ a draft advisory).
 
 ## Docs validation
 
-`npm run format:check` — Prettier covers the repository's Markdown.
+- `node scripts/check-docs.mjs`
+- `npm run format:check` — Prettier covers the repository's Markdown.

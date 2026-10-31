@@ -5,11 +5,6 @@
 `private/` — the independent `jwh3times/holland-vip-workspace` repository, ignored by this one and
 installed with `npm run bootstrap:private` (see `docs/agents/workspace-bootstrap.md`).
 
-## Sync with main
-
-`npm run sync:main` — fast-forwards both clean worktrees; `npm run sync:main -- --skip-private`
-updates only the public checkout.
-
 ## Safe-to-remove paths
 
 - `.next/`, `out/`, `coverage/`, `playwright-report/`, `test-results/`, `tsconfig.tsbuildinfo`

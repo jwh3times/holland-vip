@@ -181,10 +181,10 @@ settings files under `docs/agents/`.
 
 The generator owns `.claude/skills/` and `.codex/` (see Non-negotiable constraints for the
 symlink rule that guards both these and the authored trees). `scripts/sync-agents.mjs`,
-`scripts/lint-agent-neutrality.mjs` and their `node:test` suites are shared verbatim across
-repositories: copy changes in from the canonical source rather than editing them here (Prettier
-ignores them). Run the suites with
-`node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs`.
+`scripts/lint-agent-neutrality.mjs`, `scripts/sync-main.mjs`, `scripts/next-version.mjs`,
+`scripts/check-changelog.mjs`, `scripts/check-docs.mjs` and their `node:test` suites are shared
+verbatim across repositories: copy changes in from the canonical source rather than editing them
+here (Prettier ignores them). Run the suites with `node --test "scripts/*.test.mjs"`.
 
 ## Private workspace
 
