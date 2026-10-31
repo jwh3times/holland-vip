@@ -11,7 +11,8 @@ before its build.
 - `npm run sync:agents:check`, fixed by `npm run format` then `npm run sync:agents`, committing the
   regenerated mirrors
 - `npm run lint:agents`
-- only when `scripts/` changed: `node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs`
+- `node scripts/check-docs.mjs`
+- only when `scripts/` changed: `node --test "scripts/*.test.mjs"`
 - only when `app/`, `components/`, `lib/`, `tests/unit/` or `vitest.config.ts` changed:
   `npm run test:unit:coverage` — the 95% thresholds in `vitest.config.ts`
 

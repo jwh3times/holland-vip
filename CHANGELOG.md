@@ -12,6 +12,22 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.71] - 2026-10-31
+
+### Changed
+
+- The version, changelog, docs and sync scripts are now the canonical ones from `jwh3times/skills`,
+  and the shared skills are refreshed to match. **Changelog Version** also requires a section for
+  every released build, so a Dependabot merge must be backfilled by the next human PR. CI now runs
+  `node scripts/check-docs.mjs`: local links and anchors must resolve, and the doc map must list
+  every document.
+
+## [1.4.70] - 2026-10-30
+
+### Changed
+
+- Bumped `lucide-react` from 1.61.0 to 1.62.0 and `oxlint` from 1.89.0 to 1.90.0 (Dependabot).
+
 ## [1.4.69] - 2026-10-30
 
 ### Changed
