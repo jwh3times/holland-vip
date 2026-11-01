@@ -16,6 +16,8 @@
   reporting route or the supported version changes, or the site gains a surface the scope omits
   (a backend, a form, user data); the headers it cites live in `public/_headers`.
 - `CODE_OF_CONDUCT.md`, `LICENSE` — `owner-only`.
+- `THIRD_PARTY_NOTICES.md` — the license notices of third-party files kept here. `owner-only`: report
+  the change when a skill's source changes.
 - `CLAUDE.md` — a Claude-only overlay that imports `AGENTS.md`. **When:** only a Claude Code note
   changes.
 - `.github/copilot-instructions.md` — a Copilot-only high-signal overlay. **When:** only a Copilot

@@ -12,6 +12,13 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.74] - 2026-11-01
+
+### Added
+
+- `THIRD_PARTY_NOTICES.md` carries the MIT license notice of the installed `mattpocock/skills`
+  skills, which install without it.
+
 ## [1.4.73] - 2026-11-01
 
 ### Changed
