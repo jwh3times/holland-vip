@@ -40,8 +40,9 @@ jobs:
 
       - name: Verify generated agent artifacts are in sync and tool-neutral
         run: |
-          node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/check-docs.test.mjs
+          node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/check-docs.test.mjs scripts/check-skills.test.mjs
           node scripts/sync-agents.mjs --check
+          node scripts/check-skills.mjs
           npm run lint:agents
           node scripts/check-docs.mjs
 

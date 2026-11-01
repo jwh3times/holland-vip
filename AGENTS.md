@@ -20,8 +20,11 @@ Authoritative guidance for coding agents working in this repository.
 - Preserve `output: "export"`; every route and feature must work as a static export.
 - Keep runtime environment variables, API routes, server-only behavior, and SSR out of the app.
 - Never write a resolved credential value into `.env`; `.gitignore` ignores every env file except
-  `.env.example`/`.env.tpl`, and captured secrets route to a secret store or an unresolved
-  1Password reference (see `.agents/skills/wizard/SKILL.md`).
+  `.env.example`/`.env.tpl`. A value a wizard or script captures goes by its kind: non-secret
+  configuration to `.env`; a credential CI needs to the secret store (`set_secret`); a credential a
+  local command must resolve to 1Password, with only its unresolved `op://` reference in `.env`; any
+  other credential to the human's 1Password alone, writing nothing. `/wizard`'s `write_env` does not
+  refuse a value `ask_secret` captured, so check each call when writing the script.
 - Keep images compatible with `images.unoptimized: true`.
 - Put static assets in `public/` and reference them with root paths.
 - Define Cloudflare Pages security headers only in `public/_headers`; `headers()` in
@@ -61,6 +64,17 @@ no ready issue exists. `/ask-matt` maps the flow itself.
   prep, and an explicit user waiver recorded in the PR body as `Flow waived by the user: <reason>`.
 - **Linking.** Branches are `<type>/<issue#>-<slug>`; the PR body opens with `Closes #N` or
   `Part of #N`.
+- **The flow ends at `/ship`.** `/implement` stops at a commit; `/ship` refreshes the docs, writes the
+  changelog and the PR body, and opens the PR. `/ask-matt` also routes to `/pr`, `/retro` and
+  `/implement-spec`, which are not installed here.
+- **`/handoff` is the shared skill.** It parks the session for another machine or harness, closes it
+  out with `/end-session`, and `/lets-go` resumes it. It does not write the portable file `/ask-matt`
+  describes, so a `/prototype` detour stays in the session or uses a branch.
+- **A wizard is not the record.** A step only a human can take follows the `## Procedure` in
+  `.agents/skills/ship/settings/human-follow-up.md`, whose instructions stand without the script.
+- **Research goes where it is safe to keep.** `/research` findings that would expose private material
+  go to the private companion, where there is one, never to an ignored folder with no repository
+  behind it. Details of an unpublished vulnerability are a draft advisory, never a research file.
 
 <!-- /shared:development-flow -->
 
@@ -165,14 +179,15 @@ before agent synchronization.
 
 ## Agent artifacts
 
-Skills are authored under `.agents/skills/` and mirrored into generated `.claude/skills/`.
+Skills install under `.agents/skills/` and are mirrored into generated `.claude/skills/`.
 Subagents, when any exist, are authored under `.claude/agents/` and transformed into generated
-`.codex/agents/`. Edit only the authored side, then run:
+`.codex/agents/`. After an install, or an edit to a subagent, run:
 
 ```bash
 npm run format
 npm run sync:agents
 node scripts/sync-agents.mjs --check
+node scripts/check-skills.mjs
 npm run lint:agents
 ```
 
@@ -184,25 +199,40 @@ a bare `$0`–`$9` in a `SKILL.md` or a relative link that breaks under `.claude
 `end-session`, `handoff`, `lets-go`, `ship` and `docs-updater` install from `jwh3times/skills`, and
 are never edited here: reinstalling overwrites a local edit. A fix goes upstream, and what they need
 to know about this repository goes in the settings files under `docs/agents/`, which each skill
-proposes on first run. Re-running the install is the update; never run `npx skills update`, which
-leaves `.claude/skills/` linked to its source instead of copied:
+proposes on first run.
+
+The other shared skills come from one `mattpocock/skills` snapshot (v1.3.2, pinned by commit), the
+same in every repository, and are never edited here either: what they need to know goes in this
+file or `docs/agents/`. Moving to a newer snapshot is a change in `jwh3times/skills`. Keep
+`.agents/skills/` out of every formatter: `scripts/check-skills.mjs` fails when an installed copy
+differs from `skills-lock.json`, or the lock from these commands.
+
+Re-running the install is the update; never run `npx skills update`, which leaves `.claude/skills/`
+linked to its source instead of copied:
 
 ```bash
 npx skills add jwh3times/skills -s end-session -s handoff -s lets-go -s ship -s docs-updater -a codex --copy -y
+npx skills add mattpocock/skills#d1478fcb140db0b93c0c8df17bcfd311844749d0 \
+  -s ask-matt -s code-review -s codebase-design -s diagnosing-bugs -s domain-modeling -s grill-me \
+  -s grill-with-docs -s grilling -s implement -s improve-codebase-architecture -s prototype \
+  -s research -s setup-matt-pocock-skills -s tdd -s teach -s to-questionnaire -s to-spec \
+  -s to-tickets -s triage -s wait-what -s wayfinder -s wizard -s writing-for-agents \
+  -a codex --copy -y
 node scripts/sync-agents.mjs
 ```
 
-`scripts/sync-agents.mjs`, `lint-agent-neutrality.mjs`, `check-docs.mjs`, and `sync-main.mjs`,
-`next-version.mjs` and `check-changelog.mjs` where this repository carries them, are canonical in
-`jwh3times/skills` with their tests: fix them there, then copy them here. `sync-agents.mjs` also
-writes the marked blocks in this file: change them in `jwh3times/skills`, not here.
+`scripts/sync-agents.mjs`, `lint-agent-neutrality.mjs`, `check-docs.mjs`, `check-skills.mjs`, and
+`sync-main.mjs`, `next-version.mjs` and `check-changelog.mjs` where this repository carries them, are
+canonical in `jwh3times/skills` with their tests: fix them there, then copy them here.
+`sync-agents.mjs` also writes the marked blocks in this file: change them in `jwh3times/skills`, not
+here.
 
 <!-- /shared:shared-skills -->
 
 The decision is [ADR 0005](docs/adr/0005-shared-skills-install-from-jwh3times-skills.md).
 
 The generator owns `.claude/skills/` and `.codex/` (see Non-negotiable constraints for the
-symlink rule that guards both these and the authored trees). Prettier ignores the canonical scripts.
+symlink rule that guards both these and the authored trees). Prettier ignores the canonical scripts and `.agents/skills/`.
 Run their suites with `node --test "scripts/*.test.mjs"`.
 
 ## Private workspace

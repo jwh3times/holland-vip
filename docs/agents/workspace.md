@@ -23,5 +23,6 @@ none
 
 ## Generated-config check
 
-`npm run sync:agents:check` (run inside the required **Build & Lint** check), regenerated with
+`npm run sync:agents:check && node scripts/check-skills.mjs` (run inside the required **Build & Lint**
+check), regenerated with
 `npm run format` then `npm run sync:agents` — always: it is quick, and it also catches an orphaned mirror.

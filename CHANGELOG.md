@@ -12,6 +12,15 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.73] - 2026-11-01
+
+### Changed
+
+- Every `mattpocock/skills` skill now installs from one snapshot pinned by commit, the same in every
+  repository that shares `jwh3times/skills`, and `resolving-merge-conflicts` is gone.
+  `scripts/check-skills.mjs` fails CI when an installed skill differs from `skills-lock.json`, and
+  the rules local edits carried moved to `AGENTS.md` or `docs/agents/`.
+
 ## [1.4.72] - 2026-10-31
 
 ### Changed

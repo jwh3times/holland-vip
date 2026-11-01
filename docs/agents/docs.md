@@ -27,12 +27,11 @@
 - `CHANGELOG.md` — release history, Keep a Changelog, one dated section per merge. `ship-owned`.
 - `docs/agents/*.md` — conventions and settings the skills read. **When:** a convention, route or
   setting changes.
-- `.agents/skills/*/**` — skills, mirrored to `.claude/skills/`. The `mattpocock/skills` set is
-  forked and owned here: edit it in place, and update `ask-matt`'s routing when a skill is added or
-  removed. `end-session`, `handoff`, `lets-go`, `ship` and `docs-updater` install from
-  `jwh3times/skills` (ADR-0005): `frozen` here, fixed upstream. **When:** a skill is added, removed
-  or replaced (`.agents/skills/`, `skills-lock.json`): `ask-matt`'s routing and AGENTS.md's
-  development-flow paragraph.
+- `.agents/skills/*/**` — installed skills, mirrored to `.claude/skills/`: `end-session`, `handoff`,
+  `lets-go`, `ship` and `docs-updater` from `jwh3times/skills` (ADR-0005), and the `mattpocock/skills`
+  snapshot. `frozen` here: fixed upstream, and what they need to know goes in `AGENTS.md` or
+  `docs/agents/`. **When:** a skill is added, removed or replaced (`.agents/skills/`,
+  `skills-lock.json`): AGENTS.md's development-flow paragraph.
 - `.github/PULL_REQUEST_TEMPLATE.md`, `.github/ISSUE_TEMPLATE/*.md` — the PR body's sections; the
   bug and feature forms. **When:** the development flow's linking rule changes; the triage labels
   the forms apply change.
