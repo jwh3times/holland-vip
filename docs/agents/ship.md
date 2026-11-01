@@ -19,17 +19,3 @@ before its build.
 The unit entry is the **Unit Tests & Coverage** job's command, run here only when its paths
 changed. CI-only: the production build, **Playwright Tests** (a browser against the static build),
 the advisory **Lighthouse Budget** and **CodeQL**.
-
-## Issue link
-
-- **Branch pattern:** `<type>/<issue#>-<slug>`, `<type>` one of `feat`, `fix`, `refactor`, `test`,
-  `ci`, `build`, `docs`, `chore`. Exempt work drops the number (`docs/dev-flow`); Dependabot names
-  its own.
-- **Link line:** `Closes #<n>` when the PR finishes the issue; `Part of #<n>` for one slice of a
-  spec that stays open. It is the body's first line.
-- **Waiver line:** `Flow waived by the user: <reason>`.
-- **Exempt:**
-  - dependency bumps
-  - changes touching only docs and agent config
-  - release prep (the `docs: update docs and changelog for v<version>` commit)
-- **Defined in:** `docs/agents/dev-flow.md`.

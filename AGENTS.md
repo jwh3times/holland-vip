@@ -10,7 +10,7 @@ Authoritative guidance for coding agents working in this repository.
 - Read [CONTEXT.md](CONTEXT.md) before naming or changing portfolio domain concepts.
 - Route work through [Work tracking](docs/agents/issue-tracker.md); GitHub owns all work state and
   its public/private boundary is authoritative.
-- Read [Development flow](docs/agents/dev-flow.md) before a code edit, or when routing work
+- Read [Development flow](#development-flow) before a code edit, or when routing work
   without a ready Issue, judging an exemption, or naming a branch or PR.
 - This Next.js version may differ from training data. Read the relevant guide under
   `node_modules/next/dist/docs/` before changing Next.js behavior.
@@ -40,27 +40,33 @@ Authoritative guidance for coding agents working in this repository.
 
 ## Development flow
 
-The Matt Pocock skill flow is binding; [ask-matt](.agents/skills/ask-matt/SKILL.md) maps it, and
-workflow skills under `.agents/skills/` are authoritative for their flows.
+<!-- shared:development-flow -->
 
-- **Gate:** every code change starts from a ready Issue: a `ready-for-agent` Issue carrying a
-  `/to-spec` spec, a `/to-tickets` ticket, or a `/triage` brief, or a bug Issue worked through
-  `/diagnosing-bugs`. With none, stop before the first edit and route the user. Reading code,
-  running tests, and answering questions need no Issue.
+The flow skills are this repository's binding process for changing code. Read
+`.agents/skills/ship/settings/dev-flow.md` (the routing, exemptions and issue linking) and
+`docs/agents/dev-flow.md` (what this repository adds) before the first edit of a change, and whenever
+no ready issue exists. `/ask-matt` maps the flow itself.
+
+- **The gate.** Every code edit starts from a ready issue: an open `ready-for-agent` issue whose body
+  is a `/to-spec` spec or a `/to-tickets` ticket or that carries a `/triage` brief, or a `bug` issue
+  worked through `/diagnosing-bugs`, which needs the number and no spec. With none, stop before the
+  first edit and route the user. Reading code, running tests and answering questions need no issue.
+- **Private work.** A ready issue in the private tracker counts. Its number stays out of the branch,
+  the PR, commits and public issues, and it is closed by hand after the merge.
 - **The human starts every phase.** `/wayfinder`, `/grill-with-docs`, `/to-spec`, `/to-tickets`,
-  `/implement`, and `/triage` keep `disable-model-invocation: true`. At a phase boundary, name the
-  next command with a one-line reason and wait. Inside a phase, use `/tdd`, `/code-review`,
-  `/diagnosing-bugs`, `/domain-modeling`, `/codebase-design`, `/prototype`, and `/research`
-  whenever they fit.
-- **Exempt:** dependency bumps, changes touching only docs and agent config, release-prep commits,
-  and an explicit user waiver recorded in the PR body as `Flow waived by the user: <reason>`.
-- **Link:** branch `<type>/<issue#>-<slug>`; the PR body opens with `Closes #N` or `Part of #N`.
+  `/implement` and `/triage` stay user-invoked. At a phase boundary, name the next command, say in
+  one line why, and wait. Inside a phase, use `/tdd`, `/code-review`, `/diagnosing-bugs`,
+  `/domain-modeling`, `/codebase-design`, `/prototype` and `/research` whenever they fit.
+- **Exempt from the gate:** dependency bumps, changes touching only docs and agent config, release
+  prep, and an explicit user waiver recorded in the PR body as `Flow waived by the user: <reason>`.
+- **Linking.** Branches are `<type>/<issue#>-<slug>`; the PR body opens with `Closes #N` or
+  `Part of #N`.
 
-[Development flow](docs/agents/dev-flow.md) holds the routing table, the code/docs path split, and
-the linking detail. Outside the gated flow, use `/ship` when a branch is ready for review,
-`/end-session` to record and tidy a session without pushing, `/handoff` / `/lets-go` to move a
-session between machines through the Handoffs folder, and `/docs-updater` to audit or refresh the
-docs outside `/ship`.
+<!-- /shared:development-flow -->
+
+Outside the gated flow, use `/ship` when a branch is ready for review, `/end-session` to record and
+tidy a session without pushing, `/handoff` / `/lets-go` to move a session between machines through the
+Handoffs folder, and `/docs-updater` to audit or refresh the docs outside `/ship`.
 
 ## Code and content boundaries
 
@@ -173,18 +179,31 @@ npm run lint:agents
 `npm run lint:agents` rejects authored sources that read wrongly from their mirrored copies, such as
 a bare `$0`–`$9` in a `SKILL.md` or a relative link that breaks under `.claude/skills/`.
 
-`end-session`, `handoff`, `lets-go`, `ship` and `docs-updater` are installed from
-`jwh3times/skills` ([ADR 0005](docs/adr/0005-shared-skills-install-from-jwh3times-skills.md)) and
-never edited here: fixes land upstream, and re-running the install recorded in the ADR, then
-`npm run sync:agents`, is the update. What they need to know about this repository lives in their
-settings files under `docs/agents/`.
+<!-- shared:shared-skills -->
+
+`end-session`, `handoff`, `lets-go`, `ship` and `docs-updater` install from `jwh3times/skills`, and
+are never edited here: reinstalling overwrites a local edit. A fix goes upstream, and what they need
+to know about this repository goes in the settings files under `docs/agents/`, which each skill
+proposes on first run. Re-running the install is the update; never run `npx skills update`, which
+leaves `.claude/skills/` linked to its source instead of copied:
+
+```bash
+npx skills add jwh3times/skills -s end-session -s handoff -s lets-go -s ship -s docs-updater -a codex --copy -y
+node scripts/sync-agents.mjs
+```
+
+`scripts/sync-agents.mjs`, `lint-agent-neutrality.mjs`, `check-docs.mjs`, and `sync-main.mjs`,
+`next-version.mjs` and `check-changelog.mjs` where this repository carries them, are canonical in
+`jwh3times/skills` with their tests: fix them there, then copy them here. `sync-agents.mjs` also
+writes the marked blocks in this file: change them in `jwh3times/skills`, not here.
+
+<!-- /shared:shared-skills -->
+
+The decision is [ADR 0005](docs/adr/0005-shared-skills-install-from-jwh3times-skills.md).
 
 The generator owns `.claude/skills/` and `.codex/` (see Non-negotiable constraints for the
-symlink rule that guards both these and the authored trees). `scripts/sync-agents.mjs`,
-`scripts/lint-agent-neutrality.mjs`, `scripts/sync-main.mjs`, `scripts/next-version.mjs`,
-`scripts/check-changelog.mjs`, `scripts/check-docs.mjs` and their `node:test` suites are shared
-verbatim across repositories: copy changes in from the canonical source rather than editing them
-here (Prettier ignores them). Run the suites with `node --test "scripts/*.test.mjs"`.
+symlink rule that guards both these and the authored trees). Prettier ignores the canonical scripts.
+Run their suites with `node --test "scripts/*.test.mjs"`.
 
 ## Private workspace
 
