@@ -12,6 +12,15 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.72] - 2026-10-31
+
+### Changed
+
+- The development flow and shared-skills text in `AGENTS.md` now come from `jwh3times/skills`:
+  `scripts/sync-agents.mjs` writes them between marked lines, and its check fails when they drift.
+  `docs/agents/dev-flow.md` and `docs/agents/triage-labels.md` hold only what this repository adds
+  to the shared defaults, and the shared skills are refreshed to match.
+
 ## [1.4.71] - 2026-10-31
 
 ### Changed
