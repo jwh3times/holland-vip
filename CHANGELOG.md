@@ -12,6 +12,19 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.76] - 2026-11-02
+
+### Changed
+
+- `end-session` now closes every session with the same report: what it did, the docs it searched and
+  updated, open PRs and security alert counts, and the human steps owed before the next session.
+
+## [1.4.75] - 2026-11-02
+
+### Changed
+
+- Bumped `lucide-react` from 1.62.0 to 1.65.0 and `@types/node` from 26.6.5 to 26.6.6 (Dependabot).
+
 ## [1.4.74] - 2026-11-01
 
 ### Added
