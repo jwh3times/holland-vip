@@ -12,6 +12,62 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.84] - 2026-11-10
+
+### Changed
+
+- The installed-skills check (`scripts/check-skills.mjs`) reads the version 2 `skills-lock.json`
+  that `skills` CLI 1.8.0 writes, whose hashes no longer depend on line endings, so the shared
+  skills install with the current CLI instead of a pinned 1.7.4 (#239). The lock is now version 2;
+  no skill's content changed.
+
+## [1.4.83] - 2026-11-10
+
+### Changed
+
+- Bumped `@tailwindcss/postcss` from 4.3.4 to 4.3.5, `oxlint` from 1.91.0 to 1.92.0 and `serve`
+  from 14.2.6 to 14.2.7, with a transitive lockfile update (Dependabot, #238).
+
+## [1.4.82] - 2026-11-09
+
+### Changed
+
+- Bumped `jsdom` from 30.1.3 to 31.0.0 (Dependabot, #237).
+
+## [1.4.81] - 2026-11-09
+
+### Changed
+
+- Bumped `lucide-react` from 1.67.0 to 1.70.0, `next` from 16.4.4 to 16.4.5, `@playwright/test`
+  from 1.64.1 to 1.65.0, `oxlint` from 1.90.0 to 1.91.0 and `oxlint-tsgolint` from 7.0.2005 to
+  7.0.2006 (Dependabot, #236).
+
+## [1.4.80] - 2026-11-06
+
+### Changed
+
+- Bumped the transitive `minimatch` and `@sentry/node` in the lockfile (Dependabot, #235).
+
+## [1.4.79] - 2026-11-06
+
+### Changed
+
+- Bumped `lucide-react` from 1.66.0 to 1.67.0, `next` from 16.4.3 to 16.4.4, `@lhci/cli` from
+  0.15.1 to 0.16.0, `@tailwindcss/postcss` from 4.3.3 to 4.3.4 and `@vitest/coverage-v8` from
+  5.0.5 to 5.1.0, with transitive lockfile updates (Dependabot, #234).
+
+## [1.4.78] - 2026-11-05
+
+### Changed
+
+- Bumped `@vitejs/plugin-react` from 6.1.2 to 6.2.1 (Dependabot, #233).
+
+## [1.4.77] - 2026-11-03
+
+### Changed
+
+- Bumped `lucide-react` from 1.65.0 to 1.66.0 (Dependabot, #232).
+
 ## [1.4.76] - 2026-11-02
 
 ### Changed
