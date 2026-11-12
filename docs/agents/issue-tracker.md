@@ -129,3 +129,7 @@ jwh3times 8
 - `Status`: `Todo` / `In Progress` / `Blocked` / `Deferred` / `Done`. `Todo` means genuinely
   startable; a `Blocked` item waits on an external dependency and a `Deferred` one is parked by
   decision, and either states its trigger in the issue body.
+
+## Priority order
+
+- `board order`: the board's manual order, top first.
