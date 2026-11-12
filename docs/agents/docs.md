@@ -30,9 +30,9 @@
 - `docs/agents/*.md` — conventions and settings the skills read. **When:** a convention, route or
   setting changes.
 - `.agents/skills/*/**` — installed skills, mirrored to `.claude/skills/`: `end-session`, `handoff`,
-  `lets-go`, `ship` and `docs-updater` from `jwh3times/skills` (ADR-0005), and the `mattpocock/skills`
-  snapshot. `frozen` here: fixed upstream, and what they need to know goes in `AGENTS.md` or
-  `docs/agents/`. **When:** a skill is added, removed or replaced (`.agents/skills/`,
+  `lets-go`, `ship`, `docs-updater` and `what-next` from `jwh3times/skills` (ADR-0005), and the
+  `mattpocock/skills` snapshot. `frozen` here: fixed upstream, and what they need to know goes in
+  `AGENTS.md` or `docs/agents/`. **When:** a skill is added, removed or replaced (`.agents/skills/`,
   `skills-lock.json`): AGENTS.md's development-flow paragraph.
 - `.github/PULL_REQUEST_TEMPLATE.md`, `.github/ISSUE_TEMPLATE/*.md` — the PR body's sections; the
   bug and feature forms. **When:** the development flow's linking rule changes; the triage labels
