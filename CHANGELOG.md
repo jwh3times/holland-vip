@@ -12,6 +12,15 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.87] - 2026-11-12
+
+### Changed
+
+- `/what-next` puts an active handoff first: when `handoff_map.json` names one for this repository,
+  the report leads with it and recommends `/lets-go`, and one whose document has not reached this
+  machine is shown as pending. It still changes nothing, and a machine without the handoffs config
+  skips the check.
+
 ## [1.4.86] - 2026-11-12
 
 ### Added
