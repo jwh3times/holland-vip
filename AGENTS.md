@@ -111,13 +111,15 @@ rank the open work and name the next command.
 
 ## GitHub build data
 
-`app/page.tsx` loads featured repositories and contribution history at build time. The shared
-policy in `lib/github-fetch.ts` adds the build User-Agent and a per-request timeout, throwing
+`app/page.tsx` loads the Hobby Projects' repositories (`HOBBY_PROJECT_REPOS`, which must match
+`content/hobby-projects.ts`) and contribution history at build time. The shared policy in
+`lib/github-fetch.ts` adds the build User-Agent and a per-request timeout, throwing
 `GitHubTimeoutError` on expiry. Repository requests are anonymous; contribution requests use
 `GITHUB_TOKEN`. Only verified public repository identities reach live output. Unavailable or
 rejected repositories omit their snapshots; transient failures, including a timeout, use reviewed
-committed data. `parseRepos()` and `parseCalendar()` validate
-snapshots; malformed snapshots degrade to empty data instead of failing the build.
+committed data. Missing repository data drops only a card's metadata line, never a card or
+section. `parseRepos()` and `parseCalendar()` validate snapshots; malformed snapshots degrade to
+empty data instead of failing the build.
 
 Keep this path non-throwing and compatible with tokenless builds. The shared repository and
 contribution contracts remain plain `.mjs` so the bare-Node snapshot refresh can import them.

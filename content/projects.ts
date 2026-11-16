@@ -13,7 +13,7 @@ export interface Project {
 }
 
 export const projectsSubtitle =
-  "Selected work from my professional roles — anonymized and generalized to respect client and employer confidentiality. For my public, open-source work, see below.";
+  "Selected work from my professional roles — anonymized and generalized to respect client and employer confidentiality. My public work is in Hobby projects, above.";
 
 export const confidentialLabel = "Confidential";
 

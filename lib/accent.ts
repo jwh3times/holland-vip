@@ -45,6 +45,8 @@ export interface AccentTokens {
   chip: string;
   /** Soft drop shadow in the accent at 70%, under a selected timeline bar. */
   shadow: string;
+  /** Wide drop shadow in the accent at 60%, under an active Hobby Project card. */
+  activeShadow: string;
 }
 
 /**
@@ -52,7 +54,7 @@ export interface AccentTokens {
  * light/dark swap recolours it without a `dark:` variant. Tints are
  * `color-mix(in oklch, var(--a-X) N%, transparent)` at the design's four steps:
  * 12% (chip), 14% (bar), 30% (hover) and 55% (border glow), plus 70% for a selected bar's
- * shadow. The contribution heatmap's green ramp is `.heatmap` in `app/globals.css`.
+ * shadow and 60% for an active card's. The contribution heatmap's green ramp is `.heatmap` in `app/globals.css`.
  *
  * Each class string is written out in full, never assembled from parts: Tailwind
  * finds classes by scanning this file's text, and would miss an interpolated one.
@@ -73,6 +75,7 @@ export const accent: Record<Accent, AccentTokens> = {
     outline: "border-a-blue",
     chip: "bg-[color-mix(in_oklch,var(--a-blue)_12%,transparent)] hover:bg-[color-mix(in_oklch,var(--a-blue)_30%,transparent)]",
     shadow: "shadow-[0_8px_24px_-8px_color-mix(in_oklch,var(--a-blue)_70%,transparent)]",
+    activeShadow: "shadow-[0_20px_60px_-24px_color-mix(in_oklch,var(--a-blue)_60%,transparent)]",
   },
   green: {
     text: "text-a-green",
@@ -89,6 +92,7 @@ export const accent: Record<Accent, AccentTokens> = {
     outline: "border-a-green",
     chip: "bg-[color-mix(in_oklch,var(--a-green)_12%,transparent)] hover:bg-[color-mix(in_oklch,var(--a-green)_30%,transparent)]",
     shadow: "shadow-[0_8px_24px_-8px_color-mix(in_oklch,var(--a-green)_70%,transparent)]",
+    activeShadow: "shadow-[0_20px_60px_-24px_color-mix(in_oklch,var(--a-green)_60%,transparent)]",
   },
   purple: {
     text: "text-a-purple",
@@ -105,6 +109,7 @@ export const accent: Record<Accent, AccentTokens> = {
     outline: "border-a-purple",
     chip: "bg-[color-mix(in_oklch,var(--a-purple)_12%,transparent)] hover:bg-[color-mix(in_oklch,var(--a-purple)_30%,transparent)]",
     shadow: "shadow-[0_8px_24px_-8px_color-mix(in_oklch,var(--a-purple)_70%,transparent)]",
+    activeShadow: "shadow-[0_20px_60px_-24px_color-mix(in_oklch,var(--a-purple)_60%,transparent)]",
   },
   orange: {
     text: "text-a-orange",
@@ -121,6 +126,7 @@ export const accent: Record<Accent, AccentTokens> = {
     outline: "border-a-orange",
     chip: "bg-[color-mix(in_oklch,var(--a-orange)_12%,transparent)] hover:bg-[color-mix(in_oklch,var(--a-orange)_30%,transparent)]",
     shadow: "shadow-[0_8px_24px_-8px_color-mix(in_oklch,var(--a-orange)_70%,transparent)]",
+    activeShadow: "shadow-[0_20px_60px_-24px_color-mix(in_oklch,var(--a-orange)_60%,transparent)]",
   },
 };
 

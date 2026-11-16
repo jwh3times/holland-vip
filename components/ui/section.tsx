@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
  * Sections reachable from the nav. `Navigation` maps over this, so every entry
  * must have a label and every nav link provably points at a real section.
  */
-export const NAV_SECTION_IDS = ["about", "career", "projects", "open-source", "contact"] as const;
+export const NAV_SECTION_IDS = ["about", "projects", "career", "work", "contact"] as const;
 
 export type NavSectionId = (typeof NAV_SECTION_IDS)[number];
 

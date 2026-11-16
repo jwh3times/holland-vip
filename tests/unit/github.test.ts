@@ -1,9 +1,9 @@
 /* oxlint-disable typescript/require-await -- async fetch test doubles intentionally resolve synchronously */
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  getFeaturedRepos,
-  getFeaturedReposWithSource,
-  FEATURED_REPO_SLUGS,
+  getHobbyProjectRepos,
+  getHobbyProjectReposWithSource,
+  HOBBY_PROJECT_REPOS,
   type Repo,
 } from "@/lib/github";
 import fallback from "@/lib/github-fallback.json";
@@ -51,21 +51,21 @@ afterEach(() => {
   delete process.env.GITHUB_TOKEN;
 });
 
-describe("getFeaturedRepos", () => {
+describe("getHobbyProjectRepos", () => {
   it("maps live GitHub data for every allowlisted repo, in order", async () => {
     const fetchMock = mockOkFetch();
 
-    const repos = await getFeaturedRepos();
+    const repos = await getHobbyProjectRepos();
 
-    expect(repos.map((r) => r.name)).toEqual([...FEATURED_REPO_SLUGS]);
-    expect(fetchMock).toHaveBeenCalledTimes(FEATURED_REPO_SLUGS.length);
+    expect(repos.map((r) => r.name)).toEqual([...HOBBY_PROJECT_REPOS]);
+    expect(fetchMock).toHaveBeenCalledTimes(HOBBY_PROJECT_REPOS.length);
     expect(repos[0]).toEqual<Repo>({
-      name: "apexracers",
-      description: "desc-apexracers",
+      name: "Nearcited",
+      description: "desc-Nearcited",
       language: "TypeScript",
       stars: 7,
       pushedAt: "2026-01-02T03:04:05Z",
-      url: "https://github.com/jwh3times/apexracers",
+      url: "https://github.com/jwh3times/Nearcited",
     });
   });
 
@@ -73,7 +73,7 @@ describe("getFeaturedRepos", () => {
     const fetchMock = mockOkFetch();
     process.env.GITHUB_TOKEN = "secret-token";
 
-    await getFeaturedRepos();
+    await getHobbyProjectRepos();
 
     expect(headersOf(fetchMock.mock.calls[0]).Authorization).toBeUndefined();
   });
@@ -81,7 +81,7 @@ describe("getFeaturedRepos", () => {
   it("omits the Authorization header when no token is set", async () => {
     const fetchMock = mockOkFetch();
 
-    await getFeaturedRepos();
+    await getHobbyProjectRepos();
 
     expect(headersOf(fetchMock.mock.calls[0]).Authorization).toBeUndefined();
   });
@@ -95,7 +95,7 @@ describe("getFeaturedRepos", () => {
       })
     );
 
-    const repos = await getFeaturedRepos();
+    const repos = await getHobbyProjectRepos();
 
     expect(repos).toEqual(fallback);
     expect(warn).toHaveBeenCalledOnce();
@@ -108,7 +108,7 @@ describe("getFeaturedRepos", () => {
       vi.fn(async () => ({ ok: false, status: 403, json: async () => ({}) }) as unknown as Response)
     );
 
-    const repos = await getFeaturedRepos();
+    const repos = await getHobbyProjectRepos();
 
     expect(repos).toEqual(fallback);
   });
@@ -120,8 +120,8 @@ describe("repository disclosure eligibility", () => {
     { private: false, visibility: "internal" },
     { private: undefined, visibility: "public" },
     { owner: { login: "someone-else" } },
-    { full_name: "someone-else/apexracers" },
-    { html_url: "https://example.invalid/apexracers" },
+    { full_name: "someone-else/Nearcited" },
+    { html_url: "https://example.invalid/Nearcited" },
   ])("omits rejected live data and its old snapshot: %j", async (changes) => {
     process.env.GITHUB_TOKEN = "synthetic-token";
     vi.spyOn(console, "warn").mockImplementation(() => {});
@@ -134,14 +134,14 @@ describe("repository disclosure eligibility", () => {
           ok: true,
           status: 200,
           json: async () =>
-            slug === "apexracers"
+            slug === "Nearcited"
               ? { ...payload, ...changes, description: "SYNTHETIC CONFIDENTIAL" }
               : payload,
         };
       })
     );
-    const repos = await getFeaturedRepos();
-    expect(repos.map((repo) => repo.name)).toEqual(FEATURED_REPO_SLUGS.slice(1));
+    const repos = await getHobbyProjectRepos();
+    expect(repos.map((repo) => repo.name)).toEqual(HOBBY_PROJECT_REPOS.slice(1));
     expect(JSON.stringify(repos)).not.toContain("SYNTHETIC CONFIDENTIAL");
   });
 
@@ -153,7 +153,7 @@ describe("repository disclosure eligibility", () => {
         "fetch",
         vi.fn(async () => ({ ok: false, status }))
       );
-      expect(await getFeaturedRepos()).toEqual([]);
+      expect(await getHobbyProjectRepos()).toEqual([]);
     }
   );
 });
@@ -164,17 +164,17 @@ it("keeps public live results and transient snapshots without reviving a rejecte
     "fetch",
     vi.fn(async (url: string) => {
       const slug = url.split("/").pop() ?? "";
-      if (slug === "apexracers") return { ok: false, status: 404 };
-      if (slug === "LeaseBook") throw new Error("offline");
+      if (slug === "Nearcited") return { ok: false, status: 404 };
+      if (slug === "causet") throw new Error("offline");
       return okResponse(slug);
     })
   );
-  const result = await getFeaturedReposWithSource();
+  const result = await getHobbyProjectReposWithSource();
   expect(result.source).toBe("fallback");
   expect(result.data).toEqual([
     fallback[1],
-    expect.objectContaining({ name: "GuardianTracker", description: "desc-GuardianTracker" }),
-    expect.objectContaining({ name: "holland-vip", description: "desc-holland-vip" }),
+    expect.objectContaining({ name: "magic-agenda", description: "desc-magic-agenda" }),
+    expect.objectContaining({ name: "PressGolf", description: "desc-PressGolf" }),
   ]);
 });
 
@@ -186,7 +186,7 @@ it("accepts explicit public repositories when optional visibility is absent", as
       return { ok: true, json: async () => ({ ...payload, visibility: undefined }) };
     })
   );
-  const result = await getFeaturedReposWithSource();
+  const result = await getHobbyProjectReposWithSource();
   expect(result.source).toBe("live");
-  expect(result.data.map((repo) => repo.name)).toEqual(FEATURED_REPO_SLUGS);
+  expect(result.data.map((repo) => repo.name)).toEqual(HOBBY_PROJECT_REPOS);
 });

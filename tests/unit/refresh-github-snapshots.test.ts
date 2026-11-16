@@ -1,6 +1,6 @@
 /* oxlint-disable typescript/require-await -- async fetch test doubles intentionally resolve synchronously */
 import { describe, expect, it, vi } from "vitest";
-import { FEATURED_REPO_SLUGS } from "@/lib/github-repos-contract.mjs";
+import { HOBBY_PROJECT_REPOS } from "@/lib/github-repos-contract.mjs";
 import { refreshGithubSnapshots } from "@/scripts/refresh-github-snapshots.mjs";
 
 type FetchImpl = (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
@@ -70,13 +70,13 @@ describe("refreshGithubSnapshots", () => {
     const snapshots = await refreshGithubSnapshots({ fetchImpl, token: "process-token", writer });
 
     expect((snapshots.repos as { name: string }[]).map((repo) => repo.name)).toEqual(
-      FEATURED_REPO_SLUGS
+      HOBBY_PROJECT_REPOS
     );
     expect(snapshots.contributions).toEqual({
       totalContributions: 4,
       weeks: [[{ date: "2026-09-01", count: 4, level: 2 }]],
     });
-    expect(fetchImpl).toHaveBeenCalledTimes(FEATURED_REPO_SLUGS.length + 1);
+    expect(fetchImpl).toHaveBeenCalledTimes(HOBBY_PROJECT_REPOS.length + 1);
     expect(writer).toHaveBeenCalledOnce();
     const requests = fetchImpl.mock.calls.map((call) => call[1] as RequestInit);
     expect(requests.every((request) => request.headers)).toBe(true);
@@ -88,7 +88,7 @@ describe("refreshGithubSnapshots", () => {
     fetchImpl.mockImplementation(async (input) => {
       const url = urlOf(input);
       if (url.endsWith("/graphql")) return response(contributionsPayload());
-      if (url.endsWith(`/${FEATURED_REPO_SLUGS[0]}`)) return response({ name: "incomplete" });
+      if (url.endsWith(`/${HOBBY_PROJECT_REPOS[0]}`)) return response({ name: "incomplete" });
       return response(repoPayload(url.split("/").pop() ?? ""));
     });
     const writer = vi.fn(async () => {});

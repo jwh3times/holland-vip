@@ -10,11 +10,11 @@ import {
   TechnicalCapabilities,
   ProblemSolving,
   ProjectsSection,
-  OpenSourceSection,
+  HobbyProjectsSection,
   ContactSection,
 } from "@/components/sections";
 import { numberAt } from "@/components/ui/section";
-import { getFeaturedReposWithSource } from "@/lib/github";
+import { getHobbyProjectReposWithSource } from "@/lib/github";
 import { getContributionsWithSource } from "@/lib/github-contributions";
 import { siteConfig, socialLinks } from "@/lib/site-config";
 
@@ -55,7 +55,7 @@ export default async function Home() {
   // Resolved at build time (static export). Neither call throws — both go through
   // `withFallback` in lib/github-fetch.ts, which degrades to a committed snapshot.
   const [repoResult, contributionResult] = await Promise.all([
-    getFeaturedReposWithSource(),
+    getHobbyProjectReposWithSource(),
     getContributionsWithSource(),
   ]);
   const repos = repoResult.data;
@@ -68,26 +68,21 @@ export default async function Home() {
   // section is numbered.
   //
   // This list is the single place section order lives, and each section's number
-  // is derived from its position here — a section never picks its own. Sections
-  // that don't render are dropped from the list *before* numbers are assigned, so
-  // nothing below them is left with a gap.
+  // is derived from its position here — a section never picks its own. Every
+  // section always renders: missing GitHub data removes only the metadata it feeds.
   const numberedSections: { key: string; render: (number: string) => React.ReactNode }[] = [
     { key: "about", render: (number) => <AboutSection number={number} /> },
+    {
+      key: "hobby-projects",
+      render: (number) => <HobbyProjectsSection number={number} repos={repos} />,
+    },
     {
       key: "career",
       render: (number) => <CareerSection number={number} contributions={contributions} />,
     },
     { key: "capabilities", render: (number) => <TechnicalCapabilities number={number} /> },
     { key: "problem-solving", render: (number) => <ProblemSolving number={number} /> },
-    { key: "projects", render: (number) => <ProjectsSection number={number} /> },
-    ...(repos.length > 0
-      ? [
-          {
-            key: "open-source",
-            render: (number: string) => <OpenSourceSection number={number} repos={repos} />,
-          },
-        ]
-      : []),
+    { key: "work", render: (number) => <ProjectsSection number={number} /> },
     { key: "contact", render: (number) => <ContactSection number={number} /> },
   ];
 

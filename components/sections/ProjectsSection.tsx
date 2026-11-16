@@ -26,7 +26,7 @@ const spans = {
 
 export function ProjectsSection({ number }: NumberedSectionProps) {
   return (
-    <Section id="projects" title="Professional Work" number={number} subtitle={projectsSubtitle}>
+    <Section id="work" title="Professional Work" number={number} subtitle={projectsSubtitle}>
       <div className="flex justify-center mb-12">
         <Badge accent="orange">
           <Lock className="h-3.5 w-3.5" aria-hidden="true" />
