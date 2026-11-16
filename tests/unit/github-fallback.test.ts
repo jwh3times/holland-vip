@@ -2,7 +2,7 @@
 /* oxlint-disable typescript/require-await -- async test doubles intentionally resolve synchronously */
 import { describe, it, expect, vi, afterEach } from "vitest";
 
-import { parseRepos, FEATURED_REPO_SLUGS } from "@/lib/github";
+import { parseRepos, HOBBY_PROJECT_REPOS } from "@/lib/github";
 import { parseCalendar } from "@/lib/github-contributions";
 import repoSnapshot from "@/lib/github-fallback.json";
 import calendarSnapshot from "@/lib/github-contributions-fallback.json";
@@ -23,7 +23,7 @@ describe("committed repo snapshot", () => {
   it("covers every featured repo slug", () => {
     const parsed = parseRepos(repoSnapshot);
     expect(parsed).not.toBeNull();
-    expect(parsed!.map((r) => r.name).sort()).toEqual([...FEATURED_REPO_SLUGS].sort());
+    expect(parsed!.map((r) => r.name).sort()).toEqual([...HOBBY_PROJECT_REPOS].sort());
   });
 
   it("has a parseable pushedAt on every entry", () => {
@@ -87,7 +87,7 @@ describe("a malformed committed snapshot", () => {
     vi.resetModules();
   });
 
-  it("degrades getFeaturedRepos to an empty list", async () => {
+  it("degrades getHobbyProjectRepos to an empty list", async () => {
     vi.spyOn(console, "warn").mockImplementation(() => {});
     vi.resetModules();
     vi.doMock("@/lib/github-fallback.json", () => ({ default: [{ nope: true }] }));
@@ -98,10 +98,13 @@ describe("a malformed committed snapshot", () => {
       })
     );
 
-    const { getFeaturedRepos, getFeaturedReposWithSource } = await import("@/lib/github");
+    const { getHobbyProjectRepos, getHobbyProjectReposWithSource } = await import("@/lib/github");
 
-    await expect(getFeaturedRepos()).resolves.toEqual([]);
-    await expect(getFeaturedReposWithSource()).resolves.toEqual({ data: [], source: "fallback" });
+    await expect(getHobbyProjectRepos()).resolves.toEqual([]);
+    await expect(getHobbyProjectReposWithSource()).resolves.toEqual({
+      data: [],
+      source: "fallback",
+    });
   });
 
   it("degrades getContributions to an empty calendar", async () => {

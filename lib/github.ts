@@ -1,6 +1,6 @@
 import { githubFetch, GitHubResponseError, type GitHubDataResult } from "./github-fetch";
 import {
-  FEATURED_REPO_SLUGS as RAW_FEATURED_REPO_SLUGS,
+  HOBBY_PROJECT_REPOS as RAW_HOBBY_PROJECT_REPOS,
   GITHUB_USER,
   parseRepos as parseRepoContract,
   toRepo,
@@ -9,16 +9,14 @@ import {
 import fallbackData from "./github-fallback.json";
 
 /**
- * Curated allowlist of repos to feature, in display order.
- *
- * Resolved 2026-06-18 (Tier 5 B1). Only these are fetched — an explicit list
- * keeps the interview-submission repos out of the Open Source section. Update
- * this array (and `github-fallback.json`) to change what the site shows.
+ * The Hobby Projects' repositories, in display order. Only these are fetched; the list lives in
+ * the plain-`.mjs` contract so the bare-Node snapshot refresh shares it. Change it there, in
+ * `content/hobby-projects.ts`, and in `github-fallback.json` together.
  */
 export { GITHUB_USER };
-export const FEATURED_REPO_SLUGS = RAW_FEATURED_REPO_SLUGS as readonly string[];
+export const HOBBY_PROJECT_REPOS = RAW_HOBBY_PROJECT_REPOS as readonly string[];
 
-/** A featured repository, normalized to just the fields the UI renders. */
+/** A Hobby Project's repository, normalized to just the fields the UI renders. */
 export interface Repo {
   name: string;
   description: string | null;
@@ -47,8 +45,8 @@ export function parseRepos(data: unknown): Repo[] | null {
 /**
  * Committed snapshot used when the live GitHub fetch is unavailable.
  *
- * If the snapshot itself is malformed the section renders empty rather than
- * with garbage — `app/page.tsx` drops `OpenSourceSection` on an empty list.
+ * If the snapshot itself is malformed the cards render without repository
+ * metadata rather than with garbage; the Hobby Project cards themselves always render.
  */
 const fallbackRepos: Repo[] = parseRepos(fallbackData) ?? [];
 
@@ -66,18 +64,18 @@ async function fetchRepo(slug: string): Promise<Repo> {
 }
 
 /**
- * Returns the featured repos with live GitHub data, resolved at build time.
+ * Returns the Hobby Projects' repositories with live GitHub data, resolved at build time.
  *
  * Never throws. Transient failures use reviewed snapshots per repository;
  * unavailable or disclosure-ineligible responses omit that repository entirely.
  */
-export async function getFeaturedRepos(): Promise<Repo[]> {
-  return (await getFeaturedReposWithSource()).data;
+export async function getHobbyProjectRepos(): Promise<Repo[]> {
+  return (await getHobbyProjectReposWithSource()).data;
 }
 
-/** Returns featured repositories and the build-time source selected for them. */
-export async function getFeaturedReposWithSource(): Promise<GitHubDataResult<Repo[]>> {
-  const results = await Promise.allSettled(FEATURED_REPO_SLUGS.map(fetchRepo));
+/** Returns the Hobby Projects' repositories and the build-time source selected for them. */
+export async function getHobbyProjectReposWithSource(): Promise<GitHubDataResult<Repo[]>> {
+  const results = await Promise.allSettled(HOBBY_PROJECT_REPOS.map(fetchRepo));
   const failed = results.some((result) => result.status === "rejected");
   if (failed)
     console.warn("[github] live repo fetch incomplete; using eligible committed fallback only");
@@ -89,7 +87,7 @@ export async function getFeaturedReposWithSource(): Promise<GitHubDataResult<Rep
       (error instanceof GitHubResponseError && [404, 410].includes(error.status))
     )
       return [];
-    const slug = FEATURED_REPO_SLUGS[index];
+    const slug = HOBBY_PROJECT_REPOS[index];
     return fallbackRepos.filter(
       (repo) => repo.name === slug && repo.url === `https://github.com/${GITHUB_USER}/${slug}`
     );

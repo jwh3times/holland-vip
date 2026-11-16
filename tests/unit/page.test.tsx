@@ -3,21 +3,21 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import Home from "@/app/page";
 import { ThemeProvider } from "@/components/theme-provider";
-import { getFeaturedReposWithSource } from "@/lib/github";
+import { getHobbyProjectReposWithSource } from "@/lib/github";
 import { getContributionsWithSource } from "@/lib/github-contributions";
 
 // Stub the build-time GitHub fetch so the async page renders deterministically
 // without hitting the network.
 vi.mock("@/lib/github", () => ({
-  getFeaturedReposWithSource: vi.fn(async () => ({
+  getHobbyProjectReposWithSource: vi.fn(async () => ({
     data: [
       {
-        name: "apexracers",
-        description: "Lap time percentile tracking",
-        language: "C#",
+        name: "causet",
+        description: "An experimental causal source-control layer over Git",
+        language: "Rust",
         stars: 1,
-        pushedAt: "2026-06-18T00:00:00Z",
-        url: "https://github.com/jwh3times/apexracers",
+        pushedAt: "2026-11-16T00:00:00Z",
+        url: "https://github.com/jwh3times/causet",
       },
     ],
     source: "live",
@@ -32,12 +32,12 @@ vi.mock("@/lib/github-contributions", () => ({
 }));
 
 const repoFixture = {
-  name: "apexracers",
-  description: "Lap time percentile tracking",
-  language: "C#",
+  name: "causet",
+  description: "An experimental causal source-control layer over Git",
+  language: "Rust",
   stars: 1,
-  pushedAt: "2026-06-18T00:00:00Z",
-  url: "https://github.com/jwh3times/apexracers",
+  pushedAt: "2026-11-16T00:00:00Z",
+  url: "https://github.com/jwh3times/causet",
 };
 
 /** Render the page and read each numbered section heading, in page order. */
@@ -56,7 +56,7 @@ async function renderPage() {
 
 describe("Home page", () => {
   beforeEach(() => {
-    vi.mocked(getFeaturedReposWithSource).mockResolvedValue({
+    vi.mocked(getHobbyProjectReposWithSource).mockResolvedValue({
       data: [repoFixture],
       source: "live",
     });
@@ -78,7 +78,8 @@ describe("Home page", () => {
     expect(screen.getAllByText("Jerry Holland").length).toBeGreaterThan(0);
     expect(screen.getByText(/All rights reserved/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "About Me" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Open Source" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Hobby projects/ })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /Open Source/ })).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Get In Touch" })).toBeInTheDocument();
   });
 
@@ -102,11 +103,11 @@ describe("Home page", () => {
     // them; only the hero carries no number.
     expect(numbered).toEqual([
       ["01", "About Me"],
-      ["02", "Career & stack"],
-      ["03", "Technical Capabilities"],
-      ["04", "Problem-Solving Highlights"],
-      ["05", "Professional Work"],
-      ["06", "Open Source"],
+      ["02", "Hobby projects"],
+      ["03", "Career & stack"],
+      ["04", "Technical Capabilities"],
+      ["05", "Problem-Solving Highlights"],
+      ["06", "Professional Work"],
       ["07", "Get In Touch"],
     ]);
     expect(
@@ -114,20 +115,24 @@ describe("Home page", () => {
     ).toBeNull();
   });
 
-  // The empty-repos path. `OpenSourceSection` used to suppress itself at render
-  // time; the decision now lives in the page, before numbers are assigned, so a
-  // section that drops out leaves no gap in the numbers below it.
-  it("drops the Open Source section when there are no repos, keeping the numbers contiguous", async () => {
-    vi.mocked(getFeaturedReposWithSource).mockResolvedValue({ data: [], source: "fallback" });
+  // A bad fetch removes repository metadata, never a section or a card.
+  it("keeps Hobby projects and all four cards when no repository data is available", async () => {
+    vi.mocked(getHobbyProjectReposWithSource).mockResolvedValue({ data: [], source: "fallback" });
 
     const { numbered } = await renderPage();
 
-    expect(screen.queryByRole("heading", { name: "Open Source" })).not.toBeInTheDocument();
-    expect(numbered.map(([number]) => number)).toEqual(["01", "02", "03", "04", "05", "06"]);
-    expect(numbered.slice(-2)).toEqual([
-      ["05", "Professional Work"],
-      ["06", "Get In Touch"],
-    ]);
+    expect(numbered.map(([, title]) => title)).toContain("Hobby projects");
+    const section = screen.getByRole("heading", { name: /Hobby projects/ }).closest("section")!;
+    expect(within(section).getAllByRole("article")).toHaveLength(4);
+    expect(within(section).queryByText(/pushed \d{4}/)).toBeNull();
+  });
+
+  it("gives #projects to Hobby projects and #work to Professional Work", async () => {
+    const { container } = await renderPage();
+
+    expect(container.querySelector("section#projects h2")).toHaveTextContent("Hobby projects");
+    expect(container.querySelector("section#work h2")).toHaveTextContent("Professional Work");
+    expect(container.querySelector("#open-source")).toBeNull();
   });
 
   // The header's nav and prompt, and the hero's two buttons.

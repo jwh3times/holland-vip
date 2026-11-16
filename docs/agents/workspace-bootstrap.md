@@ -226,7 +226,7 @@ git diff -- lib/github-fallback.json lib/github-contributions-fallback.json
 npm run test:unit -- --run tests/unit/github-fallback.test.ts
 ```
 
-Commit both JSON files in the same public change after confirming that the featured repositories,
+Commit both JSON files in the same public change after confirming that the Hobby Projects' repositories,
 descriptions, totals, dates, and contribution levels are plausible. Do not copy the token or any
 resolved private environment value into the commit.
 

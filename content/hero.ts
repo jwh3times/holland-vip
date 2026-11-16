@@ -1,9 +1,7 @@
-import { socialLinks, yearsOfExperience } from "@/lib/site-config";
+import { githubUrl, yearsOfExperience } from "@/lib/site-config";
 
 /** The GitHub profile as the terminal prints it, read from site config: `github.com/<user>`. */
-const githubProfile = socialLinks
-  .find((link) => link.label === "GitHub")
-  ?.href.replace(/^https:\/\//, "");
+const githubProfile = githubUrl.replace(/^https:\/\//, "");
 
 /** How the hero terminal colours a line: a typed command, its output, or the highlighted listing. */
 export type TerminalLineKind = "command" | "output" | "highlight";

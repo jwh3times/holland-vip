@@ -5,5 +5,5 @@ export { CareerSection } from "./CareerSection";
 export { TechnicalCapabilities } from "./TechnicalCapabilities";
 export { ProblemSolving } from "./ProblemSolving";
 export { ProjectsSection } from "./ProjectsSection";
-export { OpenSourceSection } from "./OpenSourceSection";
+export { HobbyProjectsSection } from "./HobbyProjectsSection";
 export { ContactSection } from "./ContactSection";

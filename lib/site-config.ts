@@ -24,9 +24,12 @@ export const CAREER_START_YEAR = 2013;
 /** Whole years since career start. Computed at build time (static export — refreshes on deploy). */
 export const yearsOfExperience = new Date().getFullYear() - CAREER_START_YEAR;
 
+/** The GitHub profile: its social link, the hero's `ls` footnote and the Hobby Projects' link. */
+export const githubUrl = "https://github.com/jwh3times";
+
 export const socialLinks = [
   {
-    href: "https://github.com/jwh3times",
+    href: githubUrl,
     label: "GitHub",
     icon: GitHubIcon,
   },

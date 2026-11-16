@@ -18,8 +18,8 @@ assets live in `public/` and are referenced from application code with root path
 
 `app/page.tsx` composes the single-page portfolio. Hero renders first and unnumbered; the remaining
 sections are an ordered list, and `numberAt(index)` derives each one's `01`, `02`, … number from
-its position, after optional sections have been filtered, so a missing section leaves no gap.
-Sections receive their number as a prop and never choose it. Every body section is numbered, and
+its position. Every section in the list always renders, so the numbers never skip: missing GitHub
+data removes only the repository metadata it feeds, never a section. Sections receive their number as a prop and never choose it. Every body section is numbered, and
 every section sits on `--bg`: there are no alternating section surfaces.
 
 The hero (`#top`) is a server component, so its h1 and stats are in the static HTML. It receives the
@@ -128,7 +128,7 @@ expected hydration warning.
 
 ## Build-time GitHub data
 
-The homepage resolves featured repositories and contribution history during the build.
+The homepage resolves the Hobby Projects' repositories and contribution history during the build.
 `lib/github-fetch.ts` owns the shared request policy: build User-Agent, explicit anonymous access,
 optional bearer token, force-cache behavior, a per-request timeout, non-OK failure, and fallback
 support. The timeout matters because fallback only engages once a request settles or rejects, so
@@ -146,9 +146,15 @@ Repository fallback is selected per allowlisted repository. A 404/410 or a rejec
 omits that repository, including its old snapshot; a transient network, timeout, rate-limit, or
 server failure uses its reviewed committed record. Partial or rejected results mark the build source as
 `fallback`. Snapshot refresh aborts without writing either file if any repository is rejected.
-Before making a featured repository private, remove it from both the allowlist and committed
+Before making a Hobby Project's repository private, remove it from both the allowlist and committed
 snapshot: offline builds cannot discover a visibility change, and old public artifacts/history
 are not erased by a subsequent build.
+
+The allowlist is `HOBBY_PROJECT_REPOS` in `lib/github-repos-contract.mjs`. It names the same set as
+the `repo` fields in `content/hobby-projects.ts`, and a unit test fails when the two differ. The
+Hobby Projects section always renders all four cards: repository data only adds each card's
+`★ n · pushed YYYY-MM-DD` line, so a missing, unavailable or rejected repository removes that line
+and never a card or the section.
 
 Contribution failures use the validated contribution snapshot. An invalid snapshot degrades to
 empty data. These fallbacks keep public, CI, and offline builds independent from credentials and

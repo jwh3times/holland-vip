@@ -45,14 +45,12 @@ test.describe("Career & stack", () => {
     await expect(logRow(page, "Humboldt Scientific")).toHaveAttribute("aria-expanded", "false");
   });
 
-  test("holds the contribution heatmap, which Open Source no longer does", async ({ page }) => {
+  test("holds the page's only contribution heatmap", async ({ page }) => {
     const heatmap = page.getByRole("img", { name: /contributions in the last 12 months/ });
     await expect(page.locator("#career").getByRole("img", { name: /contributions/ })).toHaveCount(
       1
     );
-    await expect(
-      page.locator("#open-source").getByRole("img", { name: /contributions/ })
-    ).toHaveCount(0);
+    await expect(page.getByRole("img", { name: /contributions/ })).toHaveCount(1);
     await expect(heatmap).toBeVisible();
   });
 

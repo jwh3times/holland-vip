@@ -6,7 +6,7 @@ import { pathToFileURL, fileURLToPath } from "node:url";
 
 import { CONTRIBUTIONS_QUERY, toCalendar } from "../lib/github-contributions-query.mjs";
 import {
-  FEATURED_REPO_SLUGS,
+  HOBBY_PROJECT_REPOS,
   GITHUB_USER,
   parseRepos,
   toRepo,
@@ -28,7 +28,7 @@ export async function fetchGithubSnapshots({ fetchImpl = fetch, token }) {
     Authorization: `Bearer ${token}`,
     "User-Agent": USER_AGENT,
   };
-  const repoRequests = FEATURED_REPO_SLUGS.map(async (slug) => {
+  const repoRequests = HOBBY_PROJECT_REPOS.map(async (slug) => {
     const payload = await requestJson(
       fetchImpl,
       `https://api.github.com/repos/${GITHUB_USER}/${slug}`,
