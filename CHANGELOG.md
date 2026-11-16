@@ -12,6 +12,35 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.0] - 2026-11-16
+
+### Added
+
+- The fifth slice of the Terminal redesign (#250): a numbered **Hobby projects** section at
+  `#projects`, reached from the header's `projects/` link and the hero's `./see-projects` button.
+  Four cards (Nearcited, causet, Magic Agenda and Press) are introduced as picked for range, with a
+  link to everything on GitHub. Each card shows a status pill over a placeholder screenshot area,
+  the project's kind and one-liner, stack chips, and an `open ↗` link to the live site or repository.
+- Each card holds a mini terminal labelled "sample output". Hovering a card, or tabbing into it,
+  replays its lines one every 380ms; at rest every line shows dimmed. With reduced motion there is
+  no replay and the card does not lift.
+- When GitHub supplies the project's repository, its card shows `★ n · pushed YYYY-MM-DD`, with the
+  star count only when there are any.
+
+### Changed
+
+- Professional Work moves to `#work`, and the header's `work/` link follows it. Its intro now
+  points up to the Hobby projects rather than down to Open Source.
+- The build fetches the four Hobby Projects' repositories instead of the old featured four, through
+  the same anonymous requests, snapshot fallback and public-identity check. The committed snapshot
+  is refreshed for them. A missing, unavailable or rejected repository now removes only that card's
+  metadata line: the section and all four cards always render.
+
+### Removed
+
+- The Open Source section, with its `#open-source` anchor and nav link. An old link to it still
+  loads the page.
+
 ## [1.5.0] - 2026-11-16
 
 ### Added

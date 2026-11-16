@@ -19,8 +19,9 @@ assets live in `public/` and are referenced from application code with root path
 `app/page.tsx` composes the single-page portfolio. Hero renders first and unnumbered; the remaining
 sections are an ordered list, and `numberAt(index)` derives each one's `01`, `02`, … number from
 its position. Every section in the list always renders, so the numbers never skip: missing GitHub
-data removes only the repository metadata it feeds, never a section. Sections receive their number as a prop and never choose it. Every body section is numbered, and
-every section sits on `--bg`: there are no alternating section surfaces.
+data removes only the repository metadata it feeds, never a section. Sections receive their number
+as a prop and never choose it. Every body section is numbered, and every section sits on `--bg`:
+there are no alternating section surfaces.
 
 The hero (`#top`) is a server component, so its h1 and stats are in the static HTML. It receives the
 build-time contribution calendar from the page and counts its stats from it: the calendar's total
@@ -47,6 +48,16 @@ inventory, the Agent Skills panel, Current Explorations and the Contribution Act
 server-rendered beside and below it. The heatmap keeps a 640px minimum width and, on a narrow
 screen, scrolls sideways inside a focusable region. `components/ui/panel.tsx` is the design's
 bordered "window" with a shell-prompt header row.
+
+Hobby Projects (`#projects`) replaced the Open Source section, and Professional Work moved to
+`#work`. `HobbyProjectsSection` renders one card per project in `content/hobby-projects.ts` and
+matches each to its build-time repository data by name (see Build-time GitHub data).
+`components/hobby-project-card.tsx` is the section's one client component. Hovering a card, or
+focusing anything inside it, makes it active: its border and shadow take its accent, it lifts, and
+its mini terminal replays the sample output one line every 380ms (`REPLAY_STEP_MS`). Only the move
+from idle to active starts a replay, so moving focus within a card does not restart it. Hidden
+lines keep their space and stay in the accessibility tree, so a replay never shifts the layout. An
+idle card shows every line at 72% opacity. Under reduced motion there is no replay and no lift.
 
 Portfolio prose lives in typed modules under `content/`. Section components import and render
 those records, which keeps a resume edit independent from layout code. Contact identity and social
@@ -99,13 +110,14 @@ project-specific utility classes:
 - Decorative treatments: `gradient-text`, `glass` (the header's frosted bar), `heatmap` (the
   contribution grid's cells, filled by `data-level`)
 - Animation: `animate-blink` (the hero terminal's cursor), `animate-status-pulse` (the hero's
-  status dot) and `animate-rise` (an opened career log role's highlights), each switched off under
-  reduced motion by its caller
+  status dot) and `animate-rise` (an opened career log role's highlights and a replaying Hobby
+  Project card's sample-output lines), each switched off under reduced motion by its caller
 
 The four accent names and every associated token live in `lib/accent.ts`. Each token reads the
 accent's `--a-*` variable, with tinted fills written as `color-mix(in oklch, var(--a-X) N%,
 transparent)` at the design's four steps: 12% (chip), 14% (bar), 30% (hover) and 55% (border glow),
-plus 70% for a selected timeline bar's shadow. The contribution heatmap's green ramp, from the
+plus 70% for a selected timeline bar's shadow and 60% for an active Hobby Project card's wider
+`activeShadow`. The contribution heatmap's green ramp, from the
 empty `--heat0` cell to the full accent, is the `.heatmap` rule in `app/globals.css`, keyed by each
 cell's `data-level`, so its ~370 cells carry no class strings. `Badge` and `Card` consume
 that table; callers name an accent rather than rebuilding background, border, and text class
@@ -153,8 +165,8 @@ are not erased by a subsequent build.
 The allowlist is `HOBBY_PROJECT_REPOS` in `lib/github-repos-contract.mjs`. It names the same set as
 the `repo` fields in `content/hobby-projects.ts`, and a unit test fails when the two differ. The
 Hobby Projects section always renders all four cards: repository data only adds each card's
-`★ n · pushed YYYY-MM-DD` line, so a missing, unavailable or rejected repository removes that line
-and never a card or the section.
+`★ n · pushed YYYY-MM-DD` line (stars only when there are any), so a missing, unavailable or
+rejected repository removes that line and never a card or the section.
 
 Contribution failures use the validated contribution snapshot. An invalid snapshot degrades to
 empty data. These fallbacks keep public, CI, and offline builds independent from credentials and

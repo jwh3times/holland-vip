@@ -20,7 +20,7 @@ describe("committed repo snapshot", () => {
     expect(parseRepos(repoSnapshot)).not.toBeNull();
   });
 
-  it("covers every featured repo slug", () => {
+  it("covers every Hobby Project repository", () => {
     const parsed = parseRepos(repoSnapshot);
     expect(parsed).not.toBeNull();
     expect(parsed!.map((r) => r.name).sort()).toEqual([...HOBBY_PROJECT_REPOS].sort());
