@@ -19,10 +19,8 @@ assets live in `public/` and are referenced from application code with root path
 `app/page.tsx` composes the single-page portfolio. Hero renders first and unnumbered; the remaining
 sections are an ordered list, and `numberAt(index)` derives each one's `01`, `02`, … number from
 its position, after optional sections have been filtered, so a missing section leaves no gap.
-Sections receive their number as a prop and never choose it. During the Terminal redesign every
-body section is numbered until a later slice replaces it; the finished page leaves About and
-Contact unnumbered. The alternating section surfaces this replaced are retired: every section sits
-on `--bg`.
+Sections receive their number as a prop and never choose it. Every body section is numbered, and
+every section sits on `--bg`: there are no alternating section surfaces.
 
 Portfolio prose lives in typed modules under `content/`. Section components import and render
 those records, which keeps a resume edit independent from layout code. Contact identity and social
