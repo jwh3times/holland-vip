@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Section, type SectionSurfaceProps } from "@/components/ui/section";
+import { Section } from "@/components/ui/section";
 import {
   bio,
   careerHighlights,
@@ -12,9 +12,9 @@ import {
 import { accent } from "@/lib/accent";
 import { cn } from "@/lib/utils";
 
-export function AboutSection({ surface }: SectionSurfaceProps) {
+export function AboutSection() {
   return (
-    <Section id="about" title="About Me" surface={surface}>
+    <Section id="about" title="About Me">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           {bio.map((paragraph, index) => (

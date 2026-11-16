@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Section, type SectionSurfaceProps } from "@/components/ui/section";
+import { Section, type NumberedSectionProps } from "@/components/ui/section";
 import { challenges, challengeRows } from "@/content/problem-solving";
 import { cn } from "@/lib/utils";
 
@@ -29,9 +29,9 @@ function ChallengeItem({ icon, title, description, bgColor }: ChallengeItemProps
   );
 }
 
-export function ProblemSolving({ surface }: SectionSurfaceProps) {
+export function ProblemSolving({ number }: NumberedSectionProps) {
   return (
-    <Section title="Problem-Solving Highlights" surface={surface}>
+    <Section title="Problem-Solving Highlights" number={number}>
       <div className="max-w-5xl mx-auto space-y-8">
         {challenges.map((item) => (
           <Card key={item.challenge} padding="lg" interactive>

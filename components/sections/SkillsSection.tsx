@@ -1,4 +1,4 @@
-import { Section, type SectionSurfaceProps } from "@/components/ui/section";
+import { Section, type NumberedSectionProps } from "@/components/ui/section";
 import { skillCategories } from "@/content/skills";
 import { accent } from "@/lib/accent";
 import { cn } from "@/lib/utils";
@@ -11,9 +11,9 @@ function SkillBadge({ skill }: { skill: string }) {
   );
 }
 
-export function SkillsSection({ surface }: SectionSurfaceProps) {
+export function SkillsSection({ number }: NumberedSectionProps) {
   return (
-    <Section id="skills" title="Skills & Technologies" surface={surface}>
+    <Section id="skills" title="Skills & Technologies" number={number}>
       <div className="max-w-6xl mx-auto space-y-12">
         {skillCategories.map((category) => (
           <div key={category.title}>

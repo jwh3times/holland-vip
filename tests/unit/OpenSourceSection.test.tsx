@@ -24,7 +24,7 @@ const repos: Repo[] = [
 
 describe("OpenSourceSection", () => {
   it("renders the heading and one outbound card per repo", () => {
-    render(<OpenSourceSection repos={repos} />);
+    render(<OpenSourceSection number="01" repos={repos} />);
 
     expect(screen.getByRole("heading", { name: "Open Source" })).toBeInTheDocument();
 
@@ -35,7 +35,7 @@ describe("OpenSourceSection", () => {
   });
 
   it("shows description, language, stars, and a build-time updated date", () => {
-    render(<OpenSourceSection repos={repos} />);
+    render(<OpenSourceSection number="01" repos={repos} />);
 
     expect(screen.getByText("Lap time percentile tracking for iRacing")).toBeInTheDocument();
     expect(screen.getByText("C#")).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe("OpenSourceSection", () => {
   });
 
   it("omits the description for a repo that has none", () => {
-    render(<OpenSourceSection repos={[repos[1]]} />);
+    render(<OpenSourceSection number="01" repos={[repos[1]]} />);
 
     expect(screen.getByRole("link", { name: /GuardianTracker/i })).toBeInTheDocument();
     expect(screen.getByText("Go")).toBeInTheDocument();
@@ -52,19 +52,20 @@ describe("OpenSourceSection", () => {
   });
 
   // Suppressing the empty case is the caller's job, not this module's: app/page.tsx
-  // drops the section from its ordered list so a missing section can't re-phase the
-  // surface alternation below it. See the note on OpenSourceSection.
-  it("takes its surface from the caller rather than choosing one", () => {
-    const { container } = render(<OpenSourceSection repos={repos} surface="contrast" />);
-    expect(container.querySelector("section")).toHaveClass("section-surface-contrast");
+  // drops the section from its ordered list so a missing section can't leave a gap
+  // in the numbers below it. See the note on OpenSourceSection.
+  it("takes its number from the caller rather than choosing one", () => {
+    render(<OpenSourceSection number="06" repos={repos} />);
+    expect(screen.getByTestId("section-number")).toHaveTextContent("06");
   });
 
   it("renders the contribution heatmap only when contributions are provided", () => {
-    const { rerender } = render(<OpenSourceSection repos={repos} />);
+    const { rerender } = render(<OpenSourceSection number="01" repos={repos} />);
     expect(screen.queryByText("Contribution activity")).not.toBeInTheDocument();
 
     rerender(
       <OpenSourceSection
+        number="01"
         repos={repos}
         contributions={{
           totalContributions: 42,

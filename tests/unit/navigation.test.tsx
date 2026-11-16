@@ -1,36 +1,40 @@
 import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { Navigation } from "@/components/Navigation";
+import { NAV_SECTION_IDS } from "@/components/ui/section";
 
 describe("Navigation", () => {
-  it("renders the brand and desktop nav links", () => {
+  it("is a banner whose shell prompt links back to the top of the page", () => {
     render(<Navigation />);
-    expect(screen.getByText("Jerry Holland")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Work" })).toHaveAttribute("href", "#projects");
-    expect(screen.getByRole("link", { name: "Open Source" })).toHaveAttribute(
+    const banner = screen.getByRole("banner");
+    expect(within(banner).getByRole("link", { name: "jerry@holland.vip:~" })).toHaveAttribute(
       "href",
-      "#open-source"
+      "#top"
     );
   });
 
-  it("opens and closes the mobile menu", () => {
+  it("links every nav section once, in registry order, with its mono label", () => {
     render(<Navigation />);
+    const links = within(screen.getByRole("navigation", { name: "Sections" })).getAllByRole("link");
 
-    const openButton = screen.getByRole("button", { name: "Open menu" });
-    expect(openButton).toHaveAttribute("aria-expanded", "false");
-    // Only the desktop "About" link exists while the menu is closed.
-    expect(screen.getAllByRole("link", { name: "About" })).toHaveLength(1);
+    expect(links.map((link) => link.getAttribute("href"))).toEqual(
+      NAV_SECTION_IDS.map((id) => `#${id}`)
+    );
+    expect(links.map((link) => link.textContent)).toEqual([
+      "about.md",
+      "skills.json",
+      "career.log",
+      "work/",
+      "open-source/",
+      "contact.sh",
+    ]);
+  });
 
-    fireEvent.click(openButton);
-    const closeButton = screen.getByRole("button", { name: "Close menu" });
-    expect(closeButton).toHaveAttribute("aria-expanded", "true");
-    // Desktop + mobile copies are now present.
-    const aboutLinks = screen.getAllByRole("link", { name: "About" });
-    expect(aboutLinks).toHaveLength(2);
-
-    // Clicking a mobile link closes the menu again.
-    fireEvent.click(aboutLinks[1]);
-    expect(screen.getByRole("button", { name: "Open menu" })).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: "About" })).toHaveLength(1);
+  it("keeps the theme toggle in the header, with no separate mobile menu", () => {
+    render(<Navigation />);
+    const banner = screen.getByRole("banner");
+    // The toggle renders its inert placeholder or the live button; either sits here.
+    expect(banner.querySelector("button")).not.toBeNull();
+    expect(screen.queryByRole("button", { name: /menu/i })).not.toBeInTheDocument();
   });
 });

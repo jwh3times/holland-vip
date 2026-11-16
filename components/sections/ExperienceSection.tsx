@@ -1,13 +1,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Section, type SectionSurfaceProps } from "@/components/ui/section";
+import { Section, type NumberedSectionProps } from "@/components/ui/section";
 import { experiences } from "@/content/experience";
 import { accent } from "@/lib/accent";
 import { cn } from "@/lib/utils";
 
-export function ExperienceSection({ surface }: SectionSurfaceProps) {
+export function ExperienceSection({ number }: NumberedSectionProps) {
   return (
-    <Section id="experience" title="Professional Experience" surface={surface}>
+    <Section id="experience" title="Professional Experience" number={number}>
       <div className="max-w-4xl mx-auto">
         {/* Timeline */}
         <div className="relative">

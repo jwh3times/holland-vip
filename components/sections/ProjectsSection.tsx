@@ -3,7 +3,7 @@ import { ClipboardCopy, FileX, Signature, Columns3, Lock } from "lucide-react";
 
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { Badge } from "@/components/ui/badge";
-import { Section, type SectionSurfaceProps } from "@/components/ui/section";
+import { Section, type NumberedSectionProps } from "@/components/ui/section";
 import {
   projects,
   projectsSubtitle,
@@ -24,9 +24,9 @@ const spans = {
   two: "md:col-span-2",
 };
 
-export function ProjectsSection({ surface }: SectionSurfaceProps) {
+export function ProjectsSection({ number }: NumberedSectionProps) {
   return (
-    <Section id="projects" title="Professional Work" surface={surface} subtitle={projectsSubtitle}>
+    <Section id="projects" title="Professional Work" number={number} subtitle={projectsSubtitle}>
       <div className="flex justify-center mb-12">
         <Badge accent="orange">
           <Lock className="h-3.5 w-3.5" aria-hidden="true" />

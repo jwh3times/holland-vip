@@ -7,65 +7,36 @@ test.describe("Mobile Navigation", () => {
     await page.goto("/");
   });
 
-  test("should show hamburger menu on mobile", async ({ page }) => {
-    const menuButton = page.locator('button[aria-label="Open menu"]');
-    await expect(menuButton).toBeVisible();
+  test("keeps every section link in one row that scrolls sideways", async ({ page }) => {
+    const nav = page.getByRole("navigation", { name: "Sections" });
+    await expect(nav).toBeVisible();
+
+    // The row is narrower than its links, and scrolls rather than wrapping or clipping.
+    const { scrollWidth, clientWidth, overflowX } = await nav.evaluate((el) => ({
+      scrollWidth: el.scrollWidth,
+      clientWidth: el.clientWidth,
+      overflowX: getComputedStyle(el).overflowX,
+    }));
+    expect(scrollWidth).toBeGreaterThan(clientWidth);
+    expect(overflowX).toBe("auto");
+
+    // The header stays one 52px row.
+    const header = await page.getByRole("banner").boundingBox();
+    expect(Math.round(header!.height)).toBe(53); // 52px row + 1px bottom rule
   });
 
-  test("should hide desktop nav links on mobile", async ({ page }) => {
-    // Selected by test id, not by the Tailwind classes that happen to hide it —
-    // reordering `hidden md:flex` must not change what this test targets.
-    await expect(page.getByTestId("desktop-nav")).toBeHidden();
+  test("reaches the last link by scrolling the row, and it navigates", async ({ page }) => {
+    const nav = page.getByRole("navigation", { name: "Sections" });
+    const last = nav.getByRole("link").last();
+
+    await last.scrollIntoViewIfNeeded();
+    await expect(last).toBeInViewport();
+    const href = await last.getAttribute("href");
+    await last.click();
+    await expect(page.locator(href!)).toBeInViewport();
   });
 
-  test("should open mobile menu when hamburger is clicked", async ({ page }) => {
-    const menuButton = page.locator('button[aria-label="Open menu"]');
-    await expect(menuButton).toHaveAttribute("aria-expanded", "false");
-    await expect(page.locator("#mobile-menu")).toHaveCount(0);
-
-    await menuButton.click();
-
-    // The panel the button says it controls is the one that opens.
-    const mobileMenu = page.locator("#mobile-menu");
-    await expect(mobileMenu).toBeVisible();
-    await expect(mobileMenu).toHaveCount(1);
-
-    // Close button should now be visible, and report the panel as expanded.
-    const closeButton = page.locator('button[aria-label="Close menu"]');
-    await expect(closeButton).toBeVisible();
-    await expect(closeButton).toHaveAttribute("aria-expanded", "true");
-    await expect(closeButton).toHaveAttribute("aria-controls", "mobile-menu");
-  });
-
-  test("should close mobile menu when a link is clicked", async ({ page }) => {
-    const menuButton = page.locator('button[aria-label="Open menu"]');
-    await menuButton.click();
-
-    // Click on a nav link
-    const aboutLink = page.locator('nav a[href="#about"]').last();
-    await aboutLink.click();
-
-    // Menu should close (hamburger button should reappear)
-    const openButton = page.locator('button[aria-label="Open menu"]');
-    await expect(openButton).toBeVisible();
-  });
-
-  test("should close mobile menu when X is clicked", async ({ page }) => {
-    const menuButton = page.locator('button[aria-label="Open menu"]');
-    await menuButton.click();
-
-    const closeButton = page.locator('button[aria-label="Close menu"]');
-    await closeButton.click();
-
-    // Menu should close
-    const openButton = page.locator('button[aria-label="Open menu"]');
-    await expect(openButton).toBeVisible();
-  });
-
-  test("should have theme toggle accessible on mobile", async ({ page }) => {
-    // On mobile viewport, we should find a visible theme toggle button
-    // The mobile header shows theme toggle + hamburger menu
-    const themeToggle = page.locator('button[aria-label*="mode"]:visible');
-    await expect(themeToggle).toBeVisible();
+  test("keeps the theme toggle in the header", async ({ page }) => {
+    await expect(page.getByRole("banner").getByRole("button", { name: /^Theme:/ })).toBeVisible();
   });
 });

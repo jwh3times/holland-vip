@@ -23,30 +23,18 @@ test.describe("Homepage", () => {
     await expect(page.locator("#contact")).toBeVisible();
   });
 
-  test("should have working navigation links", async ({ page, isMobile }) => {
-    // On mobile, open the hamburger menu first
-    if (isMobile) {
-      const menuButton = page.locator('button[aria-label="Open menu"]');
-      if (await menuButton.isVisible()) {
-        await menuButton.click();
-      }
-    }
+  test("should have working navigation links", async ({ page }) => {
+    const nav = page.getByRole("navigation", { name: "Sections" });
 
-    // Click on About link (use visible link) and verify scroll
-    await page.locator('nav a[href="#about"]:visible').first().click();
+    await nav.locator('a[href="#about"]').click();
     await expect(page.locator("#about")).toBeInViewport();
 
-    // On mobile, reopen menu for next link
-    if (isMobile) {
-      const menuButton = page.locator('button[aria-label="Open menu"]');
-      if (await menuButton.isVisible()) {
-        await menuButton.click();
-      }
-    }
-
-    // Click on Contact link and verify scroll
-    await page.locator('nav a[href="#contact"]:visible').first().click();
+    await nav.locator('a[href="#contact"]').click();
     await expect(page.locator("#contact")).toBeInViewport();
+
+    // The header prompt returns to the hero.
+    await page.getByRole("banner").getByRole("link", { name: "jerry@holland.vip:~" }).click();
+    await expect(page.locator("h1")).toBeInViewport();
   });
 
   test("should have a working email link in contact section", async ({ page }) => {
@@ -60,26 +48,19 @@ test.describe("Homepage", () => {
     await expect(githubLink).toHaveAttribute("rel", /noopener/);
   });
 
-  // The surface each section renders on is derived from its position in the ordered
-  // list in app/page.tsx. Before that, each section hard-coded its own class and two
-  // adjacent ones (open-source and education) collided with nothing to catch it.
-  test("alternates section surfaces, with no two adjacent sections matching", async ({ page }) => {
-    const backgrounds = await page
-      .locator("main > section:not(.hero-section)")
-      .evaluateAll((sections) => sections.map((s) => getComputedStyle(s).backgroundColor));
+  // Each numbered section's number is derived from its position in the ordered list
+  // in app/page.tsx; no section sets its own, so the numbers always run 01, 02, … in
+  // page order with no gap.
+  test("numbers the body sections in page order, from 01 with no gap", async ({ page }) => {
+    const numbers = await page.getByTestId("section-number").allTextContents();
 
-    expect(backgrounds.length).toBeGreaterThan(1);
-    for (let i = 0; i < backgrounds.length - 1; i++) {
-      expect(
-        backgrounds[i],
-        `sections ${i} and ${i + 1} share a background (${backgrounds[i]})`
-      ).not.toBe(backgrounds[i + 1]);
-    }
+    expect(numbers.length).toBeGreaterThan(1);
+    expect(numbers).toEqual(numbers.map((_, i) => String(i + 1).padStart(2, "0")));
   });
 
-  test("every nav anchor resolves to a section that exists on the page", async ({ page }) => {
+  test("every header anchor resolves to a section that exists on the page", async ({ page }) => {
     const hrefs = await page
-      .locator("nav a[href^='#']")
+      .locator("header a[href^='#']")
       .evaluateAll((links) => Array.from(new Set(links.map((l) => l.getAttribute("href") ?? ""))));
 
     expect(hrefs.length).toBeGreaterThan(0);

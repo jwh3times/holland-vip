@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 
 import {
   Section,
-  surfaceAt,
+  numberAt,
   NAV_SECTION_IDS,
   SECTION_IDS,
   type SectionId,
@@ -27,45 +27,52 @@ describe("Section", () => {
     expect(withoutId.querySelector("section")).not.toHaveAttribute("id");
   });
 
-  it("maps the surface prop onto the two alternating background classes", () => {
-    const { container: a } = render(
-      <Section title="A" surface="surface">
+  it("prefixes the heading with the number it is given", () => {
+    render(
+      <Section title="Hobby projects" number="01">
         content
       </Section>
     );
-    expect(a.querySelector("section")).toHaveClass("section-surface");
+    // The number is visual ordinal, so the heading's accessible name stays the title.
+    const heading = screen.getByRole("heading", { level: 2, name: "Hobby projects" });
+    expect(within(heading).getByTestId("section-number")).toHaveTextContent("01");
+    expect(heading).toHaveTextContent(/^01\s*Hobby projects$/);
+  });
 
-    const { container: b } = render(
-      <Section title="B" surface="contrast">
+  it("renders no number when given none", () => {
+    render(<Section title="About Me">content</Section>);
+    expect(screen.queryByTestId("section-number")).not.toBeInTheDocument();
+  });
+
+  it("puts a heading accessory beside the heading, not inside it", () => {
+    render(
+      <Section title="Professional work" number="04" accessory={<span>private repos</span>}>
         content
       </Section>
     );
-    expect(b.querySelector("section")).toHaveClass("section-surface-contrast");
+    const heading = screen.getByRole("heading", { level: 2, name: "Professional work" });
+    expect(screen.getByText("private repos")).toBeInTheDocument();
+    expect(heading).not.toHaveTextContent("private repos");
   });
 
-  it("defaults to the base surface", () => {
-    const { container } = render(<Section title="A">content</Section>);
-    expect(container.querySelector("section")).toHaveClass("section-surface");
-  });
-
-  it("renders a subtitle between the heading and the content, tightening the heading margin", () => {
-    const { container } = render(
+  it("renders a subtitle between the heading and the content", () => {
+    render(
       <Section title="Open Source" subtitle="Pulled live from GitHub.">
         <p>body</p>
       </Section>
     );
-    expect(screen.getByText("Pulled live from GitHub.")).toBeInTheDocument();
-    expect(container.querySelector("h2")).toHaveClass("mb-4");
-  });
-
-  it("uses the roomier heading margin when there is no subtitle", () => {
-    const { container } = render(<Section title="Education">body</Section>);
-    expect(container.querySelector("h2")).toHaveClass("mb-12");
+    const subtitle = screen.getByText("Pulled live from GitHub.");
+    const body = screen.getByText("body");
+    expect(
+      screen.getByRole("heading").compareDocumentPosition(subtitle) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(subtitle.compareDocumentPosition(body) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it("switches the container width", () => {
     const { container: wide } = render(<Section title="A">body</Section>);
-    expect(wide.querySelector("section > div")).toHaveClass("max-w-7xl");
+    expect(wide.querySelector("section > div")).toHaveClass("max-w-[1240px]");
 
     const { container: narrow } = render(
       <Section title="B" width="narrow">
@@ -85,21 +92,10 @@ describe("Section", () => {
   });
 });
 
-describe("surfaceAt", () => {
-  it("alternates, starting on the base surface", () => {
-    expect([0, 1, 2, 3, 4].map(surfaceAt)).toEqual([
-      "surface",
-      "contrast",
-      "surface",
-      "contrast",
-      "surface",
-    ]);
-  });
-
-  it("never returns the same surface for adjacent positions", () => {
-    for (let i = 0; i < 20; i++) {
-      expect(surfaceAt(i)).not.toBe(surfaceAt(i + 1));
-    }
+describe("numberAt", () => {
+  it("numbers positions from 01, two digits wide", () => {
+    expect([0, 1, 2, 3].map(numberAt)).toEqual(["01", "02", "03", "04"]);
+    expect(numberAt(9)).toBe("10");
   });
 });
 
@@ -110,11 +106,14 @@ describe("section id registry", () => {
     }
   });
 
-  it("keeps education anchorable but deliberately out of the nav", () => {
+  it("keeps the hero and education anchorable but deliberately out of the nav", () => {
     // Regression guard: #education used to be an orphan anchor nothing linked to.
     // It is still not in the nav — but now that is a recorded decision, not an accident.
-    expect(SECTION_IDS).toContain("education");
-    expect(NAV_SECTION_IDS).not.toContain("education" as never);
+    // #top is the hero, which the header's prompt links to rather than a nav entry.
+    for (const id of ["top", "education"] as const) {
+      expect(SECTION_IDS).toContain(id);
+      expect(NAV_SECTION_IDS).not.toContain(id as never);
+    }
   });
 
   it("has no duplicate ids", () => {

@@ -99,9 +99,7 @@ test.describe("Accessibility", () => {
     // Wait for hydration to settle: the theme toggle renders an aria-hidden
     // placeholder during SSR and swaps to a real, aria-labelled button on mount.
     // Checking buttons mid-swap races that mutation, so anchor on the real button.
-    await expect(
-      page.getByRole("button", { name: /Activate (light|dark) mode/ }).first()
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: /^Theme:/ })).toBeVisible();
 
     // Snapshot every button's accessible name atomically in the browser so no
     // single check straddles a DOM mutation. A button is accessible if it has
