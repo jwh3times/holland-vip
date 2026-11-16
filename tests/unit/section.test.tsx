@@ -106,13 +106,16 @@ describe("section id registry", () => {
     }
   });
 
-  it("keeps the hero and education anchorable but deliberately out of the nav", () => {
-    // Regression guard: #education used to be an orphan anchor nothing linked to.
-    // It is still not in the nav — but now that is a recorded decision, not an accident.
+  it("keeps the hero anchorable but deliberately out of the nav", () => {
     // #top is the hero, which the header's prompt links to rather than a nav entry.
-    for (const id of ["top", "education"] as const) {
-      expect(SECTION_IDS).toContain(id);
-      expect(NAV_SECTION_IDS).not.toContain(id as never);
+    expect(SECTION_IDS).toContain("top");
+    expect(NAV_SECTION_IDS).not.toContain("top" as never);
+  });
+
+  it("anchors Career & stack in place of the sections it replaced", () => {
+    expect(NAV_SECTION_IDS).toContain("career");
+    for (const id of ["skills", "experience", "education"]) {
+      expect(SECTION_IDS).not.toContain(id as never);
     }
   });
 

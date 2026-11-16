@@ -14,6 +14,10 @@ const WCAG_AA_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
  * hydration cancels rejects, which counts as settled too.
  */
 async function settle(page: Page) {
+  // Sections use `content-visibility: auto`, so off-screen ones are not laid out or painted, and
+  // their animations never advance. Render them all, as a reader scrolling the page would, so
+  // axe measures real colours and the animations below can finish.
+  await page.addStyleTag({ content: "section { content-visibility: visible !important; }" });
   await page.evaluate(() =>
     Promise.all(
       document

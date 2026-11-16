@@ -1,11 +1,9 @@
 // Section components barrel export
 export { HeroSection } from "./HeroSection";
 export { AboutSection } from "./AboutSection";
-export { SkillsSection } from "./SkillsSection";
+export { CareerSection } from "./CareerSection";
 export { TechnicalCapabilities } from "./TechnicalCapabilities";
 export { ProblemSolving } from "./ProblemSolving";
-export { ExperienceSection } from "./ExperienceSection";
 export { ProjectsSection } from "./ProjectsSection";
 export { OpenSourceSection } from "./OpenSourceSection";
-export { EducationSection } from "./EducationSection";
 export { ContactSection } from "./ContactSection";

@@ -21,25 +21,18 @@ import { cn } from "@/lib/utils";
  * Sections reachable from the nav. `Navigation` maps over this, so every entry
  * must have a label and every nav link provably points at a real section.
  */
-export const NAV_SECTION_IDS = [
-  "about",
-  "skills",
-  "experience",
-  "projects",
-  "open-source",
-  "contact",
-] as const;
+export const NAV_SECTION_IDS = ["about", "career", "projects", "open-source", "contact"] as const;
 
 export type NavSectionId = (typeof NAV_SECTION_IDS)[number];
 
 /**
  * Every anchorable section id. A superset of {@link NAV_SECTION_IDS}: `top` (the
- * hero, which the header's prompt links to) and `education` are deep-linkable
- * but deliberately not nav entries. Adding an id here without adding it to
- * `NAV_SECTION_IDS` is a choice, not an accident — before this module existed,
- * `#education` was an orphan nothing linked to and nothing caught.
+ * hero, which the header's prompt links to) is deep-linkable but deliberately
+ * not a nav entry. Adding an id here without adding it to `NAV_SECTION_IDS` is
+ * a choice, not an accident — before this module existed, `#education` was an
+ * orphan nothing linked to and nothing caught.
  */
-export const SECTION_IDS = [...NAV_SECTION_IDS, "top", "education"] as const;
+export const SECTION_IDS = [...NAV_SECTION_IDS, "top"] as const;
 
 export type SectionId = (typeof SECTION_IDS)[number];
 
@@ -85,7 +78,14 @@ export function Section({
   width = "wide",
 }: SectionProps) {
   return (
-    <section {...(id ? { id } : {})} className="py-14">
+    // `content-visibility: auto` lets the browser skip layout and paint for a section until it
+    // nears the viewport, which keeps first-load main-thread work inside the Lighthouse TBT
+    // budget. The content stays in the accessibility tree and find-in-page; the 900px estimate
+    // holds the scrollbar steady until a section has been rendered once.
+    <section
+      {...(id ? { id } : {})}
+      className="py-14 [contain-intrinsic-size:auto_900px] [content-visibility:auto]"
+    >
       <div
         className={cn(
           "mx-auto px-[clamp(16px,4vw,40px)]",

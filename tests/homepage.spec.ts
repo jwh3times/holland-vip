@@ -17,8 +17,7 @@ test.describe("Homepage", () => {
   test("should display all main sections", async ({ page }) => {
     // Check for all section headings
     await expect(page.locator("#about")).toBeVisible();
-    await expect(page.locator("#skills")).toBeVisible();
-    await expect(page.locator("#experience")).toBeVisible();
+    await expect(page.locator("#career")).toBeVisible();
     await expect(page.locator("#projects")).toBeVisible();
     await expect(page.locator("#contact")).toBeVisible();
   });

@@ -59,23 +59,9 @@ describe("OpenSourceSection", () => {
     expect(screen.getByTestId("section-number")).toHaveTextContent("06");
   });
 
-  it("renders the contribution heatmap only when contributions are provided", () => {
-    const { rerender } = render(<OpenSourceSection number="01" repos={repos} />);
-    expect(screen.queryByText("Contribution activity")).not.toBeInTheDocument();
-
-    rerender(
-      <OpenSourceSection
-        number="01"
-        repos={repos}
-        contributions={{
-          totalContributions: 42,
-          weeks: [[{ date: "2026-06-14", count: 3, level: 1 }]],
-        }}
-      />
-    );
-    expect(screen.getByText("Contribution activity")).toBeInTheDocument();
-    expect(
-      screen.getByRole("img", { name: /42 contributions in the last year/i })
-    ).toBeInTheDocument();
+  // The heatmap moved to Career & stack; see career.test.tsx.
+  it("no longer carries the contribution heatmap", () => {
+    render(<OpenSourceSection number="01" repos={repos} />);
+    expect(screen.queryByRole("img", { name: /contributions/ })).not.toBeInTheDocument();
   });
 });

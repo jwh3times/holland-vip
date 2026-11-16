@@ -33,18 +33,38 @@ grid cell as the typed text, holds the finished height at every width on top of 
 typing never shifts the page. Under reduced motion it renders fully typed with no blink. The window
 is `aria-hidden`, and the hero carries a visually hidden summary from content in its place.
 
+Career & stack (`#career`) replaced the Experience, Skills and Education sections. Each Experience
+stores its `start` and `end` as a year and month, `end` being `null` for the current role, and
+`lib/role-dates.ts` derives the period label, the `Ny` / `Nmo` duration and the timeline bar from
+those dates and the build date, so the three can never disagree. The timeline axis runs from January
+2013 to the build date plus 0.1 year, with gridlines at odd years. `CareerSection` derives all of
+this on the server and hands it to `components/career-log.tsx`, the section's one client component,
+which holds the timeline and the `git log` and their shared open role. A timeline row opens its role
+in the log, a log row toggles its own, and the current role starts open. Both are native buttons,
+so Enter and Space work, and the log's collapsed highlights stay in the DOM as `hidden` so each
+`aria-controls` target always exists. Education is the log's one-line root. The `skills.json`
+inventory, the Agent Skills panel, Current Explorations and the Contribution Activity heatmap are
+server-rendered beside and below it. The heatmap keeps a 640px minimum width and, on a narrow
+screen, scrolls sideways inside a focusable region. `components/ui/panel.tsx` is the design's
+bordered "window" with a shell-prompt header row.
+
 Portfolio prose lives in typed modules under `content/`. Section components import and render
 those records, which keeps a resume edit independent from layout code. Contact identity and social
 URLs live in `lib/site-config.ts`; metadata lives in `app/layout.tsx`. The homepage emits a static
 schema.org `Person` and `WebSite` graph from that shared identity configuration in `app/page.tsx`.
 
-The portfolio intentionally has no notes or blog section. `Currently exploring` communicates
+The portfolio intentionally has no notes or blog section. The Current Explorations communicate
 active learning without implying a publication cadence, and a stale, sparsely maintained blog
 would weaken that signal. Reconsider a publishing section only when the owner wants one and can
 sustain a defined cadence.
 
 `components/ui/section.tsx` owns the section shell, vertical rhythm, the heading row (the mono
-number, the `h2`, and an optional right-aligned accessory), and the typed anchor registry.
+number, the `h2`, and an optional right-aligned accessory), and the typed anchor registry. Every
+section it renders carries `content-visibility: auto` with a 900px intrinsic-size estimate, so the
+browser skips layout and paint for sections far below the fold. That keeps first-load main-thread
+work inside the Lighthouse TBT budget, and the content stays in the accessibility tree and
+find-in-page. Because skipped sections are not painted and their animations do not advance, the axe
+spec renders every section before it scans.
 `SECTION_IDS` lists anchorable sections and `NAV_SECTION_IDS` selects the navigable subset.
 Navigation labels form a total record over that subset so missing or invented links fail to
 compile. `components/Navigation.tsx` is the sticky 52px header: a shell prompt, built from the
@@ -75,16 +95,21 @@ Components compose classes with `cn()` from `lib/utils.ts`. `app/globals.css` al
 project-specific utility classes:
 
 - Text hierarchy: `text-heading`, `text-body`, `text-label`, `text-muted`
-- Card surfaces: `card-bg-white`, `card-bg-white-transparent`, `card-bg-white-80`, `bento-card-bg`
-- Decorative treatments: `gradient-text`, `glass` (the header's frosted bar)
-- Animation: `animate-blink` (the hero terminal's cursor) and `animate-status-pulse` (the hero's
-  status dot), each switched off under reduced motion by its caller
+- Card surfaces: `card-bg-white`, `bento-card-bg`
+- Decorative treatments: `gradient-text`, `glass` (the header's frosted bar), `heatmap` (the
+  contribution grid's cells, filled by `data-level`)
+- Animation: `animate-blink` (the hero terminal's cursor), `animate-status-pulse` (the hero's
+  status dot) and `animate-rise` (an opened career log role's highlights), each switched off under
+  reduced motion by its caller
 
 The four accent names and every associated token live in `lib/accent.ts`. Each token reads the
 accent's `--a-*` variable, with tinted fills written as `color-mix(in oklch, var(--a-X) N%,
-transparent)` at the design's four steps: 12% (chip), 14% (bar), 30% (hover) and 55% (border glow).
-`Badge` and `Card` consume that table; callers name an accent rather than rebuilding background,
-border, and text class combinations.
+transparent)` at the design's four steps: 12% (chip), 14% (bar), 30% (hover) and 55% (border glow),
+plus 70% for a selected timeline bar's shadow. The contribution heatmap's green ramp, from the
+empty `--heat0` cell to the full accent, is the `.heatmap` rule in `app/globals.css`, keyed by each
+cell's `data-level`, so its ~370 cells carry no class strings. `Badge` and `Card` consume
+that table; callers name an accent rather than rebuilding background, border, and text class
+combinations.
 
 Type is Geist for UI text and Geist Mono for labels and terminal text, both from the `geist` package
 and served through `next/font/local` (`app/fonts.ts`). They are self-hosted under

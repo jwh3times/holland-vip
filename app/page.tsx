@@ -6,13 +6,11 @@ import { Footer } from "@/components/Footer";
 import {
   HeroSection,
   AboutSection,
-  SkillsSection,
+  CareerSection,
   TechnicalCapabilities,
   ProblemSolving,
-  ExperienceSection,
   ProjectsSection,
   OpenSourceSection,
-  EducationSection,
   ContactSection,
 } from "@/components/sections";
 import { numberAt } from "@/components/ui/section";
@@ -75,22 +73,21 @@ export default async function Home() {
   // nothing below them is left with a gap.
   const numberedSections: { key: string; render: (number: string) => React.ReactNode }[] = [
     { key: "about", render: (number) => <AboutSection number={number} /> },
-    { key: "skills", render: (number) => <SkillsSection number={number} /> },
+    {
+      key: "career",
+      render: (number) => <CareerSection number={number} contributions={contributions} />,
+    },
     { key: "capabilities", render: (number) => <TechnicalCapabilities number={number} /> },
     { key: "problem-solving", render: (number) => <ProblemSolving number={number} /> },
-    { key: "experience", render: (number) => <ExperienceSection number={number} /> },
     { key: "projects", render: (number) => <ProjectsSection number={number} /> },
     ...(repos.length > 0
       ? [
           {
             key: "open-source",
-            render: (number: string) => (
-              <OpenSourceSection number={number} repos={repos} contributions={contributions} />
-            ),
+            render: (number: string) => <OpenSourceSection number={number} repos={repos} />,
           },
         ]
       : []),
-    { key: "education", render: (number) => <EducationSection number={number} /> },
     { key: "contact", render: (number) => <ContactSection number={number} /> },
   ];
 

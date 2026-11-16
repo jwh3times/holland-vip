@@ -23,7 +23,6 @@ describe("Navigation", () => {
     );
     expect(links.map((link) => link.textContent)).toEqual([
       "about.md",
-      "skills.json",
       "career.log",
       "work/",
       "open-source/",

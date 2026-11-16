@@ -82,6 +82,5 @@ rather than as a project itself. It counts contributions of every kind, not comm
 _Avoid_: Commits, hobby project, experience
 
 **Education**:
-Jerry's formal university degrees and the academic focus or leadership highlights associated with
-them.
+Jerry's formal university degrees: the school, the degrees and the year he graduated.
 _Avoid_: Training, certification

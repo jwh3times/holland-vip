@@ -10,8 +10,7 @@ import { siteConfig } from "@/lib/site-config";
  */
 const navLabels: Record<NavSectionId, string> = {
   about: "about.md",
-  skills: "skills.json",
-  experience: "career.log",
+  career: "career.log",
   projects: "work/",
   "open-source": "open-source/",
   contact: "contact.sh",

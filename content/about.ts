@@ -14,7 +14,8 @@ export interface TechnicalAchievement {
   items: string[];
 }
 
-export interface ExploringTag {
+/** A Current Exploration: something being learned now, not claimed as expertise. */
+export interface CurrentExploration {
   label: string;
   accent: Accent;
 }
@@ -85,12 +86,12 @@ export const technicalAchievements: TechnicalAchievement[] = [
 
 export const achievementsHeading = "Recent Technical Achievements";
 
-export const exploringHeading = "Currently exploring";
-
-/** A few things I'm currently digging into — edit this list freely. */
-export const exploringTags: ExploringTag[] = [
-  { label: "Agentic AI dev workflows", accent: "blue" },
-  { label: "Kubernetes / AKS", accent: "purple" },
-  { label: "Next.js & RSC", accent: "green" },
-  { label: "Go", accent: "orange" },
+/** Current Explorations, shown as `[~]` chips in Career & stack. Edit this list freely. */
+export const currentExplorations: CurrentExploration[] = [
+  { label: "Multi-agent workflows · Claude Code · Codex · MCP", accent: "purple" },
+  { label: "Spec-driven development", accent: "blue" },
+  { label: "AI authorship provenance in VCS", accent: "green" },
+  { label: "Rust native tooling", accent: "orange" },
+  { label: "Edge-native apps on Cloudflare", accent: "blue" },
+  { label: "Quant backtesting", accent: "green" },
 ];
