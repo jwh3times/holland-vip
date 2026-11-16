@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import {
-  HeroSection,
   AboutSection,
   SkillsSection,
   TechnicalCapabilities,
@@ -14,7 +13,6 @@ import {
 
 // These assertions read from the content modules rather than restating their
 // strings. Before the content seam existed, editing the resume broke this file.
-import { hero } from "@/content/hero";
 import { careerHighlights, exploringTags, exploringHeading } from "@/content/about";
 import { skillCategories } from "@/content/skills";
 import { capabilities } from "@/content/capabilities";
@@ -25,17 +23,8 @@ import { education } from "@/content/education";
 import { contact } from "@/content/contact";
 import { siteConfig } from "@/lib/site-config";
 
+// The hero and its terminal are covered in hero.test.tsx.
 describe("section components", () => {
-  it("Hero renders the headline and social links", () => {
-    render(<HeroSection />);
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(hero.name);
-    expect(screen.getByLabelText("GitHub")).toBeInTheDocument();
-    expect(screen.getByLabelText("LinkedIn")).toBeInTheDocument();
-    for (const cta of hero.ctas) {
-      expect(screen.getByRole("link", { name: cta.label })).toHaveAttribute("href", cta.href);
-    }
-  });
-
   it("About renders every career highlight and exploring tag", () => {
     render(<AboutSection number="01" />);
     expect(screen.getByRole("heading", { name: "About Me" })).toBeInTheDocument();

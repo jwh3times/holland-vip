@@ -141,9 +141,10 @@ describe("Home page", () => {
     ]);
   });
 
-  it("links every header anchor to a section rendered on the page", async () => {
+  // The header's nav and prompt, and the hero's two buttons.
+  it("links every in-page anchor to a section rendered on the page", async () => {
     const { container } = await renderPage();
-    const hrefs = [...container.querySelectorAll('header a[href^="#"]')].map((link) =>
+    const hrefs = [...container.querySelectorAll('a[href^="#"]')].map((link) =>
       link.getAttribute("href")
     );
 
@@ -151,5 +152,22 @@ describe("Home page", () => {
     for (const href of hrefs) {
       expect(container.querySelector(`section${href}`), `no section for ${href}`).not.toBeNull();
     }
+  });
+
+  it("counts the hero's contribution stats from the build-time calendar", async () => {
+    vi.mocked(getContributionsWithSource).mockResolvedValue({
+      data: {
+        totalContributions: 4321,
+        weeks: [[{ date: "2026-11-15", count: 7, level: 2 }]],
+      },
+      source: "fallback",
+    });
+    await renderPage();
+
+    const hero = within(screen.getByRole("heading", { level: 1 }).closest("section")!);
+    expect(hero.getByText("contributions / 12mo").previousElementSibling).toHaveTextContent(
+      "4,321"
+    );
+    expect(hero.getByText("contributions / 30d").previousElementSibling).toHaveTextContent("7");
   });
 });

@@ -1,56 +1,99 @@
-import { Cta } from "@/components/ui/cta";
+import type * as React from "react";
+
+import { HeroTerminal } from "@/components/hero-terminal";
 import type { SectionId } from "@/components/ui/section";
 import { hero } from "@/content/hero";
-import { socialLinks } from "@/lib/site-config";
+import type { ContributionCalendar } from "@/lib/github-contributions";
+import { yearsOfExperience } from "@/lib/site-config";
+import { cn } from "@/lib/utils";
 
-export function HeroSection() {
+export interface HeroSectionProps {
+  /** The build-time contribution calendar, live or snapshot; the stats are counted from it. */
+  contributions: ContributionCalendar;
+}
+
+const formatCount = (n: number) => n.toLocaleString("en-US");
+
+/**
+ * The two contribution stats. An empty calendar (a malformed snapshot degrades to one)
+ * shows a dash rather than claiming zero activity.
+ */
+function contributionStats({ totalContributions, weeks }: ContributionCalendar) {
+  const days = weeks.flat();
+  if (days.length === 0) return { year: "—", month: "—" };
+  const lastThirty = days.slice(-30).reduce((sum, day) => sum + day.count, 0);
+  return { year: formatCount(totalContributions), month: formatCount(lastThirty) };
+}
+
+function Stat({ value, label }: { value: React.ReactNode; label: string }) {
+  return (
+    <div>
+      <div className="text-[28px] font-semibold text-fg">{value}</div>
+      <div className="mt-1 text-xs text-mute">{label}</div>
+    </div>
+  );
+}
+
+const ctaBase =
+  "rounded-lg px-[18px] py-3 font-mono text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-a-blue";
+
+/**
+ * The page's opening screen. Server-rendered, so the h1 and stats are in the static HTML;
+ * only the terminal window is a client component.
+ */
+export function HeroSection({ contributions }: HeroSectionProps) {
   const [primary, secondary] = hero.ctas;
+  const counts = contributionStats(contributions);
 
   return (
     <section
       id={"top" satisfies SectionId}
-      className="relative overflow-hidden hero-section transition-colors duration-300"
+      className="mx-auto grid max-w-[1240px] grid-cols-[repeat(auto-fit,minmax(min(100%,460px),1fr))] items-center gap-12 px-[clamp(16px,4vw,40px)] pt-[clamp(48px,8vw,96px)] pb-14"
     >
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSA2MCAwIEwgMCAwIDAgNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgwLDAsMCwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-50 dark:opacity-20"></div>
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
-        <div className="text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fadeInUp text-heading">
-            {hero.greeting} <span className="gradient-text">{hero.name}</span>
-          </h1>
-          <p className="text-2xl md:text-3xl text-heading mb-6 animate-fadeInUp font-semibold">
-            {hero.tagline}
-          </p>
-          <p className="text-lg md:text-xl text-muted max-w-3xl mx-auto mb-10 animate-fadeInUp leading-relaxed">
-            {hero.blurb}
-          </p>
-
-          {/* Social Links */}
-          <div className="flex gap-8 justify-center mb-12 animate-fadeInUp">
-            {socialLinks.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-125 transform"
-                aria-label={social.label}
-              >
-                <social.icon className="w-10 h-10" />
-              </a>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap gap-4 justify-center animate-fadeInUp">
-            <Cta href={primary.href} size="lg">
-              {primary.label}
-            </Cta>
-            <Cta href={secondary.href} variant="secondary" size="lg">
-              {secondary.label}
-            </Cta>
-          </div>
+      <div className="min-w-0">
+        <div className="mb-6 flex items-center gap-2 font-mono text-[13px] text-mute">
+          <span
+            aria-hidden="true"
+            className="h-[7px] w-[7px] rounded-full bg-a-green animate-status-pulse motion-reduce:animate-none"
+          />
+          {hero.status}
+        </div>
+        <h1 className="mb-6 text-[clamp(48px,7vw,88px)] leading-[0.95] font-bold tracking-[-0.04em] text-balance text-fg">
+          {hero.name}
+          <span aria-hidden="true" className="text-a-green">
+            _
+          </span>
+        </h1>
+        <p className="mb-8 max-w-[540px] text-[clamp(18px,1.6vw,21px)] leading-normal text-pretty text-mute">
+          {hero.lead}
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <a href={primary.href} className={cn(ctaBase, "bg-fg text-bg hover:opacity-85")}>
+            {primary.label}
+          </a>
+          <a
+            href={secondary.href}
+            className={cn(ctaBase, "border border-line2 text-fg hover:bg-panel2")}
+          >
+            {secondary.label}
+          </a>
+        </div>
+        <div className="mt-12 grid grid-cols-[repeat(3,auto)] justify-start gap-8 font-mono">
+          <Stat
+            value={
+              <>
+                {yearsOfExperience}
+                <span className="text-base text-dim">y</span>
+              </>
+            }
+            label={hero.stats.years}
+          />
+          <Stat value={counts.year} label={hero.stats.contributionsYear} />
+          <Stat value={counts.month} label={hero.stats.contributionsMonth} />
         </div>
       </div>
+      <p className="sr-only">{hero.terminal.summary}</p>
+      <HeroTerminal title={hero.terminal.title} script={hero.terminal.script} />
     </section>
   );
 }

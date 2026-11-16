@@ -26,6 +26,7 @@
   --color-heat0: var(--heat0);
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --shadow-terminal: 0 30px 80px -30px rgb(0 0 0 / 0.5);
 }
 
 @layer base {
@@ -55,7 +56,6 @@
     --background: var(--bg);
     --foreground: var(--fg);
     --muted: var(--panel);
-    --hero-background: linear-gradient(var(--bg), var(--bg));
     --card-blue: color-mix(in oklch, var(--a-blue) 12%, transparent);
     --card-green: color-mix(in oklch, var(--a-green) 12%, transparent);
     --card-purple: color-mix(in oklch, var(--a-purple) 12%, transparent);
@@ -101,14 +101,6 @@
   }
 }
 
-.hero-section {
-  background-image: var(--hero-background);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  transition: background-image 0.4s ease;
-}
-
 @layer utilities {
   .text-heading {
     color: var(--heading-text);
@@ -143,20 +135,30 @@
   }
 }
 
-/* Custom animations */
-@keyframes fadeInUp {
-  from {
+/* The hero's terminal cursor, and its pulsing status dot. Both are switched off under
+   reduced motion by the components that use them. */
+@keyframes blink {
+  50% {
     opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 
-.animate-fadeInUp {
-  animation: fadeInUp 0.6s ease-out;
+.animate-blink {
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes status-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.animate-status-pulse {
+  animation: status-pulse 2s infinite;
 }
 
 /* Gradient text */

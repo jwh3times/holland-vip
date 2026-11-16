@@ -82,7 +82,6 @@ const ROLLOUT_ALIASES = [
   "--background",
   "--foreground",
   "--muted",
-  "--hero-background",
   "--card-blue",
   "--card-green",
   "--card-purple",

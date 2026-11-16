@@ -22,6 +22,17 @@ its position, after optional sections have been filtered, so a missing section l
 Sections receive their number as a prop and never choose it. Every body section is numbered, and
 every section sits on `--bg`: there are no alternating section surfaces.
 
+The hero (`#top`) is a server component, so its h1 and stats are in the static HTML. It receives the
+build-time contribution calendar from the page and counts its stats from it: the calendar's total
+for "contributions / 12mo" and the sum of its last 30 days for "contributions / 30d", whichever
+source supplied it, with a dash when the calendar is empty. Its terminal window,
+`components/hero-terminal.tsx`, is the only client part. It types the script from
+`content/hero.ts` and keeps a live clock. The clock and the typed text render empty on the server
+and through hydration, so neither can mismatch. An invisible copy of the full script, in the same
+grid cell as the typed text, holds the finished height at every width on top of the 340px floor, so
+typing never shifts the page. Under reduced motion it renders fully typed with no blink. The window
+is `aria-hidden`, and the hero carries a visually hidden summary from content in its place.
+
 Portfolio prose lives in typed modules under `content/`. Section components import and render
 those records, which keeps a resume edit independent from layout code. Contact identity and social
 URLs live in `lib/site-config.ts`; metadata lives in `app/layout.tsx`. The homepage emits a static
@@ -64,9 +75,9 @@ project-specific utility classes:
 
 - Text hierarchy: `text-heading`, `text-body`, `text-label`, `text-muted`
 - Card surfaces: `card-bg-white`, `card-bg-white-transparent`, `card-bg-white-80`, `bento-card-bg`
-- Hero surface: `hero-section`
 - Decorative treatments: `gradient-text`, `glass` (the header's frosted bar)
-- Animation: `animate-fadeInUp`
+- Animation: `animate-blink` (the hero terminal's cursor) and `animate-status-pulse` (the hero's
+  status dot), each switched off under reduced motion by its caller
 
 The four accent names and every associated token live in `lib/accent.ts`. Each token reads the
 accent's `--a-*` variable, with tinted fills written as `color-mix(in oklch, var(--a-X) N%,
