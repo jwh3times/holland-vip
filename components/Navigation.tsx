@@ -1,5 +1,6 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import { NAV_SECTION_IDS, type NavSectionId } from "@/components/ui/section";
+import { siteConfig } from "@/lib/site-config";
 
 /**
  * Nav label for each linkable section, styled as a path in the prompt's working
@@ -19,9 +20,10 @@ const navLabels: Record<NavSectionId, string> = {
 const navLinks = NAV_SECTION_IDS.map((id) => ({ href: `#${id}`, label: navLabels[id] }));
 
 /**
- * The sticky 52px header: a shell prompt linking to the top of the page, the
- * section links, and the theme toggle. On a narrow screen the link row scrolls
- * sideways instead of collapsing into a menu, so every link stays one tap away.
+ * The sticky 52px header: a shell prompt (the contact address, read as
+ * `user@host`) linking to the top of the page, the section links, and the theme
+ * toggle. On a narrow screen the link row scrolls sideways instead of collapsing
+ * into a menu, so every link stays one tap away.
  */
 export function Navigation() {
   return (
@@ -32,9 +34,10 @@ export function Navigation() {
           className="flex items-center gap-2.5 whitespace-nowrap font-semibold text-fg"
         >
           <span aria-hidden="true" className="h-2 w-2 rounded-[2px] bg-a-green" />
-          {/* One flex item, so the accessible name reads "jerry@holland.vip:~" unbroken. */}
+          {/* One flex item, so the accessible name reads "<email>:~" unbroken. */}
           <span>
-            jerry@holland.vip<span className="text-dim">:~</span>
+            {siteConfig.email}
+            <span className="text-dim">:~</span>
           </span>
         </a>
         <nav aria-label="Sections" className="flex min-w-0 flex-1 gap-0.5 overflow-x-auto">

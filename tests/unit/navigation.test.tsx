@@ -2,12 +2,13 @@ import { describe, it, expect } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import { Navigation } from "@/components/Navigation";
 import { NAV_SECTION_IDS } from "@/components/ui/section";
+import { siteConfig } from "@/lib/site-config";
 
 describe("Navigation", () => {
   it("is a banner whose shell prompt links back to the top of the page", () => {
     render(<Navigation />);
     const banner = screen.getByRole("banner");
-    expect(within(banner).getByRole("link", { name: "jerry@holland.vip:~" })).toHaveAttribute(
+    expect(within(banner).getByRole("link", { name: `${siteConfig.email}:~` })).toHaveAttribute(
       "href",
       "#top"
     );

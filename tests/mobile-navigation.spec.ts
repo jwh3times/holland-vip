@@ -20,9 +20,12 @@ test.describe("Mobile Navigation", () => {
     expect(scrollWidth).toBeGreaterThan(clientWidth);
     expect(overflowX).toBe("auto");
 
-    // The header stays one 52px row.
-    const header = await page.getByRole("banner").boundingBox();
-    expect(Math.round(header!.height)).toBe(53); // 52px row + 1px bottom rule
+    // The header stays a single row: the links never wrap beneath the prompt.
+    const [prompt, last] = await Promise.all([
+      page.getByRole("banner").getByRole("link", { name: /:~$/ }).boundingBox(),
+      nav.getByRole("link").last().boundingBox(),
+    ]);
+    expect(Math.abs(prompt!.y + prompt!.height / 2 - (last!.y + last!.height / 2))).toBeLessThan(4);
   });
 
   test("reaches the last link by scrolling the row, and it navigates", async ({ page }) => {

@@ -16,11 +16,13 @@ assets live in `public/` and are referenced from application code with root path
 
 ## Page composition and content
 
-`app/page.tsx` composes the single-page portfolio. Hero, About and Contact are unnumbered; the
-sections between them are an ordered list, and `numberAt(index)` derives each one's `01`, `02`, …
-number from its position, after optional sections have been filtered, so a missing section leaves
-no gap. Sections receive their number as a prop and never choose it. The alternating section
-surfaces this replaced are retired: every section sits on `--bg`.
+`app/page.tsx` composes the single-page portfolio. Hero renders first and unnumbered; the remaining
+sections are an ordered list, and `numberAt(index)` derives each one's `01`, `02`, … number from
+its position, after optional sections have been filtered, so a missing section leaves no gap.
+Sections receive their number as a prop and never choose it. During the Terminal redesign every
+body section is numbered until a later slice replaces it; the finished page leaves About and
+Contact unnumbered. The alternating section surfaces this replaced are retired: every section sits
+on `--bg`.
 
 Portfolio prose lives in typed modules under `content/`. Section components import and render
 those records, which keeps a resume edit independent from layout code. Contact identity and social
@@ -33,12 +35,13 @@ would weaken that signal. Reconsider a publishing section only when the owner wa
 sustain a defined cadence.
 
 `components/ui/section.tsx` owns the section shell, vertical rhythm, the heading row (the mono
-number, the `h2`, and an optional right-aligned accessory), and the typed anchor registry. `SECTION_IDS` lists anchorable sections and `NAV_SECTION_IDS` selects the
-navigable subset. Navigation labels form a total record over that subset so missing or invented
-links fail to compile. `components/Navigation.tsx` is the sticky 52px header: a shell prompt linking
-to the hero's `#top`, the section links as a row that scrolls sideways on narrow screens rather
-than collapsing into a menu, and the theme toggle. It holds no state, so it stays a server
-component.
+number, the `h2`, and an optional right-aligned accessory), and the typed anchor registry.
+`SECTION_IDS` lists anchorable sections and `NAV_SECTION_IDS` selects the navigable subset.
+Navigation labels form a total record over that subset so missing or invented links fail to
+compile. `components/Navigation.tsx` is the sticky 52px header: a shell prompt, built from the
+contact address in `lib/site-config.ts`, linking to the hero's `#top`; the section links, as a row
+that scrolls sideways on narrow screens rather than collapsing into a menu; and the theme toggle.
+It holds no state, so it stays a server component.
 
 ## UI vocabulary
 

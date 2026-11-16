@@ -7,7 +7,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 // choice ("system" when there is none); `resolvedTheme` is what is painted.
 const themeState = vi.hoisted(() => ({
   theme: "system" as string | undefined,
-  resolvedTheme: "dark",
+  resolvedTheme: "dark" as string | undefined,
   setTheme: vi.fn(),
 }));
 
@@ -19,7 +19,7 @@ vi.mock("next-themes", () => ({
   }),
 }));
 
-function renderAt(theme: string | undefined, resolvedTheme: string) {
+function renderAt(theme: string | undefined, resolvedTheme: string | undefined) {
   themeState.theme = theme;
   themeState.resolvedTheme = resolvedTheme;
   render(<ModeToggle />);
@@ -35,6 +35,8 @@ describe("ModeToggle", () => {
     // stored choice, OS-resolved theme, visible label, accessible name, next choice
     ["system", "dark", "◒ auto", "Theme: auto (dark). Switch to dark.", "dark"],
     ["system", "light", "◒ auto", "Theme: auto (light). Switch to dark.", "dark"],
+    // Before next-themes has read the OS scheme, auto names no resolved theme.
+    ["system", undefined, "◒ auto", "Theme: auto. Switch to dark.", "dark"],
     ["dark", "dark", "◐ dark", "Theme: dark. Switch to light.", "light"],
     ["light", "light", "◑ light", "Theme: light. Switch to auto.", "system"],
   ])("at %s (%s) shows %s, names %s, and moves to %s", (theme, resolved, label, name, next) => {

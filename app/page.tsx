@@ -65,14 +65,16 @@ export default async function Home() {
   const githubDataSource =
     repoResult.source === "live" && contributionResult.source === "live" ? "live" : "fallback";
 
-  // The page's numbered body sections, in order. Hero, About and Contact sit
-  // outside: they carry no number.
+  // The page's numbered body sections, in order. Hero sits outside: it carries
+  // no number. Until the redesign's later slices replace them, every other
+  // section is numbered.
   //
   // This list is the single place section order lives, and each section's number
   // is derived from its position here — a section never picks its own. Sections
   // that don't render are dropped from the list *before* numbers are assigned, so
   // nothing below them is left with a gap.
   const numberedSections: { key: string; render: (number: string) => React.ReactNode }[] = [
+    { key: "about", render: (number) => <AboutSection number={number} /> },
     { key: "skills", render: (number) => <SkillsSection number={number} /> },
     { key: "capabilities", render: (number) => <TechnicalCapabilities number={number} /> },
     { key: "problem-solving", render: (number) => <ProblemSolving number={number} /> },
@@ -89,6 +91,7 @@ export default async function Home() {
         ]
       : []),
     { key: "education", render: (number) => <EducationSection number={number} /> },
+    { key: "contact", render: (number) => <ContactSection number={number} /> },
   ];
 
   return (
@@ -106,11 +109,9 @@ export default async function Home() {
         data-github-data-source={githubDataSource}
       >
         <HeroSection />
-        <AboutSection />
         {numberedSections.map(({ key, render }, index) => (
           <React.Fragment key={key}>{render(numberAt(index))}</React.Fragment>
         ))}
-        <ContactSection />
       </main>
 
       <Footer />

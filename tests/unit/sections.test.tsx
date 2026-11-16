@@ -37,7 +37,7 @@ describe("section components", () => {
   });
 
   it("About renders every career highlight and exploring tag", () => {
-    render(<AboutSection />);
+    render(<AboutSection number="01" />);
     expect(screen.getByRole("heading", { name: "About Me" })).toBeInTheDocument();
     expect(screen.getByText(exploringHeading)).toBeInTheDocument();
     for (const highlight of careerHighlights) {
@@ -113,19 +113,21 @@ describe("section components", () => {
 
   // The page numbers sections by position; a section only forwards what it is handed.
   it.each([
+    ["About", AboutSection],
     ["Skills", SkillsSection],
     ["Technical Capabilities", TechnicalCapabilities],
     ["Problem Solving", ProblemSolving],
     ["Experience", ExperienceSection],
     ["Projects", ProjectsSection],
     ["Education", EducationSection],
+    ["Contact", ContactSection],
   ])("%s shows the number it is given rather than choosing one", (_, NumberedSection) => {
     render(<NumberedSection number="07" />);
     expect(screen.getByTestId("section-number")).toHaveTextContent("07");
   });
 
   it("Contact renders the email link", () => {
-    render(<ContactSection />);
+    render(<ContactSection number="01" />);
     expect(screen.getByRole("heading", { name: "Get In Touch" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: contact.ctaLabel })).toHaveAttribute(
       "href",

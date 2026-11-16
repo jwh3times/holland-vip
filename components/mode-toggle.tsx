@@ -13,8 +13,12 @@ const emptySubscribe = () => () => {};
 const CHOICES = ["system", "dark", "light"] as const;
 type Choice = (typeof CHOICES)[number];
 
-const NAMES: Record<Choice, string> = { system: "auto", dark: "dark", light: "light" };
-const GLYPHS: Record<Choice, string> = { system: "◒", dark: "◐", light: "◑" };
+/** How the pill shows each choice. The glyphs are part of the text label, not icons. */
+const LABELS: Record<Choice, { glyph: string; name: string }> = {
+  system: { glyph: "◒", name: "auto" },
+  dark: { glyph: "◐", name: "dark" },
+  light: { glyph: "◑", name: "light" },
+};
 
 // Shared by the placeholder and the mounted pill so both render at the same fixed
 // width: the label appearing on mount must not shift the header's nav row.
@@ -35,7 +39,9 @@ export function ModeToggle() {
 
   const current: Choice = CHOICES.find((choice) => choice === theme) ?? "system";
   const next = CHOICES[(CHOICES.indexOf(current) + 1) % CHOICES.length];
-  const state = current === "system" ? `auto (${resolvedTheme})` : NAMES[current];
+  // "auto (dark)": in auto, say which scheme the OS resolved to, once it is known.
+  const currentState =
+    current === "system" && resolvedTheme ? `auto (${resolvedTheme})` : LABELS[current].name;
 
   return (
     <button
@@ -45,9 +51,9 @@ export function ModeToggle() {
         "cursor-pointer transition-colors hover:border-line2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-a-blue"
       )}
       onClick={() => setTheme(next)}
-      aria-label={`Theme: ${state}. Switch to ${NAMES[next]}.`}
+      aria-label={`Theme: ${currentState}. Switch to ${LABELS[next].name}.`}
     >
-      <span aria-hidden="true">{GLYPHS[current]}</span>&nbsp;{NAMES[current]}
+      <span aria-hidden="true">{LABELS[current].glyph}</span>&nbsp;{LABELS[current].name}
     </button>
   );
 }

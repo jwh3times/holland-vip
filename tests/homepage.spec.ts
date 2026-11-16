@@ -26,15 +26,15 @@ test.describe("Homepage", () => {
   test("should have working navigation links", async ({ page }) => {
     const nav = page.getByRole("navigation", { name: "Sections" });
 
-    await nav.locator('a[href="#about"]').click();
+    await nav.getByRole("link", { name: "about.md" }).click();
     await expect(page.locator("#about")).toBeInViewport();
 
-    await nav.locator('a[href="#contact"]').click();
+    await nav.getByRole("link", { name: "contact.sh" }).click();
     await expect(page.locator("#contact")).toBeInViewport();
 
     // The header prompt returns to the hero.
-    await page.getByRole("banner").getByRole("link", { name: "jerry@holland.vip:~" }).click();
-    await expect(page.locator("h1")).toBeInViewport();
+    await page.getByRole("banner").getByRole("link", { name: /:~$/ }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toBeInViewport();
   });
 
   test("should have a working email link in contact section", async ({ page }) => {
