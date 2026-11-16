@@ -124,14 +124,19 @@ the build result to production checks without rendering UI or disclosing request
 
 Vitest and Testing Library cover modules with meaningful executable seams. Coverage policy lives
 in `vitest.config.ts`; pure-JSX section and UI shell modules are excluded from line accounting and
-asserted through seam tests instead.
+asserted through seam tests instead. Next modules that only work under Next's compiler
+(`next/image`, `next/link`, `next/font/local`, and the `geist` faces built on it) are aliased in
+`vitest.config.ts` to stand-ins under `tests/unit/mocks/`, so components and the root layout render
+in jsdom.
 
 Playwright starts its own server. Local runs cover the configured desktop and mobile projects. CI
 builds once, uploads `out/`, then runs the Chromium-engine projects against that downloaded
 artifact. `tests/global-setup.ts` refuses to run against an unrelated service already listening on
 port 3000. A separate weekly and manually dispatchable workflow builds one static export, fans out
 Firefox and WebKit into independent jobs, and uploads an engine-specific report from each. This
-adds cross-browser regression coverage without extending routine merge checks.
+adds cross-browser regression coverage without extending routine merge checks. The axe scans in
+`tests/accessibility.spec.ts` first wait for every finite animation to finish, because a mid-fade
+element's blended color is not the one a reader sees; infinite animations are not waited on.
 
 Lighthouse CI measures the same downloaded static export in a separate advisory merge-time job.
 Its versioned configuration collects five runs through Playwright's managed Chromium and evaluates
