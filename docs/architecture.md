@@ -105,7 +105,7 @@ converted render in the new palette. They are declared once on `:root` and follo
 Components compose classes with `cn()` from `lib/utils.ts`. `app/globals.css` also defines these
 project-specific utility classes:
 
-- Text hierarchy: `text-heading`, `text-body`, `text-label`, `text-muted`
+- Text hierarchy: `text-heading`, `text-body`, `text-muted`
 - Card surfaces: `card-bg-white`, `bento-card-bg`
 - Decorative treatments: `gradient-text`, `glass` (the header's frosted bar), `heatmap` (the
   contribution grid's cells, filled by `data-level`)

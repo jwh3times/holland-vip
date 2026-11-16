@@ -1,3 +1,5 @@
+import type * as React from "react";
+
 import { Section, type NumberedSectionProps } from "@/components/ui/section";
 import { capabilities } from "@/content/capabilities";
 import { careerHighlights, impactCopy, technicalAchievements } from "@/content/impact";
@@ -5,12 +7,70 @@ import { challenges } from "@/content/problem-solving";
 import { accent, type Accent } from "@/lib/accent";
 import { cn } from "@/lib/utils";
 
-/** A case's three blocks, in order: the problem reads in full colour, the response and result muted. */
-const caseBlocks: { key: "challenge" | "solution" | "impact"; accent: Accent; muted: boolean }[] = [
-  { key: "challenge", accent: "orange", muted: false },
-  { key: "solution", accent: "blue", muted: true },
-  { key: "impact", accent: "green", muted: true },
+type CaseBlock = keyof typeof impactCopy.caseBlocks;
+
+/**
+ * How each of a case's blocks is drawn, in render order: the label's accent, and whether the text
+ * is muted. The problem reads in full colour; the response and the result are muted.
+ */
+const caseBlockStyles: { block: CaseBlock; accent: Accent; muted: boolean }[] = [
+  { block: "challenge", accent: "orange", muted: false },
+  { block: "solution", accent: "blue", muted: true },
+  { block: "impact", accent: "green", muted: true },
 ];
+
+const panelSurface = "rounded-xl border border-line bg-panel";
+
+/** One of Impact's four groups: a list named by a heading only screen readers hear. */
+function ImpactGroup({
+  id,
+  name,
+  className,
+  children,
+}: {
+  id: string;
+  name: string;
+  className: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <>
+      <h3 id={id} className="sr-only">
+        {name}
+      </h3>
+      <ul aria-labelledby={id} className={cn("grid gap-5", className)}>
+        {children}
+      </ul>
+    </>
+  );
+}
+
+/** A muted list whose items each sit beside a decorative glyph. */
+function GlyphList({
+  items,
+  glyph,
+  glyphClassName,
+  columns,
+}: {
+  items: string[];
+  glyph: string;
+  glyphClassName: string;
+  /** The grid template: the glyph's column, then the text's. */
+  columns: string;
+}) {
+  return (
+    <ul>
+      {items.map((item) => (
+        <li key={item} className={cn("mb-1.5 grid text-[13px] leading-[1.55] text-mute", columns)}>
+          <span aria-hidden="true" className={glyphClassName}>
+            {glyph}
+          </span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 /**
  * Impact: Career Highlights, Problem-Solving Highlights as cases, Technical Capabilities and
@@ -21,15 +81,13 @@ export function ImpactSection({ number }: NumberedSectionProps) {
 
   return (
     <Section id="impact" title={impactCopy.title} number={number}>
-      <h3 id="impact-highlights" className="sr-only">
-        {groups.highlights}
-      </h3>
-      <ul
-        aria-labelledby="impact-highlights"
-        className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,240px),1fr))] gap-3"
+      <ImpactGroup
+        id="impact-highlights"
+        name={groups.highlights}
+        className="grid-cols-[repeat(auto-fit,minmax(min(100%,240px),1fr))] gap-3"
       >
         {careerHighlights.map((highlight) => (
-          <li key={highlight.title} className="rounded-xl border border-line bg-panel p-[22px]">
+          <li key={highlight.title} className={cn(panelSurface, "p-[22px]")}>
             <div
               className={cn(
                 "font-mono text-[clamp(36px,4vw,48px)] font-semibold tracking-[-0.03em]",
@@ -44,20 +102,15 @@ export function ImpactSection({ number }: NumberedSectionProps) {
             </div>
           </li>
         ))}
-      </ul>
+      </ImpactGroup>
 
-      <h3 id="impact-cases" className="sr-only">
-        {groups.cases}
-      </h3>
-      <ul
-        aria-labelledby="impact-cases"
-        className="mt-5 grid grid-cols-[repeat(auto-fit,minmax(min(100%,340px),1fr))] gap-5"
+      <ImpactGroup
+        id="impact-cases"
+        name={groups.cases}
+        className="mt-5 grid-cols-[repeat(auto-fit,minmax(min(100%,340px),1fr))]"
       >
         {challenges.map((item, index) => (
-          <li
-            key={item.challenge}
-            className="flex flex-col gap-3.5 rounded-xl border border-line bg-panel p-5"
-          >
+          <li key={item.challenge} className={cn(panelSurface, "flex flex-col gap-3.5 p-5")}>
             <div
               data-testid="case-header"
               className="flex items-baseline justify-between gap-2.5 font-mono"
@@ -67,30 +120,28 @@ export function ImpactSection({ number }: NumberedSectionProps) {
                 {item.metric}
               </span>
             </div>
-            {caseBlocks.map(({ key, accent: blockAccent, muted }) => (
+            {caseBlockStyles.map(({ block, accent: labelAccent, muted }) => (
               <div
-                key={key}
-                data-block={key}
+                key={block}
+                data-testid="case-block"
                 className={cn("text-sm leading-[1.55]", muted ? "text-mute" : "text-fg")}
               >
                 <span
-                  className={cn("mb-0.5 block font-mono text-[11px]", accent[blockAccent].text)}
+                  className={cn("mb-0.5 block font-mono text-[11px]", accent[labelAccent].text)}
                 >
-                  {impactCopy.caseBlocks[key]}
+                  {impactCopy.caseBlocks[block]}
                 </span>
-                {item[key]}
+                {item[block]}
               </div>
             ))}
           </li>
         ))}
-      </ul>
+      </ImpactGroup>
 
-      <h3 id="impact-capabilities" className="sr-only">
-        {groups.capabilities}
-      </h3>
-      <ul
-        aria-labelledby="impact-capabilities"
-        className="mt-5 grid grid-cols-[repeat(auto-fit,minmax(min(100%,260px),1fr))] gap-5"
+      <ImpactGroup
+        id="impact-capabilities"
+        name={groups.capabilities}
+        className="mt-5 grid-cols-[repeat(auto-fit,minmax(min(100%,260px),1fr))]"
       >
         {capabilities.map((capability, index) => (
           <li
@@ -101,35 +152,26 @@ export function ImpactSection({ number }: NumberedSectionProps) {
             <h4 id={`impact-capability-${index}`} className="mb-2.5 font-semibold text-fg">
               {capability.title}
             </h4>
-            <ul>
-              {capability.items.map((item) => (
-                <li
-                  key={item}
-                  className="mb-1.5 grid grid-cols-[22px_1fr] text-[13px] leading-normal text-mute"
-                >
-                  <span aria-hidden="true" className="font-mono text-dim">
-                    ├─
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
+            <GlyphList
+              items={capability.items}
+              glyph="├─"
+              glyphClassName="font-mono text-dim"
+              columns="grid-cols-[22px_1fr]"
+            />
           </li>
         ))}
-      </ul>
+      </ImpactGroup>
 
-      <h3 id="impact-achievements" className="sr-only">
-        {groups.achievements}
-      </h3>
-      <ul
-        aria-labelledby="impact-achievements"
-        className="mt-7 grid grid-cols-[repeat(auto-fit,minmax(min(100%,340px),1fr))] gap-5"
+      <ImpactGroup
+        id="impact-achievements"
+        name={groups.achievements}
+        className="mt-7 grid-cols-[repeat(auto-fit,minmax(min(100%,340px),1fr))]"
       >
         {technicalAchievements.map((achievement, index) => (
           <li
             key={achievement.title}
             aria-labelledby={`impact-achievement-${index}`}
-            className="rounded-xl border border-line bg-panel p-5"
+            className={cn(panelSurface, "p-5")}
           >
             <div
               aria-hidden="true"
@@ -143,22 +185,15 @@ export function ImpactSection({ number }: NumberedSectionProps) {
             >
               {achievement.title}
             </h4>
-            <ul>
-              {achievement.items.map((item) => (
-                <li
-                  key={item}
-                  className="mb-1.5 grid grid-cols-[16px_1fr] text-[13px] leading-[1.55] text-mute"
-                >
-                  <span aria-hidden="true" className={accent[achievement.accent].bullet}>
-                    ▸
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
+            <GlyphList
+              items={achievement.items}
+              glyph="▸"
+              glyphClassName={accent[achievement.accent].bullet}
+              columns="grid-cols-[16px_1fr]"
+            />
           </li>
         ))}
-      </ul>
+      </ImpactGroup>
     </Section>
   );
 }

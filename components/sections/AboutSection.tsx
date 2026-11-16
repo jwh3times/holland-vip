@@ -2,7 +2,7 @@ import { Section, type NumberedSectionProps } from "@/components/ui/section";
 import { bio } from "@/content/about";
 import { cn } from "@/lib/utils";
 
-/** The Biography. Its Career Highlights and Technical Achievements render in Impact. */
+/** The Biography, as prose paragraphs. */
 export function AboutSection({ number }: NumberedSectionProps) {
   return (
     <Section id="about" title="About Me" number={number}>

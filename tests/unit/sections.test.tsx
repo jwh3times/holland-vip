@@ -18,7 +18,7 @@ import { siteConfig } from "@/lib/site-config";
 // The hero and its terminal are covered in hero.test.tsx, Career & stack in career.test.tsx, and
 // Impact in impact.test.tsx.
 describe("section components", () => {
-  // Its Career Highlights and Technical Achievements moved to Impact.
+  // Career Highlights and Technical Achievements belong to Impact, not the Biography.
   it("About renders the Biography and nothing that moved to Impact", () => {
     render(<AboutSection number="01" />);
     expect(screen.getByRole("heading", { name: "About Me" })).toBeInTheDocument();

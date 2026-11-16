@@ -48,15 +48,15 @@ describe("ImpactSection", () => {
     ]);
     for (const [index, item] of cases.entries()) {
       const { challenge, solution, impact } = challenges[index];
-      expect(within(item).getByText(challenge).closest("[data-block]")).toHaveTextContent(
-        `ERR${challenge}`
-      );
-      expect(within(item).getByText(solution).closest("[data-block]")).toHaveTextContent(
-        `FIX${solution}`
-      );
-      expect(within(item).getByText(impact).closest("[data-block]")).toHaveTextContent(
-        `OK${impact}`
-      );
+      expect(
+        within(item).getByText(challenge).closest('[data-testid="case-block"]')
+      ).toHaveTextContent(`ERR${challenge}`);
+      expect(
+        within(item).getByText(solution).closest('[data-testid="case-block"]')
+      ).toHaveTextContent(`FIX${solution}`);
+      expect(
+        within(item).getByText(impact).closest('[data-testid="case-block"]')
+      ).toHaveTextContent(`OK${impact}`);
     }
     expect(section.queryByText(/incident/i)).toBeNull();
   });
