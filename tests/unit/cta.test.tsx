@@ -47,9 +47,9 @@ describe("Cta", () => {
     it("defaults to the primary variant at md size", () => {
       render(<Cta href="#a">Default</Cta>);
       const el = screen.getByRole("link", { name: "Default" });
-      // The design primary: a solid --fg fill with --bg text, inverted by theme.
-      expect(el).toHaveClass("bg-fg", "text-bg");
-      expect(el).toHaveClass("px-8", "py-3");
+      // The design primary: a solid --fg fill with --bg text, inverted by theme, in mono.
+      expect(el).toHaveClass("bg-fg", "text-bg", "font-mono", "rounded-lg");
+      expect(el).toHaveClass("px-[18px]", "py-3");
     });
 
     it("renders the secondary variant as an outline", () => {
@@ -59,17 +59,24 @@ describe("Cta", () => {
         </Cta>
       );
       const el = screen.getByRole("link", { name: "Secondary" });
-      expect(el).toHaveClass("border-2", "border-line2");
+      expect(el).toHaveClass("border", "border-line2");
       expect(el).not.toHaveClass("bg-fg");
     });
 
-    it("applies the lg size", () => {
+    it("applies the sm size", () => {
       render(
-        <Cta href="#a" size="lg">
-          Large
+        <Cta href="#a" size="sm">
+          Small
         </Cta>
       );
-      expect(screen.getByRole("link", { name: "Large" })).toHaveClass("px-10", "py-4");
+      expect(screen.getByRole("link", { name: "Small" })).toHaveClass("px-3.5", "py-2");
+    });
+
+    // The Terminal buttons stay flat: no hover scale, no drop shadow.
+    it("neither scales nor casts a shadow", () => {
+      render(<Cta href="#a">Flat</Cta>);
+      const el = screen.getByRole("link", { name: "Flat" });
+      expect(el.className.split(" ").filter((c) => /scale-|shadow/.test(c))).toEqual([]);
     });
 
     it("carries a focus-visible ring on every variant", () => {

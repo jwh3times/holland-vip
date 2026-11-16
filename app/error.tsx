@@ -38,10 +38,10 @@ export default function Error({
         </div>
 
         {/* Title */}
-        <h2 className="text-3xl md:text-4xl font-bold text-heading mb-4">Something went wrong!</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-fg mb-4">Something went wrong!</h2>
 
         {/* Description */}
-        <p className="text-lg text-muted max-w-md mx-auto mb-8">
+        <p className="text-lg text-mute max-w-md mx-auto mb-8">
           An unexpected error occurred. Please try again or return to the home page.
         </p>
 

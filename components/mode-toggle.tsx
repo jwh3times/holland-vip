@@ -3,11 +3,8 @@
 import * as React from "react";
 import { useTheme } from "next-themes";
 
+import { useMounted } from "@/lib/use-mounted";
 import { cn } from "@/lib/utils";
-
-// Hydration-safe mount detection without setState-in-effect: returns the
-// server snapshot (false) during SSR + initial hydration, then true on the client.
-const emptySubscribe = () => () => {};
 
 /** The stored theme choices, in the order the pill cycles through them. */
 const CHOICES = ["system", "dark", "light"] as const;
@@ -27,11 +24,7 @@ const toggleBase =
 
 export function ModeToggle() {
   const { theme, resolvedTheme, setTheme } = useTheme();
-  const mounted = React.useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false
-  );
+  const mounted = useMounted();
 
   if (!mounted) {
     return <button type="button" className={toggleBase} disabled tabIndex={-1} aria-hidden />;

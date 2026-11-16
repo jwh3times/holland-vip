@@ -7,12 +7,18 @@ export interface CurrentExploration {
   accent: Accent;
 }
 
-/** Biography paragraphs, rendered in order. */
+/** The Biography: the README panel's three paragraphs, rendered in order. */
 export const bio: string[] = [
-  `I'm a senior software engineer with ${yearsOfExperience} years across full-stack development, back-end architecture, and embedded systems. I focus on building scalable, high-performance applications with modern cloud technologies and a microservices approach.`,
-  "Currently a Senior Software Engineer and Tech Lead at SoftPro, building the new ledger and register experience for the Sky platform — letting closing teams balance the register for a real-estate transaction file. My team is building it as a greenfield microservice on AKS behind a modern Angular front end, integrated with SoftPro's established Select backend. Alongside the full-stack work, I lead our team's adoption of AI in the development workflow — building custom agents, maintaining shared Copilot instructions, and authoring reusable prompts — and I partner with product to scope work and shape technical direction.",
-  "Outside of feature work, I focus on performance tuning, system optimization, and mentoring other developers. I lean on test-driven development and Agile practices, and I make a habit of learning continuously.",
+  `I'm a senior software engineer with ${yearsOfExperience} years across full-stack development, back-end architecture, and embedded systems. I build scalable, well-tested systems — and lately, the agentic tooling that helps teams build them faster.`,
+  "At SoftPro I'm Tech Lead on the new ledger and register experience for the Sky platform: a greenfield microservice on AKS behind a modern Angular front end, integrated with the established Select backend. Beyond my team, I'm leading company-wide adoption of PrimeNG and Storybook, and I'm part of SoftPro's Claude Code and spec-driven development pilot. Inside the team I run our AI-in-development initiative — custom agents, shared Copilot instructions, and reusable prompts.",
+  "Off the clock I keep a steady stream of hobby projects going in the open, each run with the same agent workflow: a shared skills repo installed across every project, generated AGENTS.md conventions, MCP servers, and cross-machine handoffs. I lean on TDD, property-based testing, and ADRs, and I make a habit of learning continuously.",
 ];
+
+/** The README panel's labels. */
+export const aboutCopy = {
+  file: "# README.md",
+  title: "About",
+};
 
 /** Current Explorations, shown as `[~]` chips in Career & stack. Edit this list freely. */
 export const currentExplorations: CurrentExploration[] = [

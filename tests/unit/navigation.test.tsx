@@ -22,7 +22,6 @@ describe("Navigation", () => {
       NAV_SECTION_IDS.map((id) => `#${id}`)
     );
     expect(links.map((link) => link.textContent)).toEqual([
-      "about.md",
       "projects/",
       "career.log",
       "impact.diff",

@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import Home from "@/app/page";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SECTION_IDS } from "@/components/ui/section";
 import { getHobbyProjectReposWithSource } from "@/lib/github";
 import { getContributionsWithSource } from "@/lib/github-contributions";
 
@@ -66,7 +67,7 @@ describe("Home page", () => {
     });
   });
 
-  it("composes navigation, main content, and footer", async () => {
+  it("composes navigation, main content, and the status bar", async () => {
     const ui = await Home();
     render(
       <ThemeProvider attribute="class" defaultTheme="light">
@@ -76,11 +77,10 @@ describe("Home page", () => {
 
     expect(screen.getByRole("main")).toBeInTheDocument();
     expect(screen.getAllByText("Jerry Holland").length).toBeGreaterThan(0);
-    expect(screen.getByText(/All rights reserved/i)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "About Me" })).toBeInTheDocument();
+    expect(screen.getByRole("contentinfo")).toHaveTextContent(/UTF-8 · LF/);
+    expect(screen.queryByText(/All rights reserved/i)).toBeNull();
     expect(screen.getByRole("heading", { name: /Hobby projects/ })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /Open Source/ })).not.toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Get In Touch" })).toBeInTheDocument();
   });
 
   it("marks the static page live only when both GitHub requests are live", async () => {
@@ -96,19 +96,18 @@ describe("Home page", () => {
     expect(screen.getByRole("main")).toHaveAttribute("data-github-data-source", "fallback");
   });
 
-  it("numbers the body sections 01, 02, … in page order", async () => {
+  it("numbers the four body sections 01–04 in page order, with About and Contact after them", async () => {
     const { numbered } = await renderPage();
 
-    // Every body section is numbered until the redesign's later slices replace
-    // them; only the hero carries no number.
+    // The hero, About and Contact carry no number.
     expect(numbered).toEqual([
-      ["01", "About Me"],
-      ["02", "Hobby projects"],
-      ["03", "Career & stack"],
-      ["04", "Impact"],
-      ["05", "Professional Work"],
-      ["06", "Get In Touch"],
+      ["01", "Hobby projects"],
+      ["02", "Career & stack"],
+      ["03", "Impact"],
+      ["04", "Professional work"],
     ]);
+    const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
+    expect(headings.slice(-2)).toEqual(["About", "Contact"]);
     expect(
       within(screen.getByRole("heading", { level: 1 })).queryByTestId("section-number")
     ).toBeNull();
@@ -126,12 +125,21 @@ describe("Home page", () => {
     expect(within(section).queryByText(/pushed \d{4}/)).toBeNull();
   });
 
-  it("gives #projects to Hobby projects and #work to Professional Work", async () => {
+  it("gives #projects to Hobby projects, #work to Professional work and #about to the Biography", async () => {
     const { container } = await renderPage();
 
     expect(container.querySelector("section#projects h2")).toHaveTextContent("Hobby projects");
-    expect(container.querySelector("section#work h2")).toHaveTextContent("Professional Work");
+    expect(container.querySelector("section#work h2")).toHaveTextContent("Professional work");
+    expect(container.querySelector("section#about h2")).toHaveTextContent("About");
+    expect(container.querySelector("section#about")).toHaveTextContent("# README.md");
     expect(container.querySelector("#open-source")).toBeNull();
+  });
+
+  it("anchors every nav and deep-link-only id to a rendered section", async () => {
+    const { container } = await renderPage();
+    for (const id of SECTION_IDS) {
+      expect(container.querySelector(`section#${id}`), `no section for #${id}`).not.toBeNull();
+    }
   });
 
   // The header's nav and prompt, and the hero's two buttons.

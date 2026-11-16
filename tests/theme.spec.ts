@@ -44,6 +44,22 @@ test.describe("Theme Toggle", () => {
     }
   });
 
+  test("names the painted theme in the status bar, following the toggle", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
+    await page.goto("/");
+    const statusBar = page.getByRole("contentinfo");
+    const button = themeToggle(page);
+
+    // auto resolves to the OS scheme; the bar never says "auto" or "system".
+    await expect(statusBar).toContainText("UTF-8 · LF · dark");
+    await button.click(); // → dark
+    await expect(statusBar).toContainText("UTF-8 · LF · dark");
+    await button.click(); // → light
+    await expect(statusBar).toContainText("UTF-8 · LF · light");
+    await button.click(); // → auto (dark)
+    await expect(statusBar).toContainText("UTF-8 · LF · dark");
+  });
+
   test("persists an explicit choice across reload, over the OS scheme", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "dark" });
     await page.goto("/");

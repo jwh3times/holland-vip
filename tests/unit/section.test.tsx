@@ -70,18 +70,6 @@ describe("Section", () => {
     expect(subtitle.compareDocumentPosition(body) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  it("switches the container width", () => {
-    const { container: wide } = render(<Section title="A">body</Section>);
-    expect(wide.querySelector("section > div")).toHaveClass("max-w-[1240px]");
-
-    const { container: narrow } = render(
-      <Section title="B" width="narrow">
-        body
-      </Section>
-    );
-    expect(narrow.querySelector("section > div")).toHaveClass("max-w-3xl", "text-center");
-  });
-
   it("renders its children", () => {
     render(
       <Section title="A">
@@ -106,10 +94,16 @@ describe("section id registry", () => {
     }
   });
 
-  it("keeps the hero anchorable but deliberately out of the nav", () => {
-    // #top is the hero, which the header's prompt links to rather than a nav entry.
-    expect(SECTION_IDS).toContain("top");
-    expect(NAV_SECTION_IDS).not.toContain("top" as never);
+  it("navigates to the four numbered sections and Contact, in page order", () => {
+    expect(NAV_SECTION_IDS).toEqual(["projects", "career", "impact", "work", "contact"]);
+  });
+
+  it("keeps the hero and the Biography anchorable but deliberately out of the nav", () => {
+    // #top is the hero, which the header's prompt links to; #about keeps old links to the
+    // Biography working.
+    expect(
+      SECTION_IDS.filter((id) => !(NAV_SECTION_IDS as readonly string[]).includes(id))
+    ).toEqual(["top", "about"]);
   });
 
   it("anchors Career & stack in place of the sections it replaced", () => {

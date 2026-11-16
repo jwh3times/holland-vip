@@ -9,9 +9,8 @@
  * Now there is one union and one token table. Callers name an {@link Accent} and
  * read the token they need; they never write colour classes by hand.
  *
- * Prefer the components that consume these — `<Badge>` and `<Card>` — over reading
- * tokens directly. Reach for the table when you need a single token (a bullet
- * glyph, a timeline dot) rather than a whole element.
+ * Read the token you need — a bullet glyph, a timeline bar, a chip — rather than
+ * spelling out an accent's classes.
  */
 
 export const ACCENTS = ["blue", "green", "purple", "orange"] as const;
@@ -25,16 +24,8 @@ export interface AccentTokens {
   bullet: string;
   /** Solid dot — timeline nodes, language indicators. */
   dot: string;
-  /** Ring around a solid dot, or a chip's outline: the 30% hover tint. */
-  ring: string;
-  /** Card border for tinted cards: the 30% tint. */
-  border: string;
-  /** Tinted card background, paired with `border`: the 12% chip tint. */
+  /** Tinted background: a Hobby Project card's screenshot area, at the 12% chip tint. */
   cardBg: string;
-  /** Pill background + text. See `<Badge>`. */
-  badge: string;
-  /** Icon chip: background, text, and ring. */
-  iconChip: string;
   /** Bar fill — a timeline span: the 14% tint. */
   bar: string;
   /** Border glow on a selected or hovered element: the 55% tint. */
@@ -64,12 +55,7 @@ export const accent: Record<Accent, AccentTokens> = {
     text: "text-a-blue",
     bullet: "text-a-blue",
     dot: "bg-a-blue",
-    ring: "ring-[color-mix(in_oklch,var(--a-blue)_30%,transparent)]",
-    border: "border-[color-mix(in_oklch,var(--a-blue)_30%,transparent)]",
     cardBg: "bg-[color-mix(in_oklch,var(--a-blue)_12%,transparent)]",
-    badge: "bg-[color-mix(in_oklch,var(--a-blue)_12%,transparent)] text-a-blue",
-    iconChip:
-      "bg-[color-mix(in_oklch,var(--a-blue)_12%,transparent)] text-a-blue ring-[color-mix(in_oklch,var(--a-blue)_30%,transparent)]",
     bar: "bg-[color-mix(in_oklch,var(--a-blue)_14%,transparent)]",
     glow: "border-[color-mix(in_oklch,var(--a-blue)_55%,transparent)]",
     outline: "border-a-blue",
@@ -81,12 +67,7 @@ export const accent: Record<Accent, AccentTokens> = {
     text: "text-a-green",
     bullet: "text-a-green",
     dot: "bg-a-green",
-    ring: "ring-[color-mix(in_oklch,var(--a-green)_30%,transparent)]",
-    border: "border-[color-mix(in_oklch,var(--a-green)_30%,transparent)]",
     cardBg: "bg-[color-mix(in_oklch,var(--a-green)_12%,transparent)]",
-    badge: "bg-[color-mix(in_oklch,var(--a-green)_12%,transparent)] text-a-green",
-    iconChip:
-      "bg-[color-mix(in_oklch,var(--a-green)_12%,transparent)] text-a-green ring-[color-mix(in_oklch,var(--a-green)_30%,transparent)]",
     bar: "bg-[color-mix(in_oklch,var(--a-green)_14%,transparent)]",
     glow: "border-[color-mix(in_oklch,var(--a-green)_55%,transparent)]",
     outline: "border-a-green",
@@ -98,12 +79,7 @@ export const accent: Record<Accent, AccentTokens> = {
     text: "text-a-purple",
     bullet: "text-a-purple",
     dot: "bg-a-purple",
-    ring: "ring-[color-mix(in_oklch,var(--a-purple)_30%,transparent)]",
-    border: "border-[color-mix(in_oklch,var(--a-purple)_30%,transparent)]",
     cardBg: "bg-[color-mix(in_oklch,var(--a-purple)_12%,transparent)]",
-    badge: "bg-[color-mix(in_oklch,var(--a-purple)_12%,transparent)] text-a-purple",
-    iconChip:
-      "bg-[color-mix(in_oklch,var(--a-purple)_12%,transparent)] text-a-purple ring-[color-mix(in_oklch,var(--a-purple)_30%,transparent)]",
     bar: "bg-[color-mix(in_oklch,var(--a-purple)_14%,transparent)]",
     glow: "border-[color-mix(in_oklch,var(--a-purple)_55%,transparent)]",
     outline: "border-a-purple",
@@ -115,12 +91,7 @@ export const accent: Record<Accent, AccentTokens> = {
     text: "text-a-orange",
     bullet: "text-a-orange",
     dot: "bg-a-orange",
-    ring: "ring-[color-mix(in_oklch,var(--a-orange)_30%,transparent)]",
-    border: "border-[color-mix(in_oklch,var(--a-orange)_30%,transparent)]",
     cardBg: "bg-[color-mix(in_oklch,var(--a-orange)_12%,transparent)]",
-    badge: "bg-[color-mix(in_oklch,var(--a-orange)_12%,transparent)] text-a-orange",
-    iconChip:
-      "bg-[color-mix(in_oklch,var(--a-orange)_12%,transparent)] text-a-orange ring-[color-mix(in_oklch,var(--a-orange)_30%,transparent)]",
     bar: "bg-[color-mix(in_oklch,var(--a-orange)_14%,transparent)]",
     glow: "border-[color-mix(in_oklch,var(--a-orange)_55%,transparent)]",
     outline: "border-a-orange",
@@ -129,8 +100,3 @@ export const accent: Record<Accent, AccentTokens> = {
     activeShadow: "shadow-[0_20px_60px_-24px_color-mix(in_oklch,var(--a-orange)_60%,transparent)]",
   },
 };
-
-/** The accent at `index`, cycling through {@link ACCENTS}. For lists with no inherent accent. */
-export function accentAt(index: number): Accent {
-  return ACCENTS[index % ACCENTS.length];
-}
