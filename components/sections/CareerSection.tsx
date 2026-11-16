@@ -5,7 +5,7 @@ import { Section, type NumberedSectionProps } from "@/components/ui/section";
 import { currentExplorations } from "@/content/about";
 import { agentSkills, agentSkillsSource } from "@/content/agent-skills";
 import { career } from "@/content/career";
-import { education } from "@/content/education";
+import { educationRoot } from "@/content/education";
 import { experiences } from "@/content/experience";
 import { skillCategories } from "@/content/skills";
 import { accent } from "@/lib/accent";
@@ -24,7 +24,10 @@ const jsonKey = (title: string) => title.toLowerCase().replace(/ & /g, "_").repl
 
 function SkillsPanel() {
   return (
-    <Panel title={career.skills.file} meta={<span>{skillCategories.length} keys</span>}>
+    <Panel
+      title={career.skills.file}
+      meta={<span>{career.skills.keys(skillCategories.length)}</span>}
+    >
       <div className="px-[18px] py-4 font-mono text-[13px] leading-[1.9]">
         <div className="text-dim">{"{"}</div>
         {skillCategories.map((category) => {
@@ -103,7 +106,7 @@ function ExplorationsPanel() {
               accent[exploration.accent].outline
             )}
           >
-            [~] {exploration.label}
+            {career.exploring.marker} {exploration.label}
           </li>
         ))}
       </ul>
@@ -122,23 +125,24 @@ export interface CareerSectionProps extends NumberedSectionProps {
  * Role dates are derived here, against the build date, and handed to the client already formatted.
  */
 export function CareerSection({ number, contributions }: CareerSectionProps) {
-  const roles: CareerRole[] = experiences.map((role) => ({
-    company: role.company,
-    title: role.title,
-    accent: role.accent,
-    hash: role.hash,
-    highlights: role.highlights,
-    current: role.end === null,
-    ...describeRole(role, buildMonth),
-  }));
-  const root = `root: ${education.school} · ${education.degrees.join(" + ")} · ${education.graduated}`;
+  const roles: CareerRole[] = experiences.map(
+    ({ company, title, accent, hash, highlights, ...role }) => ({
+      company,
+      title,
+      accent,
+      hash,
+      highlights,
+      current: role.end === null,
+      ...describeRole(role, buildMonth),
+    })
+  );
 
   return (
     <Section id="career" title={career.title} number={number}>
       <CareerLog
         roles={roles}
         ticks={timelineTicks(buildMonth)}
-        root={root}
+        root={educationRoot}
         aside={
           <>
             <SkillsPanel />

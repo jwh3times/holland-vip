@@ -4,17 +4,14 @@ import * as React from "react";
 
 import { Panel } from "@/components/ui/panel";
 import { career } from "@/content/career";
-import { accent, type Accent } from "@/lib/accent";
+import type { Experience } from "@/content/experience";
+import { accent } from "@/lib/accent";
 import type { RoleTimeline, TimelineTick } from "@/lib/role-dates";
 import { cn } from "@/lib/utils";
 
 /** A role as the timeline and log show it, its dates already derived at build time. */
-export interface CareerRole extends RoleTimeline {
-  company: string;
-  title: string;
-  accent: Accent;
-  hash: string;
-  highlights: string[];
+export interface CareerRole
+  extends Pick<Experience, "company" | "title" | "accent" | "hash" | "highlights">, RoleTimeline {
   /** The role with no end date: open by default, and marked `(HEAD → main)`. */
   current: boolean;
 }
@@ -42,12 +39,13 @@ export function CareerLog({ roles, ticks, root, aside }: CareerLogProps) {
   const initial = roles.findIndex((role) => role.current);
   const [open, setOpen] = React.useState<number | null>(initial === -1 ? null : initial);
   const id = React.useId();
+  const highlightsIdOf = (index: number) => `${id}-role-${index}`;
 
   return (
     <>
       <Panel title={career.timeline.command} meta={career.timeline.hint} className="mb-5">
         <div className="pt-2.5 pb-3.5">
-          <ul aria-label="Career timeline">
+          <ul aria-label={career.timeline.label}>
             {roles.map((role, index) => {
               const selected = open === index;
               const tokens = accent[role.accent];
@@ -55,7 +53,9 @@ export function CareerLog({ roles, ticks, root, aside }: CareerLogProps) {
                 <li key={role.company}>
                   <button
                     type="button"
-                    aria-pressed={selected}
+                    // It opens its role in the log, so it reports that role's state there.
+                    aria-expanded={selected}
+                    aria-controls={highlightsIdOf(index)}
                     onClick={() => setOpen(index)}
                     className={cn(
                       "grid h-[46px] w-full cursor-pointer items-center px-[22px] text-left transition-colors hover:bg-panel2",
@@ -122,11 +122,11 @@ export function CareerLog({ roles, ticks, root, aside }: CareerLogProps) {
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,480px),1fr))] items-start gap-5">
         <Panel title={career.log.command}>
-          <ol aria-label="Career log" className="py-2">
+          <ol aria-label={career.log.label} className="py-2">
             {roles.map((role, index) => {
               const expanded = open === index;
               const tokens = accent[role.accent];
-              const highlightsId = `${id}-role-${index}`;
+              const highlightsId = highlightsIdOf(index);
               return (
                 <li
                   key={role.company}

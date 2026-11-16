@@ -7,3 +7,6 @@ export const education = {
   degrees: ["BS Electrical Eng.", "BS Computer Eng."],
   graduated: 2013,
 };
+
+/** The line itself, as the log prints it. */
+export const educationRoot = `root: ${education.school} · ${education.degrees.join(" + ")} · ${education.graduated}`;

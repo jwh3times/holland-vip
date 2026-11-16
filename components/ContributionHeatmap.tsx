@@ -34,18 +34,18 @@ export function ContributionHeatmap({ calendar }: { calendar: ContributionCalend
     <div className="rounded-xl border border-line bg-panel px-[22px] py-5">
       <div className="mb-3.5 flex flex-wrap justify-between gap-2 font-mono text-xs text-dim">
         <span>{career.contributions.command}</span>
-        <span className="text-fg">{total} contributions</span>
+        <span className="text-fg">{career.contributions.total(total)}</span>
       </div>
       {/* Scrolls sideways on a narrow screen, so a keyboard user must be able to focus it. */}
       <div
         role="region"
-        aria-label="Contribution heatmap"
+        aria-label={career.contributions.region}
         tabIndex={0}
         className="overflow-x-auto rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-a-blue"
       >
         <div
           role="img"
-          aria-label={`${total} contributions in the last 12 months on GitHub`}
+          aria-label={career.contributions.summary(total)}
           className="grid min-w-[640px] auto-cols-[minmax(9px,1fr)] grid-flow-col grid-rows-[repeat(7,1fr)] gap-[3px]"
         >
           {padDates.map((date) => (

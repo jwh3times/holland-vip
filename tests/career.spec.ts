@@ -23,7 +23,7 @@ test.describe("Career & stack", () => {
       .click();
 
     await expect(timeline(page).getByRole("button", { name: /SAS Institute/ })).toHaveAttribute(
-      "aria-pressed",
+      "aria-expanded",
       "true"
     );
     await expect(logRow(page, "SAS Institute")).toHaveAttribute("aria-expanded", "true");
@@ -54,5 +54,17 @@ test.describe("Career & stack", () => {
       page.locator("#open-source").getByRole("img", { name: /contributions/ })
     ).toHaveCount(0);
     await expect(heatmap).toBeVisible();
+  });
+
+  test("scrolls the heatmap sideways on a phone rather than shrinking it", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    const region = page.getByRole("region", { name: "Contribution heatmap" });
+
+    const { scrollWidth, clientWidth } = await region.evaluate((el) => ({
+      scrollWidth: el.scrollWidth,
+      clientWidth: el.clientWidth,
+    }));
+    expect(scrollWidth).toBeGreaterThanOrEqual(640);
+    expect(scrollWidth).toBeGreaterThan(clientWidth);
   });
 });

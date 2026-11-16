@@ -51,7 +51,8 @@ export interface AccentTokens {
  * Every token reads the accent's `--a-*` variable from `app/globals.css`, so the
  * light/dark swap recolours it without a `dark:` variant. Tints are
  * `color-mix(in oklch, var(--a-X) N%, transparent)` at the design's four steps:
- * 12% (chip), 14% (bar), 30% (hover) and 55% (border glow).
+ * 12% (chip), 14% (bar), 30% (hover) and 55% (border glow), plus 70% for a selected bar's
+ * shadow. The heatmap's own ramp is {@link heatLevels}.
  *
  * Each class string is written out in full, never assembled from parts: Tailwind
  * finds classes by scanning this file's text, and would miss an interpolated one.

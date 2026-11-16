@@ -90,11 +90,11 @@ describe("CareerSection", () => {
     await user.click(timeline.getByRole("button", { name: /SAS Institute/ }));
 
     expect(timeline.getByRole("button", { name: /SAS Institute/ })).toHaveAttribute(
-      "aria-pressed",
+      "aria-expanded",
       "true"
     );
     expect(timeline.getByRole("button", { name: /SoftPro/ })).toHaveAttribute(
-      "aria-pressed",
+      "aria-expanded",
       "false"
     );
     expect(logRow(log, "SAS Institute")).toHaveAttribute("aria-expanded", "true");
@@ -111,7 +111,7 @@ describe("CareerSection", () => {
     expect(logRow(log, "SoftPro")).toHaveAttribute("aria-expanded", "false");
     expect(log.getByText(current.highlights[0])).not.toBeVisible();
     for (const row of timeline.getAllByRole("button")) {
-      expect(row).toHaveAttribute("aria-pressed", "false");
+      expect(row).toHaveAttribute("aria-expanded", "false");
     }
   });
 
