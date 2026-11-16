@@ -37,6 +37,9 @@ No unreleased changes.
   restyled. Each day's tooltip reads "N on YYYY-MM-DD". On a phone it scrolls sideways at a readable
   size, and the scroll area can be reached from the keyboard.
 - Education is now a single line at the root of the `git log`.
+- First load does less work. Sections well below the fold skip layout and paint until they near the
+  viewport, and the heatmap's cells carry only their level, filled by one stylesheet rule. The page
+  is about 37KB smaller and stays within the Lighthouse total-blocking-time budget.
 
 ### Removed
 

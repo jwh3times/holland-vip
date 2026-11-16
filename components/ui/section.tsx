@@ -78,7 +78,14 @@ export function Section({
   width = "wide",
 }: SectionProps) {
   return (
-    <section {...(id ? { id } : {})} className="py-14">
+    // `content-visibility: auto` lets the browser skip layout and paint for a section until it
+    // nears the viewport, which keeps first-load main-thread work inside the Lighthouse TBT
+    // budget. The content stays in the accessibility tree and find-in-page; the 900px estimate
+    // holds the scrollbar steady until a section has been rendered once.
+    <section
+      {...(id ? { id } : {})}
+      className="py-14 [contain-intrinsic-size:auto_900px] [content-visibility:auto]"
+    >
       <div
         className={cn(
           "mx-auto px-[clamp(16px,4vw,40px)]",

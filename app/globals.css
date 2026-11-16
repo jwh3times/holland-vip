@@ -175,6 +175,34 @@
   background-clip: text;
 }
 
+/* The contribution heatmap's cells, square and filled by `data-level`: --heat0 for none, then the
+   green accent at 28%, 50%, 75% and full strength. One rule here, rather than a class string on
+   each of ~370 cells, keeps the page and its RSC payload small. Pad cells have no level. */
+.heatmap > * {
+  aspect-ratio: 1;
+}
+
+.heatmap > [data-level] {
+  border-radius: 2px;
+  background: var(--heat0);
+}
+
+.heatmap > [data-level="1"] {
+  background: color-mix(in oklch, var(--a-green) 28%, transparent);
+}
+
+.heatmap > [data-level="2"] {
+  background: color-mix(in oklch, var(--a-green) 50%, transparent);
+}
+
+.heatmap > [data-level="3"] {
+  background: color-mix(in oklch, var(--a-green) 75%, transparent);
+}
+
+.heatmap > [data-level="4"] {
+  background: var(--a-green);
+}
+
 /* The sticky header's frosted bar. */
 .glass {
   background: color-mix(in oklch, var(--bg) 82%, transparent);

@@ -59,7 +59,12 @@ would weaken that signal. Reconsider a publishing section only when the owner wa
 sustain a defined cadence.
 
 `components/ui/section.tsx` owns the section shell, vertical rhythm, the heading row (the mono
-number, the `h2`, and an optional right-aligned accessory), and the typed anchor registry.
+number, the `h2`, and an optional right-aligned accessory), and the typed anchor registry. Every
+section it renders carries `content-visibility: auto` with a 900px intrinsic-size estimate, so the
+browser skips layout and paint for sections far below the fold. That keeps first-load main-thread
+work inside the Lighthouse TBT budget, and the content stays in the accessibility tree and
+find-in-page. Because skipped sections are not painted and their animations do not advance, the axe
+spec renders every section before it scans.
 `SECTION_IDS` lists anchorable sections and `NAV_SECTION_IDS` selects the navigable subset.
 Navigation labels form a total record over that subset so missing or invented links fail to
 compile. `components/Navigation.tsx` is the sticky 52px header: a shell prompt, built from the
@@ -91,7 +96,8 @@ project-specific utility classes:
 
 - Text hierarchy: `text-heading`, `text-body`, `text-label`, `text-muted`
 - Card surfaces: `card-bg-white`, `bento-card-bg`
-- Decorative treatments: `gradient-text`, `glass` (the header's frosted bar)
+- Decorative treatments: `gradient-text`, `glass` (the header's frosted bar), `heatmap` (the
+  contribution grid's cells, filled by `data-level`)
 - Animation: `animate-blink` (the hero terminal's cursor), `animate-status-pulse` (the hero's
   status dot) and `animate-rise` (an opened career log role's highlights), each switched off under
   reduced motion by its caller
@@ -99,8 +105,9 @@ project-specific utility classes:
 The four accent names and every associated token live in `lib/accent.ts`. Each token reads the
 accent's `--a-*` variable, with tinted fills written as `color-mix(in oklch, var(--a-X) N%,
 transparent)` at the design's four steps: 12% (chip), 14% (bar), 30% (hover) and 55% (border glow),
-plus 70% for a selected timeline bar's shadow. The same module holds `heatLevels`, the contribution
-heatmap's green ramp from the empty `--heat0` cell to the full accent. `Badge` and `Card` consume
+plus 70% for a selected timeline bar's shadow. The contribution heatmap's green ramp, from the
+empty `--heat0` cell to the full accent, is the `.heatmap` rule in `app/globals.css`, keyed by each
+cell's `data-level`, so its ~370 cells carry no class strings. `Badge` and `Card` consume
 that table; callers name an accent rather than rebuilding background, border, and text class
 combinations.
 

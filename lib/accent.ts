@@ -52,7 +52,7 @@ export interface AccentTokens {
  * light/dark swap recolours it without a `dark:` variant. Tints are
  * `color-mix(in oklch, var(--a-X) N%, transparent)` at the design's four steps:
  * 12% (chip), 14% (bar), 30% (hover) and 55% (border glow), plus 70% for a selected bar's
- * shadow. The heatmap's own ramp is {@link heatLevels}.
+ * shadow. The contribution heatmap's green ramp is `.heatmap` in `app/globals.css`.
  *
  * Each class string is written out in full, never assembled from parts: Tailwind
  * finds classes by scanning this file's text, and would miss an interpolated one.
@@ -128,15 +128,3 @@ export const accent: Record<Accent, AccentTokens> = {
 export function accentAt(index: number): Accent {
   return ACCENTS[index % ACCENTS.length];
 }
-
-/**
- * The contribution heatmap's fill for each level, 0 (none) to 4 (most): the empty-cell token,
- * then the green accent at 28%, 50%, 75% and full strength.
- */
-export const heatLevels = [
-  "bg-heat0",
-  "bg-[color-mix(in_oklch,var(--a-green)_28%,transparent)]",
-  "bg-[color-mix(in_oklch,var(--a-green)_50%,transparent)]",
-  "bg-[color-mix(in_oklch,var(--a-green)_75%,transparent)]",
-  "bg-a-green",
-] as const;

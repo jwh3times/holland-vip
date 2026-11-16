@@ -1,7 +1,5 @@
 import { career } from "@/content/career";
-import { heatLevels } from "@/lib/accent";
 import type { ContributionCalendar } from "@/lib/github-contributions";
-import { cn } from "@/lib/utils";
 
 const formatCount = (n: number) => n.toLocaleString("en-US");
 
@@ -46,16 +44,18 @@ export function ContributionHeatmap({ calendar }: { calendar: ContributionCalend
         <div
           role="img"
           aria-label={career.contributions.summary(total)}
-          className="grid min-w-[640px] auto-cols-[minmax(9px,1fr)] grid-flow-col grid-rows-[repeat(7,1fr)] gap-[3px]"
+          className="heatmap grid min-w-[640px] auto-cols-[minmax(9px,1fr)] grid-flow-col grid-rows-[repeat(7,1fr)] gap-[3px]"
         >
+          {/* Each cell carries only its level: `.heatmap` in app/globals.css shapes and fills
+              it, so ~370 cells don't each repeat a class string in the HTML and RSC payload. */}
           {padDates.map((date) => (
-            <div key={date} data-testid="heat-pad" className="aspect-square" />
+            <div key={date} data-testid="heat-pad" />
           ))}
           {days.map((day) => (
             <div
               key={day.date}
+              data-level={day.level}
               title={`${formatCount(day.count)} on ${day.date}`}
-              className={cn("aspect-square rounded-[2px]", heatLevels[day.level])}
             />
           ))}
         </div>
