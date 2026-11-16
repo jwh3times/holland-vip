@@ -19,6 +19,7 @@ test.describe("Homepage", () => {
     await expect(page.locator("#about")).toBeVisible();
     await expect(page.locator("#career")).toBeVisible();
     await expect(page.locator("#projects")).toBeVisible();
+    await expect(page.locator("#impact")).toBeVisible();
     await expect(page.locator("#work")).toBeVisible();
     await expect(page.locator("#contact")).toBeVisible();
   });

@@ -12,6 +12,7 @@ const navLabels: Record<NavSectionId, string> = {
   about: "about.md",
   projects: "projects/",
   career: "career.log",
+  impact: "impact.diff",
   work: "work/",
   contact: "contact.sh",
 };

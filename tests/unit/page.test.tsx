@@ -105,10 +105,9 @@ describe("Home page", () => {
       ["01", "About Me"],
       ["02", "Hobby projects"],
       ["03", "Career & stack"],
-      ["04", "Technical Capabilities"],
-      ["05", "Problem-Solving Highlights"],
-      ["06", "Professional Work"],
-      ["07", "Get In Touch"],
+      ["04", "Impact"],
+      ["05", "Professional Work"],
+      ["06", "Get In Touch"],
     ]);
     expect(
       within(screen.getByRole("heading", { level: 1 })).queryByTestId("section-number")
