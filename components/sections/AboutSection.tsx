@@ -1,14 +1,6 @@
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Section, type NumberedSectionProps } from "@/components/ui/section";
-import {
-  bio,
-  careerHighlights,
-  technicalAchievements,
-  exploringTags,
-  exploringHeading,
-  achievementsHeading,
-} from "@/content/about";
+import { bio, careerHighlights, technicalAchievements, achievementsHeading } from "@/content/about";
 import { accent } from "@/lib/accent";
 import { cn } from "@/lib/utils";
 
@@ -25,18 +17,6 @@ export function AboutSection({ number }: NumberedSectionProps) {
               {paragraph}
             </p>
           ))}
-
-          {/* Currently exploring */}
-          <div className="mt-10">
-            <p className="text-sm font-semibold text-label mb-3">{exploringHeading}</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {exploringTags.map((tag) => (
-                <Badge key={tag.label} accent={tag.accent}>
-                  {tag.label}
-                </Badge>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Career Highlights */}

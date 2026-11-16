@@ -61,8 +61,6 @@
     --card-purple: color-mix(in oklch, var(--a-purple) 12%, transparent);
     --card-orange: color-mix(in oklch, var(--a-orange) 12%, transparent);
     --card-white: var(--panel);
-    --card-white-transparent: color-mix(in oklch, var(--panel) 85%, transparent);
-    --card-white-80: color-mix(in oklch, var(--panel) 80%, transparent);
     --bento-gradient: linear-gradient(var(--panel), var(--panel));
     --heading-text: var(--fg);
     --body-text: var(--fg);
@@ -122,21 +120,13 @@
     background-color: var(--card-white);
   }
 
-  .card-bg-white-transparent {
-    background-color: var(--card-white-transparent);
-  }
-
-  .card-bg-white-80 {
-    background-color: var(--card-white-80);
-  }
-
   .bento-card-bg {
     background-image: var(--bento-gradient);
   }
 }
 
-/* The hero's terminal cursor, and its pulsing status dot. Both are switched off under
-   reduced motion by the components that use them. */
+/* The hero's terminal cursor and its pulsing status dot, and the career log's rising lines.
+   Each is switched off under reduced motion by the component that uses it. */
 @keyframes blink {
   50% {
     opacity: 0;
@@ -159,6 +149,22 @@
 
 .animate-status-pulse {
   animation: status-pulse 2s infinite;
+}
+
+/* A line easing up into place: an opened career log role's highlights. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-rise {
+  animation: rise 0.3s ease-out;
 }
 
 /* Gradient text */

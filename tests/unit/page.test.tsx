@@ -102,14 +102,12 @@ describe("Home page", () => {
     // them; only the hero carries no number.
     expect(numbered).toEqual([
       ["01", "About Me"],
-      ["02", "Skills & Technologies"],
+      ["02", "Career & stack"],
       ["03", "Technical Capabilities"],
       ["04", "Problem-Solving Highlights"],
-      ["05", "Professional Experience"],
-      ["06", "Professional Work"],
-      ["07", "Open Source"],
-      ["08", "Education"],
-      ["09", "Get In Touch"],
+      ["05", "Professional Work"],
+      ["06", "Open Source"],
+      ["07", "Get In Touch"],
     ]);
     expect(
       within(screen.getByRole("heading", { level: 1 })).queryByTestId("section-number")
@@ -125,19 +123,10 @@ describe("Home page", () => {
     const { numbered } = await renderPage();
 
     expect(screen.queryByRole("heading", { name: "Open Source" })).not.toBeInTheDocument();
-    expect(numbered.map(([number]) => number)).toEqual([
-      "01",
-      "02",
-      "03",
-      "04",
-      "05",
-      "06",
-      "07",
-      "08",
-    ]);
+    expect(numbered.map(([number]) => number)).toEqual(["01", "02", "03", "04", "05", "06"]);
     expect(numbered.slice(-2)).toEqual([
-      ["07", "Education"],
-      ["08", "Get In Touch"],
+      ["05", "Professional Work"],
+      ["06", "Get In Touch"],
     ]);
   });
 

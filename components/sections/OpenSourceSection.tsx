@@ -1,8 +1,6 @@
 import { cn } from "@/lib/utils";
 import { FolderGit2, Star, ArrowUpRight } from "lucide-react";
 import type { Repo } from "@/lib/github";
-import type { ContributionCalendar } from "@/lib/github-contributions";
-import { ContributionHeatmap } from "@/components/ContributionHeatmap";
 import { Section, type NumberedSectionProps } from "@/components/ui/section";
 import { openSource } from "@/content/open-source";
 import { accent, accentAt } from "@/lib/accent";
@@ -26,14 +24,7 @@ function formatUpdated(iso: string): string {
  * `repos` list — `app/page.tsx` drops the section from its ordered list
  * instead, so a missing section can't leave a gap in the numbers below it.
  */
-export function OpenSourceSection({
-  repos,
-  contributions,
-  number,
-}: NumberedSectionProps & {
-  repos: Repo[];
-  contributions?: ContributionCalendar;
-}) {
+export function OpenSourceSection({ repos, number }: NumberedSectionProps & { repos: Repo[] }) {
   return (
     <Section id="open-source" title="Open Source" number={number} subtitle={openSource.subtitle}>
       <div className="grid gap-6 sm:grid-cols-2 max-w-4xl mx-auto">
@@ -89,12 +80,6 @@ export function OpenSourceSection({
           );
         })}
       </div>
-
-      {contributions && (
-        <div className="max-w-4xl mx-auto">
-          <ContributionHeatmap calendar={contributions} />
-        </div>
-      )}
     </Section>
   );
 }

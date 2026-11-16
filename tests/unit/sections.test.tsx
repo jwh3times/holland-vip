@@ -2,49 +2,28 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import {
   AboutSection,
-  SkillsSection,
   TechnicalCapabilities,
   ProblemSolving,
-  ExperienceSection,
   ProjectsSection,
-  EducationSection,
   ContactSection,
 } from "@/components/sections";
 
 // These assertions read from the content modules rather than restating their
 // strings. Before the content seam existed, editing the resume broke this file.
-import { careerHighlights, exploringTags, exploringHeading } from "@/content/about";
-import { skillCategories } from "@/content/skills";
+import { careerHighlights } from "@/content/about";
 import { capabilities } from "@/content/capabilities";
 import { challenges, challengeRows } from "@/content/problem-solving";
-import { experiences } from "@/content/experience";
 import { projects, confidentialLabel } from "@/content/projects";
-import { education } from "@/content/education";
 import { contact } from "@/content/contact";
 import { siteConfig } from "@/lib/site-config";
 
-// The hero and its terminal are covered in hero.test.tsx.
+// The hero and its terminal are covered in hero.test.tsx, and Career & stack in career.test.tsx.
 describe("section components", () => {
-  it("About renders every career highlight and exploring tag", () => {
+  it("About renders every career highlight", () => {
     render(<AboutSection number="01" />);
     expect(screen.getByRole("heading", { name: "About Me" })).toBeInTheDocument();
-    expect(screen.getByText(exploringHeading)).toBeInTheDocument();
     for (const highlight of careerHighlights) {
       expect(screen.getByText(highlight.title)).toBeInTheDocument();
-    }
-    for (const tag of exploringTags) {
-      expect(screen.getByText(tag.label)).toBeInTheDocument();
-    }
-  });
-
-  it("Skills renders every category and skill", () => {
-    render(<SkillsSection number="01" />);
-    expect(screen.getByRole("heading", { name: "Skills & Technologies" })).toBeInTheDocument();
-    for (const category of skillCategories) {
-      expect(screen.getByText(category.title)).toBeInTheDocument();
-      for (const skill of category.skills) {
-        expect(screen.getAllByText(skill).length).toBeGreaterThan(0);
-      }
     }
   });
 
@@ -68,16 +47,6 @@ describe("section components", () => {
     }
   });
 
-  it("Experience renders every role and marks the current one", () => {
-    render(<ExperienceSection number="01" />);
-    expect(screen.getByRole("heading", { name: "Professional Experience" })).toBeInTheDocument();
-    for (const role of experiences) {
-      expect(screen.getByText(role.company)).toBeInTheDocument();
-    }
-    const current = experiences.filter((r) => r.isCurrent);
-    expect(screen.getAllByText("Current")).toHaveLength(current.length);
-  });
-
   it("Projects renders as confidential professional work with every bento item", () => {
     render(<ProjectsSection number="01" />);
     expect(screen.getByRole("heading", { name: "Professional Work" })).toBeInTheDocument();
@@ -87,28 +56,12 @@ describe("section components", () => {
     }
   });
 
-  it("Education renders the school, logo, degrees, and highlights", () => {
-    render(<EducationSection number="01" />);
-    expect(screen.getByRole("heading", { name: "Education" })).toBeInTheDocument();
-    expect(screen.getByAltText(education.logoAlt)).toBeInTheDocument();
-    expect(screen.getByText(education.school)).toBeInTheDocument();
-    for (const degree of education.degrees) {
-      expect(screen.getByText(degree.name)).toBeInTheDocument();
-    }
-    for (const highlight of education.highlights) {
-      expect(screen.getByText(highlight.label)).toBeInTheDocument();
-    }
-  });
-
   // The page numbers sections by position; a section only forwards what it is handed.
   it.each([
     ["About", AboutSection],
-    ["Skills", SkillsSection],
     ["Technical Capabilities", TechnicalCapabilities],
     ["Problem Solving", ProblemSolving],
-    ["Experience", ExperienceSection],
     ["Projects", ProjectsSection],
-    ["Education", EducationSection],
     ["Contact", ContactSection],
   ])("%s shows the number it is given rather than choosing one", (_, NumberedSection) => {
     render(<NumberedSection number="07" />);

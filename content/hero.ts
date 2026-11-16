@@ -40,7 +40,7 @@ export const hero = {
   lead: "Senior software engineer. I build production systems by day and keep a steady stream of hobby projects going in the open — from AI-search tracking to version control to mobile apps.",
   ctas: [
     { label: "./see-projects", href: "#projects" },
-    { label: "cat career.log", href: "#experience" },
+    { label: "cat career.log", href: "#career" },
   ],
   stats: {
     years: "in production",

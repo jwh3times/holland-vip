@@ -33,12 +33,27 @@ grid cell as the typed text, holds the finished height at every width on top of 
 typing never shifts the page. Under reduced motion it renders fully typed with no blink. The window
 is `aria-hidden`, and the hero carries a visually hidden summary from content in its place.
 
+Career & stack (`#career`) replaced the Experience, Skills and Education sections. Each Experience
+stores its `start` and `end` as a year and month, `end` being `null` for the current role, and
+`lib/role-dates.ts` derives the period label, the `Ny` / `Nmo` duration and the timeline bar from
+those dates and the build date, so the three can never disagree. The timeline axis runs from January
+2013 to the build date plus 0.1 year, with gridlines at odd years. `CareerSection` derives all of
+this on the server and hands it to `components/career-log.tsx`, the section's one client component,
+which holds the timeline and the `git log` and their shared open role. A timeline row opens its role
+in the log, a log row toggles its own, and the current role starts open. Both are native buttons,
+so Enter and Space work, and the log's collapsed highlights stay in the DOM as `hidden` so each
+`aria-controls` target always exists. Education is the log's one-line root. The `skills.json`
+inventory, the Agent Skills panel, Current Explorations and the Contribution Activity heatmap are
+server-rendered beside and below it. The heatmap keeps a 640px minimum width and, on a narrow
+screen, scrolls sideways inside a focusable region. `components/ui/panel.tsx` is the design's
+bordered "window" with a shell-prompt header row.
+
 Portfolio prose lives in typed modules under `content/`. Section components import and render
 those records, which keeps a resume edit independent from layout code. Contact identity and social
 URLs live in `lib/site-config.ts`; metadata lives in `app/layout.tsx`. The homepage emits a static
 schema.org `Person` and `WebSite` graph from that shared identity configuration in `app/page.tsx`.
 
-The portfolio intentionally has no notes or blog section. `Currently exploring` communicates
+The portfolio intentionally has no notes or blog section. The Current Explorations communicate
 active learning without implying a publication cadence, and a stale, sparsely maintained blog
 would weaken that signal. Reconsider a publishing section only when the owner wants one and can
 sustain a defined cadence.
@@ -75,10 +90,11 @@ Components compose classes with `cn()` from `lib/utils.ts`. `app/globals.css` al
 project-specific utility classes:
 
 - Text hierarchy: `text-heading`, `text-body`, `text-label`, `text-muted`
-- Card surfaces: `card-bg-white`, `card-bg-white-transparent`, `card-bg-white-80`, `bento-card-bg`
+- Card surfaces: `card-bg-white`, `bento-card-bg`
 - Decorative treatments: `gradient-text`, `glass` (the header's frosted bar)
-- Animation: `animate-blink` (the hero terminal's cursor) and `animate-status-pulse` (the hero's
-  status dot), each switched off under reduced motion by its caller
+- Animation: `animate-blink` (the hero terminal's cursor), `animate-status-pulse` (the hero's
+  status dot) and `animate-rise` (an opened career log role's highlights), each switched off under
+  reduced motion by its caller
 
 The four accent names and every associated token live in `lib/accent.ts`. Each token reads the
 accent's `--a-*` variable, with tinted fills written as `color-mix(in oklch, var(--a-X) N%,

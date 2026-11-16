@@ -87,8 +87,6 @@ const ROLLOUT_ALIASES = [
   "--card-purple",
   "--card-orange",
   "--card-white",
-  "--card-white-transparent",
-  "--card-white-80",
   "--bento-gradient",
   "--heading-text",
   "--body-text",
