@@ -40,7 +40,7 @@ export function Card({
         padding === "lg" ? "p-8" : "p-6",
         key
           ? cn("border", accent[key].border, accent[key].cardBg)
-          : "card-bg-white border border-gray-200 dark:border-slate-700 shadow-lg",
+          : "card-bg-white border border-line shadow-lg",
         interactive && "hover:shadow-2xl",
         className
       )}

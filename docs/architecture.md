@@ -37,24 +37,43 @@ links fail to compile.
 
 ## UI vocabulary
 
-Theme colors are CSS custom properties in `app/globals.css`, surfaced through semantic utilities
-such as `text-heading`, `text-body`, and `section-surface`. Components compose classes with `cn()`
-from `lib/utils.ts`.
+Theme colors are the Terminal design's tokens, CSS custom properties in `app/globals.css`: `--bg`,
+`--panel`, `--panel2`, `--line`, `--line2`, `--fg`, `--mute`, `--dim`, the four accents `--a-blue`,
+`--a-purple`, `--a-green` and `--a-orange`, and the empty heatmap cell `--heat0`. Light values sit on
+`:root` and dark values under `.dark`. A `@theme inline` block exposes each token as a Tailwind color
+(`bg-panel`, `text-mute`, `border-line`, `text-a-green`), so a utility reads the live token and the
+theme swap recolors it without a `dark:` variant. Where a value departs from the design handoff, it
+is for WCAG AA: `--dim`, dark `--mute` and the light accents are adjusted so every text token clears
+4.5:1 on `--bg`, `--panel` and `--panel2`, and each accent on its own 14% tint.
+`tests/unit/globals-css.test.ts` computes those ratios from the stylesheet, which matters because
+axe only measures the colors a rendered page happens to use.
 
-`app/globals.css` defines these project-specific utility classes:
+During the redesign rollout, the pre-Terminal token names (`--background`, `--heading-text`,
+`--card-white`, and the rest) are aliases built only from the new tokens, so sections not yet
+converted render in the new palette. They are declared once on `:root` and follow the theme through
+`var()`. The final redesign slice deletes them, along with the utilities below that read them.
+
+Components compose classes with `cn()` from `lib/utils.ts`. `app/globals.css` also defines these
+project-specific utility classes:
 
 - Text hierarchy: `text-heading`, `text-body`, `text-label`, `text-muted`
-- Badge text: `text-badge-blue`, `text-badge-green`, `text-badge-purple`,
-  `text-badge-orange`
-- Card surfaces: `card-bg-blue`, `card-bg-green`, `card-bg-purple`, `card-bg-orange`,
-  `card-bg-white`, `card-bg-white-transparent`, `card-bg-white-80`, `bento-card-bg`
+- Card surfaces: `card-bg-white`, `card-bg-white-transparent`, `card-bg-white-80`, `bento-card-bg`
 - Section and hero surfaces: `section-surface`, `section-surface-contrast`, `hero-section`
 - Decorative treatments: `gradient-text`, `gradient-text-blue`, `glass`
 - Animation: `animate-fadeInUp`
 
-The four accent names and every associated token live in `lib/accent.ts`. `Badge` and `Card`
-consume that table; callers name an accent rather than rebuilding background, border, and text
-class combinations.
+The four accent names and every associated token live in `lib/accent.ts`. Each token reads the
+accent's `--a-*` variable, with tinted fills written as `color-mix(in oklch, var(--a-X) N%,
+transparent)` at the design's four steps: 12% (chip), 14% (bar), 30% (hover) and 55% (border glow).
+`Badge` and `Card` consume that table; callers name an accent rather than rebuilding background,
+border, and text class combinations.
+
+Type is Geist for UI text and Geist Mono for labels and terminal text, both from the `geist` package
+and served through `next/font/local` (`app/fonts.ts`). They are self-hosted under
+`/_next/static/media`, so the build fetches no font and the `font-src 'self'` CSP is unchanged. Their
+variables map to Tailwind's `--font-sans` and `--font-mono`. Only Geist Sans is preloaded: a preload
+competes with the hero's LCP text on a throttled connection, and Lighthouse's simulated LCP counts it
+whether or not anything renders in that face.
 
 `next-themes` applies light/dark mode through the root class. A component that reads theme state
 uses the `useSyncExternalStore` mount guard in `components/mode-toggle.tsx` and renders stable

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
  *
  * Interface — everything a caller needs to know:
  *
- * - `variant`: "primary" (filled blue gradient) or "secondary" (outlined).
+ * - `variant`: "primary" (solid --fg fill, --bg text) or "secondary" (outlined).
  *   Defaults to "primary".
  * - `size`: "md" (px-8 py-3) or "lg" (px-10 py-4). Defaults to "md".
  * - The rendered element is derived from the props, not chosen by the caller:
@@ -27,13 +27,11 @@ type CtaVariant = "primary" | "secondary";
 type CtaSize = "md" | "lg";
 
 const base =
-  "inline-block rounded-xl font-semibold transition-all hover:scale-105 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
+  "inline-block rounded-xl font-semibold transition-all hover:scale-105 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-a-blue focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
 
 const variants: Record<CtaVariant, string> = {
-  primary:
-    "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white hover:shadow-2xl",
-  secondary:
-    "border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white dark:border-blue-500 dark:text-blue-400 dark:hover:bg-blue-500 dark:hover:text-white",
+  primary: "bg-fg text-bg hover:shadow-2xl",
+  secondary: "border-2 border-line2 text-fg hover:bg-panel2",
 };
 
 const sizes: Record<CtaSize, string> = {

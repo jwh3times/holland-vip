@@ -19,74 +19,89 @@ export const ACCENTS = ["blue", "green", "purple", "orange"] as const;
 export type Accent = (typeof ACCENTS)[number];
 
 export interface AccentTokens {
-  /** Heading text. Chosen for AA contrast on both surfaces. */
+  /** Accent text: headings, links, metrics. AA on every surface and on the accent's own tint. */
   text: string;
   /** Bullet glyphs and list markers. */
   bullet: string;
   /** Solid dot — timeline nodes, language indicators. */
   dot: string;
-  /** Ring around a solid dot. */
+  /** Ring around a solid dot, or a chip's outline: the 30% hover tint. */
   ring: string;
-  /** Card border for tinted cards. */
+  /** Card border for tinted cards: the 30% tint. */
   border: string;
-  /** Tinted card background, paired with `border`. */
+  /** Tinted card background, paired with `border`: the 12% chip tint. */
   cardBg: string;
   /** Pill background + text. See `<Badge>`. */
   badge: string;
   /** Icon chip: background, text, and ring. */
   iconChip: string;
+  /** Bar fill — a timeline span: the 14% tint. */
+  bar: string;
+  /** Border glow on a selected or hovered element: the 55% tint. */
+  glow: string;
 }
 
 /**
- * Note on `text`: green and orange use the 700 shade rather than 600. Both were
- * previously in use — `SkillsSection` had 700 while `AboutSection` and
- * `TechnicalCapabilities` had 600 — and 700 is the one that clears WCAG AA for
- * normal-size text on the light surfaces. Blue and purple already clear it at 600.
+ * Every token reads the accent's `--a-*` variable from `app/globals.css`, so the
+ * light/dark swap recolours it without a `dark:` variant. Tints are
+ * `color-mix(in oklch, var(--a-X) N%, transparent)` at the design's four steps:
+ * 12% (chip), 14% (bar), 30% (hover) and 55% (border glow).
+ *
+ * Each class string is written out in full, never assembled from parts: Tailwind
+ * finds classes by scanning this file's text, and would miss an interpolated one.
  */
 export const accent: Record<Accent, AccentTokens> = {
   blue: {
-    text: "text-blue-600 dark:text-blue-400",
-    bullet: "text-blue-500",
-    dot: "bg-blue-500",
-    ring: "ring-blue-500/20",
-    border: "border-blue-200 dark:border-slate-700",
-    cardBg: "card-bg-blue",
-    badge: "bg-blue-100 dark:bg-blue-900/40 text-badge-blue",
+    text: "text-a-blue",
+    bullet: "text-a-blue",
+    dot: "bg-a-blue",
+    ring: "ring-[color-mix(in_oklch,var(--a-blue)_30%,transparent)]",
+    border: "border-[color-mix(in_oklch,var(--a-blue)_30%,transparent)]",
+    cardBg: "bg-[color-mix(in_oklch,var(--a-blue)_12%,transparent)]",
+    badge: "bg-[color-mix(in_oklch,var(--a-blue)_12%,transparent)] text-a-blue",
     iconChip:
-      "bg-blue-500/10 text-blue-600 ring-blue-500/20 dark:bg-blue-500/15 dark:text-blue-300 dark:ring-blue-500/25",
+      "bg-[color-mix(in_oklch,var(--a-blue)_12%,transparent)] text-a-blue ring-[color-mix(in_oklch,var(--a-blue)_30%,transparent)]",
+    bar: "bg-[color-mix(in_oklch,var(--a-blue)_14%,transparent)]",
+    glow: "border-[color-mix(in_oklch,var(--a-blue)_55%,transparent)]",
   },
   green: {
-    text: "text-green-700 dark:text-green-400",
-    bullet: "text-green-500",
-    dot: "bg-green-500",
-    ring: "ring-green-500/20",
-    border: "border-green-200 dark:border-slate-700",
-    cardBg: "card-bg-green",
-    badge: "bg-green-100 dark:bg-green-900/40 text-badge-green",
+    text: "text-a-green",
+    bullet: "text-a-green",
+    dot: "bg-a-green",
+    ring: "ring-[color-mix(in_oklch,var(--a-green)_30%,transparent)]",
+    border: "border-[color-mix(in_oklch,var(--a-green)_30%,transparent)]",
+    cardBg: "bg-[color-mix(in_oklch,var(--a-green)_12%,transparent)]",
+    badge: "bg-[color-mix(in_oklch,var(--a-green)_12%,transparent)] text-a-green",
     iconChip:
-      "bg-green-500/10 text-green-700 ring-green-500/20 dark:bg-green-500/15 dark:text-green-300 dark:ring-green-500/25",
+      "bg-[color-mix(in_oklch,var(--a-green)_12%,transparent)] text-a-green ring-[color-mix(in_oklch,var(--a-green)_30%,transparent)]",
+    bar: "bg-[color-mix(in_oklch,var(--a-green)_14%,transparent)]",
+    glow: "border-[color-mix(in_oklch,var(--a-green)_55%,transparent)]",
   },
   purple: {
-    text: "text-purple-600 dark:text-purple-400",
-    bullet: "text-purple-500",
-    dot: "bg-purple-500",
-    ring: "ring-purple-500/20",
-    border: "border-purple-200 dark:border-slate-700",
-    cardBg: "card-bg-purple",
-    badge: "bg-purple-100 dark:bg-purple-900/40 text-badge-purple",
+    text: "text-a-purple",
+    bullet: "text-a-purple",
+    dot: "bg-a-purple",
+    ring: "ring-[color-mix(in_oklch,var(--a-purple)_30%,transparent)]",
+    border: "border-[color-mix(in_oklch,var(--a-purple)_30%,transparent)]",
+    cardBg: "bg-[color-mix(in_oklch,var(--a-purple)_12%,transparent)]",
+    badge: "bg-[color-mix(in_oklch,var(--a-purple)_12%,transparent)] text-a-purple",
     iconChip:
-      "bg-purple-500/10 text-purple-600 ring-purple-500/20 dark:bg-purple-500/15 dark:text-purple-300 dark:ring-purple-500/25",
+      "bg-[color-mix(in_oklch,var(--a-purple)_12%,transparent)] text-a-purple ring-[color-mix(in_oklch,var(--a-purple)_30%,transparent)]",
+    bar: "bg-[color-mix(in_oklch,var(--a-purple)_14%,transparent)]",
+    glow: "border-[color-mix(in_oklch,var(--a-purple)_55%,transparent)]",
   },
   orange: {
-    text: "text-orange-700 dark:text-orange-400",
-    bullet: "text-orange-500",
-    dot: "bg-orange-500",
-    ring: "ring-orange-500/20",
-    border: "border-orange-200 dark:border-slate-700",
-    cardBg: "card-bg-orange",
-    badge: "bg-orange-100 dark:bg-orange-900/40 text-badge-orange",
+    text: "text-a-orange",
+    bullet: "text-a-orange",
+    dot: "bg-a-orange",
+    ring: "ring-[color-mix(in_oklch,var(--a-orange)_30%,transparent)]",
+    border: "border-[color-mix(in_oklch,var(--a-orange)_30%,transparent)]",
+    cardBg: "bg-[color-mix(in_oklch,var(--a-orange)_12%,transparent)]",
+    badge: "bg-[color-mix(in_oklch,var(--a-orange)_12%,transparent)] text-a-orange",
     iconChip:
-      "bg-orange-500/10 text-orange-700 ring-orange-500/20 dark:bg-orange-500/15 dark:text-orange-300 dark:ring-orange-500/25",
+      "bg-[color-mix(in_oklch,var(--a-orange)_12%,transparent)] text-a-orange ring-[color-mix(in_oklch,var(--a-orange)_30%,transparent)]",
+    bar: "bg-[color-mix(in_oklch,var(--a-orange)_14%,transparent)]",
+    glow: "border-[color-mix(in_oklch,var(--a-orange)_55%,transparent)]",
   },
 };
 

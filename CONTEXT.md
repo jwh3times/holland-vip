@@ -41,6 +41,11 @@ A repeatable kind of engineering work Jerry can perform, usually drawing on seve
 practices.
 _Avoid_: Skill, technology
 
+**Agent Skill**:
+A reusable instruction set Jerry authored for coding agents and publishes for use across his
+repositories.
+_Avoid_: Skill, plugin
+
 ### Evidence of work
 
 **Career Highlight**:
@@ -64,21 +69,17 @@ _Avoid_: Project, engagement
 **Professional Project**:
 Selected work completed in a professional role and described in anonymized, generalized terms to
 protect employer and client confidentiality.
-_Avoid_: Featured repository, open-source project
+_Avoid_: Hobby project, open-source project
 
-**Open Source**:
-The public-work category that combines curated repositories with Jerry's broader GitHub contribution
-activity.
-_Avoid_: Professional projects
-
-**Featured Repository**:
-A curated public project that Jerry builds or maintains openly on GitHub.
-_Avoid_: Professional project, contribution activity
+**Hobby Project**:
+A public project Jerry builds outside his employment, one of a few selected to show range rather
+than a complete list of his active work.
+_Avoid_: Side project, featured repository, professional project
 
 **Contribution Activity**:
-Jerry's public GitHub contribution history, presented as evidence of ongoing open-source activity
-rather than as a project itself.
-_Avoid_: Featured repository, experience
+Jerry's public GitHub contribution history, presented as evidence of ongoing engineering activity
+rather than as a project itself. It counts contributions of every kind, not commits alone.
+_Avoid_: Commits, hobby project, experience
 
 **Education**:
 Jerry's formal university degrees and the academic focus or leadership highlights associated with

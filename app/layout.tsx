@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { geistMono, geistSans } from "./fonts";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { siteConfig, yearsOfExperience } from "@/lib/site-config";
@@ -71,8 +72,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
+    { media: "(prefers-color-scheme: light)", color: "#f5f5f2" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0c0e" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -84,7 +85,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
       <body className="antialiased">
         {/* Skip to main content link for accessibility */}
         <a
