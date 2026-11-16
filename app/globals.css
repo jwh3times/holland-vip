@@ -6,10 +6,10 @@
    and keeps the dark-mode contract next to the tokens it governs. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* The Terminal tokens as Tailwind theme colours and fonts: `bg-panel`, `text-mute`,
-   `border-line`, `text-a-green`, `font-mono`. `inline` makes each utility read the token
-   itself, so the `.dark` swap below recolours it. The Geist variables come from the `geist`
-   package's `next/font/local` faces in app/fonts.ts. */
+/* The Terminal tokens as Tailwind theme colours, fonts and the terminal window's shadow:
+   `bg-panel`, `text-mute`, `border-line`, `text-a-green`, `font-mono`, `shadow-terminal`.
+   `inline` makes each utility read the token itself, so the `.dark` swap below recolours it.
+   The Geist variables come from the `geist` package's `next/font/local` faces in app/fonts.ts. */
 @theme inline {
   --color-bg: var(--bg);
   --color-panel: var(--panel);

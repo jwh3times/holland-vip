@@ -41,7 +41,8 @@ export function parseCalendar(data: unknown): ContributionCalendar | null {
 /**
  * Committed snapshot used when the live GraphQL fetch is unavailable (no/invalid
  * token, offline). A malformed snapshot degrades to an empty calendar rather
- * than rendering garbage — `OpenSourceSection` omits the heatmap when it's absent.
+ * than rendering garbage — the heatmap renders nothing for it, and the hero's
+ * contribution stats show a dash.
  */
 const fallbackCalendar: ContributionCalendar = parseCalendar(fallbackData) ?? {
   totalContributions: 0,

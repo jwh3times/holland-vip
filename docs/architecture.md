@@ -59,9 +59,10 @@ Theme colors are the Terminal design's tokens, CSS custom properties in `app/glo
 `--a-purple`, `--a-green` and `--a-orange`, and the empty heatmap cell `--heat0`. Light values sit on
 `:root` and dark values under `.dark`. A `@theme inline` block exposes each token as a Tailwind color
 (`bg-panel`, `text-mute`, `border-line`, `text-a-green`), so a utility reads the live token and the
-theme swap recolors it without a `dark:` variant. Where a value departs from the design handoff, it
-is for WCAG AA: `--dim`, dark `--mute` and the light accents are adjusted so every text token clears
-4.5:1 on `--bg`, `--panel` and `--panel2`, and each accent on its own 14% tint.
+theme swap recolors it without a `dark:` variant. The same block defines `--shadow-terminal`, the
+hero terminal window's drop shadow (`shadow-terminal`). Where a value departs from the design
+handoff, it is for WCAG AA: `--dim`, dark `--mute` and the light accents are adjusted so every text
+token clears 4.5:1 on `--bg`, `--panel` and `--panel2`, and each accent on its own 14% tint.
 `tests/unit/globals-css.test.ts` computes those ratios from the stylesheet, which matters because
 axe only measures the colors a rendered page happens to use.
 
