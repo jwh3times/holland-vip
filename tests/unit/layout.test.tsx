@@ -27,6 +27,20 @@ describe("RootLayout", () => {
     expect(viewport.width).toBe("device-width");
   });
 
+  it("paints the browser chrome in each theme's --bg", () => {
+    // Viewport metadata cannot read a CSS variable, so the colours are copies;
+    // this keeps them from drifting away from app/globals.css.
+    const css = readFileSync(join(root, "app", "globals.css"), "utf8");
+    const bg = (selector: string) =>
+      new RegExp(`^  ${selector}\\s*\\{[^}]*?--bg:\\s*(#[0-9a-f]{6});`, "m").exec(css)?.[1];
+    expect(viewport.themeColor).toEqual([
+      { media: "(prefers-color-scheme: light)", color: bg(":root") },
+      { media: "(prefers-color-scheme: dark)", color: bg("\\.dark") },
+    ]);
+    expect(bg(":root")).toBeDefined();
+    expect(bg("\\.dark")).toBeDefined();
+  });
+
   it("builds the document shell around its children", () => {
     const tree = RootLayout({ children: <div>page body</div> });
     expect(tree).toBeTruthy();
