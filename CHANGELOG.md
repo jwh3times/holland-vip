@@ -12,6 +12,39 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.3] - 2026-11-16
+
+### Changed
+
+- The final slice of the Terminal redesign (#252):
+  - **Professional work** (now `04`) shows each anonymized project as a `private/{slug}` cell on a
+    hairline grid, under a "🔒 private repos · anonymized" pill.
+  - **About** becomes an unnumbered README-style panel holding a rewritten three-paragraph
+    Biography.
+  - **Contact** becomes an unnumbered `$ ./contact.sh` prompt with the address as one large email
+    link and bordered `github/jwh3times` and `linkedin/jerryhollandiii` buttons.
+- The header's nav is now `projects/`, `career.log`, `impact.diff`, `work/` and `contact.sh`. About
+  left the nav, but `#about` still lands on the Biography, so old links keep working.
+- An editor-style status bar replaces the footer: `● main`, `holland.vip`, `© {year} Holland`, and
+  `UTF-8 · LF · {theme}` naming the theme actually painted, which follows the theme toggle.
+- Every button shares the Terminal style (mono text, 8px radius, no hover scale or shadow),
+  including the hero's two, the 404 page's and the error page's.
+
+### Removed
+
+- The pre-Terminal colour token aliases and the utility classes built on them, the unused card,
+  badge and bento-grid components, the old footer and its social icons, and the `lucide-react`
+  dependency. The design uses text glyphs, so the site no longer ships an icon library.
+
+## [1.6.2] - 2026-11-16
+
+### Changed
+
+- Bumped `lucide-react` from 1.71.0 to 1.72.0, `@lhci/cli` from 0.16.0 to 0.16.1,
+  `@testing-library/user-event` from 14.6.9 to 14.6.10, `jsdom` from 31.0.0 to 31.0.1,
+  `oxlint-tsgolint` from 7.0.2006 to 7.0.2007, `prettier` from 3.9.10 to 3.10.1 and `serve` from
+  14.2.7 to 14.2.8 (Dependabot, #260).
+
 ## [1.6.1] - 2026-11-16
 
 ### Changed
