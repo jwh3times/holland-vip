@@ -108,7 +108,7 @@ export default async function Home() {
         tabIndex={-1}
         data-github-data-source={githubDataSource}
       >
-        <HeroSection />
+        <HeroSection contributions={contributions} />
         {numberedSections.map(({ key, render }, index) => (
           <React.Fragment key={key}>{render(numberAt(index))}</React.Fragment>
         ))}

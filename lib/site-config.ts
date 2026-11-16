@@ -2,7 +2,9 @@ import { GitHubIcon, LinkedInIcon } from "@/components/icons/SocialIcons";
 
 /**
  * Single source of truth for contact + social links.
- * Consumed by HeroSection, Footer, and ContactSection.
+ * `siteConfig` is read by the layout, the page's JSON-LD, the header prompt and
+ * ContactSection; `socialLinks` by the Footer, the JSON-LD and the hero terminal's
+ * script in `content/hero.ts`.
  */
 export const siteConfig = {
   email: "jerry@holland.vip",

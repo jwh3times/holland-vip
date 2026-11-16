@@ -12,6 +12,28 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.91] - 2026-11-16
+
+### Changed
+
+- The third slice of the Terminal redesign (#248): the hero is rebuilt as a two-column opening
+  screen. It has a pulsing `Tech Lead @ SoftPro · Raleigh, NC` status line, a `Jerry Holland_`
+  heading, a one-paragraph lead, and `./see-projects` and `cat career.log` buttons that jump to the
+  work and career sections. A stats row shows years of experience and two contribution counts,
+  "contributions / 12mo" and "contributions / 30d", both taken from the build-time contribution
+  calendar, live or snapshot. An empty calendar shows a dash rather than zero.
+- Beside it, a terminal window types out a short `whoami` / `uptime` / `ls` / `cat now.txt`
+  session with a blinking cursor and a live 24-hour clock. It reserves its finished height, so
+  typing never moves the page. Under reduced motion it appears fully typed, with no blinking or
+  pulsing. Screen readers skip the window and hear a one-paragraph summary of it instead. The hero
+  is still server-rendered, so its heading and stats are in the static HTML; only the terminal runs
+  in the browser.
+
+### Removed
+
+- The hero's GitHub and LinkedIn icon links (the footer keeps them), its grid background, and the
+  `.hero-section`, `--hero-background` and `.animate-fadeInUp` styles that only the old hero used.
+
 ## [1.4.90] - 2026-11-16
 
 ### Changed
