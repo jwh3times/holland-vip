@@ -2,48 +2,29 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import {
   AboutSection,
-  TechnicalCapabilities,
-  ProblemSolving,
+  ImpactSection,
   ProjectsSection,
   ContactSection,
 } from "@/components/sections";
 
 // These assertions read from the content modules rather than restating their
 // strings. Before the content seam existed, editing the resume broke this file.
-import { careerHighlights } from "@/content/about";
-import { capabilities } from "@/content/capabilities";
-import { challenges, challengeRows } from "@/content/problem-solving";
+import { bio } from "@/content/about";
+import { careerHighlights, technicalAchievements } from "@/content/impact";
 import { projects, confidentialLabel } from "@/content/projects";
 import { contact } from "@/content/contact";
 import { siteConfig } from "@/lib/site-config";
 
-// The hero and its terminal are covered in hero.test.tsx, and Career & stack in career.test.tsx.
+// The hero and its terminal are covered in hero.test.tsx, Career & stack in career.test.tsx, and
+// Impact in impact.test.tsx.
 describe("section components", () => {
-  it("About renders every career highlight", () => {
+  // Its Career Highlights and Technical Achievements moved to Impact.
+  it("About renders the Biography and nothing that moved to Impact", () => {
     render(<AboutSection number="01" />);
     expect(screen.getByRole("heading", { name: "About Me" })).toBeInTheDocument();
-    for (const highlight of careerHighlights) {
-      expect(screen.getByText(highlight.title)).toBeInTheDocument();
-    }
-  });
-
-  it("Technical Capabilities renders every capability", () => {
-    render(<TechnicalCapabilities number="01" />);
-    expect(screen.getByRole("heading", { name: "Technical Capabilities" })).toBeInTheDocument();
-    for (const capability of capabilities) {
-      expect(screen.getByText(capability.title)).toBeInTheDocument();
-    }
-  });
-
-  it("Problem Solving renders each challenge with all three rows", () => {
-    render(<ProblemSolving number="01" />);
-    expect(screen.getByRole("heading", { name: "Problem-Solving Highlights" })).toBeInTheDocument();
-    for (const row of challengeRows) {
-      expect(screen.getAllByText(row.title)).toHaveLength(challenges.length);
-    }
-    for (const item of challenges) {
-      expect(screen.getByText(item.challenge)).toBeInTheDocument();
-      expect(screen.getByText(item.impact)).toBeInTheDocument();
+    for (const paragraph of bio) expect(screen.getByText(paragraph)).toBeInTheDocument();
+    for (const { title } of [...careerHighlights, ...technicalAchievements]) {
+      expect(screen.queryByText(title)).toBeNull();
     }
   });
 
@@ -59,8 +40,7 @@ describe("section components", () => {
   // The page numbers sections by position; a section only forwards what it is handed.
   it.each([
     ["About", AboutSection],
-    ["Technical Capabilities", TechnicalCapabilities],
-    ["Problem Solving", ProblemSolving],
+    ["Impact", ImpactSection],
     ["Projects", ProjectsSection],
     ["Contact", ContactSection],
   ])("%s shows the number it is given rather than choosing one", (_, NumberedSection) => {

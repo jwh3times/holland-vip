@@ -25,6 +25,7 @@ describe("Navigation", () => {
       "about.md",
       "projects/",
       "career.log",
+      "impact.diff",
       "work/",
       "contact.sh",
     ]);

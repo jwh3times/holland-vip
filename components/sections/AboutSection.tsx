@@ -1,60 +1,20 @@
-import { Card } from "@/components/ui/card";
 import { Section, type NumberedSectionProps } from "@/components/ui/section";
-import { bio, careerHighlights, technicalAchievements, achievementsHeading } from "@/content/about";
-import { accent } from "@/lib/accent";
+import { bio } from "@/content/about";
 import { cn } from "@/lib/utils";
 
+/** The Biography. Its Career Highlights and Technical Achievements render in Impact. */
 export function AboutSection({ number }: NumberedSectionProps) {
   return (
     <Section id="about" title="About Me" number={number}>
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          {bio.map((paragraph, index) => (
-            <p
-              key={paragraph.slice(0, 40)}
-              className={cn("text-lg text-muted leading-relaxed", index < bio.length - 1 && "mb-6")}
-            >
-              {paragraph}
-            </p>
-          ))}
-        </div>
-
-        {/* Career Highlights */}
-        <div className="grid md:grid-cols-2 gap-6 mt-12">
-          {careerHighlights.map((highlight) => (
-            <Card key={highlight.title} accent={highlight.accent}>
-              <div className={cn("text-3xl font-bold mb-2", accent[highlight.accent].text)}>
-                {highlight.value}
-              </div>
-              <div className="text-sm font-semibold text-label mb-1">{highlight.title}</div>
-              <div className="text-xs text-muted">{highlight.description}</div>
-            </Card>
-          ))}
-        </div>
-
-        {/* Recent Technical Achievements */}
-        <div className="mt-16">
-          <h3 className="text-2xl font-bold text-center mb-8 text-heading">
-            {achievementsHeading}
-          </h3>
-          <div className="space-y-6">
-            {technicalAchievements.map((achievement) => (
-              <Card key={achievement.title} accent={achievement.accent}>
-                <h4 className={cn("text-xl font-bold mb-3", accent[achievement.accent].text)}>
-                  {achievement.title}
-                </h4>
-                <ul className="space-y-2 text-muted">
-                  {achievement.items.map((item) => (
-                    <li key={item} className="flex items-start">
-                      <span className={cn("mr-2", accent[achievement.accent].bullet)}>▸</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-            ))}
-          </div>
-        </div>
+      <div className="max-w-4xl mx-auto text-center">
+        {bio.map((paragraph, index) => (
+          <p
+            key={paragraph.slice(0, 40)}
+            className={cn("text-lg text-muted leading-relaxed", index < bio.length - 1 && "mb-6")}
+          >
+            {paragraph}
+          </p>
+        ))}
       </div>
     </Section>
   );

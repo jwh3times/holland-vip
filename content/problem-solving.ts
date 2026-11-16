@@ -1,18 +1,15 @@
+/** A Problem-Solving Highlight: a problem, the response to it, and the result. */
 export interface Challenge {
+  /** The headline result, exactly as shown: `−75%` (with U+2212), `45s → 3s`. */
+  metric: string;
   challenge: string;
   solution: string;
   impact: string;
 }
 
-/** Row labels for each challenge card, in render order. */
-export const challengeRows = [
-  { key: "challenge", icon: "⚠️", title: "Challenge", bgColor: "bg-red-100 dark:bg-red-900/30" },
-  { key: "solution", icon: "💡", title: "Solution", bgColor: "bg-blue-100 dark:bg-blue-900/30" },
-  { key: "impact", icon: "✅", title: "Impact", bgColor: "bg-green-100 dark:bg-green-900/30" },
-] as const;
-
 export const challenges: Challenge[] = [
   {
+    metric: "−75%",
     challenge:
       "Legacy authentication system causing frequent user lockouts and poor session management",
     solution:
@@ -21,6 +18,7 @@ export const challenges: Challenge[] = [
       "Reduced authentication support tickets by 75%, improved user satisfaction scores, and enabled single sign-on capabilities",
   },
   {
+    metric: "45s → 3s",
     challenge:
       "Complex database queries timing out in production, causing application slowdowns and poor user experience",
     solution:
@@ -29,6 +27,7 @@ export const challenges: Challenge[] = [
       "Reduced query execution time from 45 seconds to under 3 seconds, dramatically improved user experience and system throughput",
   },
   {
+    metric: "−95%",
     challenge:
       "Manual data import process prone to errors, consuming significant staff time and causing data quality issues",
     solution:

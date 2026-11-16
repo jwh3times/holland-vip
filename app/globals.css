@@ -108,10 +108,6 @@
     color: var(--body-text);
   }
 
-  .text-label {
-    color: var(--label-text);
-  }
-
   .text-muted {
     color: var(--muted-text);
   }
