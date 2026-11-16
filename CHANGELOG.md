@@ -12,6 +12,54 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.89] - 2026-11-16
+
+### Added
+
+- Geist and Geist Mono set the site's type, self-hosted from the `geist` package through
+  `next/font/local` in `app/fonts.ts`: no font is downloaded at build time or requested from a font
+  CDN, and the CSP is unchanged. Only Geist Sans is preloaded, because nothing renders in the mono
+  face yet and preloading it delayed the largest contentful paint.
+
+### Changed
+
+- The first slice of the Terminal redesign (#246): the site takes the Terminal palette, light by
+  default and dark under the theme toggle. Its tokens (`--bg`, `--panel`, `--panel2`, `--line`,
+  `--line2`, `--fg`, `--mute`, `--dim`, the four `--a-*` accents and `--heat0`) live in
+  `app/globals.css` and reach components as Tailwind utilities such as `bg-panel`, `text-mute` and
+  `text-a-green`. Every old token name stays as an alias resolved through the new tokens, so
+  sections the later slices redesign already render in the new palette.
+- `--dim`, the dark theme's `--mute` and the four light-theme accents depart from the design
+  handoff's values so that every text colour meets WCAG AA (4.5:1) on every surface, and each
+  accent on its own tint. A unit test holds every text token to that bar in both themes.
+- The accent table in `lib/accent.ts` keeps its four accents and colours each from its `--a-*`
+  token, tinted with `color-mix` at 12% for chips and cards and 30% for rings and borders, and gains
+  `bar` (14%) and `glow` (55%) tokens.
+- Cards, the call-to-action buttons, the bento grid, the navigation and footer, and the error,
+  loading and 404 pages use the new tokens; the primary button is now a solid foreground fill. The
+  browser's theme colour matches each theme's background, and a test keeps the two in step.
+- The domain glossary in `CONTEXT.md` adds **Agent Skill** and **Hobby Project**, retires **Open
+  Source** and **Featured Repository**, and counts every kind of contribution in **Contribution
+  Activity**.
+
+### Removed
+
+- The unused `.text-badge-*` and `.card-bg-{blue,green,purple,orange}` utilities and the
+  `.dark .glass` override.
+
+### Fixed
+
+- The Playwright accessibility check waits for entrance animations to finish before running axe,
+  so it no longer measures a colour halfway through a fade-in.
+
+## [1.4.88] - 2026-11-13
+
+### Changed
+
+- Bumped `lucide-react` from 1.70.0 to 1.71.0, `next` from 16.4.5 to 16.4.6,
+  `@testing-library/user-event` from 14.6.8 to 14.6.9 and `oxlint` from 1.92.0 to 1.93.0
+  (Dependabot, #244).
+
 ## [1.4.87] - 2026-11-12
 
 ### Changed

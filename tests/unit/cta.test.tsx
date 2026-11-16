@@ -47,7 +47,8 @@ describe("Cta", () => {
     it("defaults to the primary variant at md size", () => {
       render(<Cta href="#a">Default</Cta>);
       const el = screen.getByRole("link", { name: "Default" });
-      expect(el).toHaveClass("from-blue-600");
+      // The design primary: a solid --fg fill with --bg text, inverted by theme.
+      expect(el).toHaveClass("bg-fg", "text-bg");
       expect(el).toHaveClass("px-8", "py-3");
     });
 
@@ -58,8 +59,8 @@ describe("Cta", () => {
         </Cta>
       );
       const el = screen.getByRole("link", { name: "Secondary" });
-      expect(el).toHaveClass("border-2", "border-blue-600");
-      expect(el).not.toHaveClass("from-blue-600");
+      expect(el).toHaveClass("border-2", "border-line2");
+      expect(el).not.toHaveClass("bg-fg");
     });
 
     it("applies the lg size", () => {
@@ -85,7 +86,7 @@ describe("Cta", () => {
     );
     const el = screen.getByRole("link", { name: "Merged" });
     expect(el).toHaveClass("custom-class");
-    expect(el).toHaveClass("from-blue-600");
+    expect(el).toHaveClass("bg-fg");
   });
 
   it("fires onClick when the button form is activated", async () => {

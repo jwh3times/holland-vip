@@ -14,6 +14,9 @@ export default defineConfig({
       // Stub Next's Image/Link so components render as plain elements in jsdom.
       { find: "next/image", replacement: `${root}/tests/unit/mocks/next-image.tsx` },
       { find: "next/link", replacement: `${root}/tests/unit/mocks/next-link.tsx` },
+      // next/font/local and the geist faces built on it need Next's compiler.
+      { find: "next/font/local", replacement: `${root}/tests/unit/mocks/next-font-local.ts` },
+      { find: "geist/font/sans", replacement: `${root}/tests/unit/mocks/geist-font.ts` },
       // Mirror the tsconfig "@/*" path alias.
       { find: /^@\/(.*)$/, replacement: `${root}/$1` },
     ],

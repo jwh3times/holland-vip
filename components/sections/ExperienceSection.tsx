@@ -12,7 +12,7 @@ export function ExperienceSection({ surface }: SectionSurfaceProps) {
         {/* Timeline */}
         <div className="relative">
           {/* Vertical line */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-[linear-gradient(to_bottom,var(--color-blue-500),var(--color-purple-500),var(--color-green-500),var(--color-orange-500))]"></div>
+          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-[linear-gradient(to_bottom,var(--a-blue),var(--a-purple),var(--a-green),var(--a-orange))]"></div>
 
           {experiences.map((exp, index) => {
             const colors = accent[exp.accent];
@@ -23,7 +23,7 @@ export function ExperienceSection({ surface }: SectionSurfaceProps) {
               >
                 <div
                   className={cn(
-                    "absolute -left-[3.25rem] top-2 w-6 h-6 rounded-full border-4 border-white dark:border-slate-900 ring-4",
+                    "absolute -left-[3.25rem] top-2 w-6 h-6 rounded-full border-4 border-bg ring-4",
                     colors.dot,
                     colors.ring
                   )}

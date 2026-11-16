@@ -6,72 +6,94 @@
    and keeps the dark-mode contract next to the tokens it governs. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
-    --muted: 220 14% 96%;
-    --hero-background: linear-gradient(135deg, #f0f4ff 0%, #ffffff 50%, #ede9fe 100%);
-    --card-blue: 214 100% 97%;
-    --card-green: 142 76% 96%;
-    --card-purple: 250 100% 98%;
-    --card-orange: 33 100% 96%;
-    --card-white: 0 0% 100%;
-    --card-white-transparent: 0 0% 100% / 0.85;
-    --card-white-80: 0 0% 100% / 0.8;
-    --bento-gradient: linear-gradient(
-      to bottom right,
-      rgba(255, 255, 255, 0.95),
-      rgba(239, 246, 255, 0.4),
-      rgba(255, 255, 255, 0.9)
-    );
-    --heading-text: 222 47% 11%;
-    --body-text: 75 85% 6%; /* Body text - dark gray-600 equivalent */
-    --label-text: 222 47% 11%; /* Labels/semibold text - dark gray-700 equivalent */
-    --muted-text: 218 11% 40%; /* Muted/secondary text - darkened for WCAG AA on light surfaces */
+/* The Terminal tokens as Tailwind theme colours and fonts: `bg-panel`, `text-mute`,
+   `border-line`, `text-a-green`, `font-mono`. `inline` makes each utility read the token
+   itself, so the `.dark` swap below recolours it. The Geist variables come from the `geist`
+   package's `next/font/local` faces in app/fonts.ts. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel2: var(--panel2);
+  --color-line: var(--line);
+  --color-line2: var(--line2);
+  --color-fg: var(--fg);
+  --color-mute: var(--mute);
+  --color-dim: var(--dim);
+  --color-a-blue: var(--a-blue);
+  --color-a-purple: var(--a-purple);
+  --color-a-green: var(--a-green);
+  --color-a-orange: var(--a-orange);
+  --color-heat0: var(--heat0);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
 
-    /* Colored badge text - darker for better contrast in light mode */
-    --badge-blue-text: 214 100% 25%; /* Much darker blue for light backgrounds */
-    --badge-green-text: 142 76% 20%; /* Much darker green for light backgrounds */
-    --badge-purple-text: 250 100% 28%; /* Much darker purple for light backgrounds */
-    --badge-orange-text: 33 100% 30%; /* Much darker orange for light backgrounds */
+@layer base {
+  /* Terminal tokens (design handoff), light unless next-themes puts `.dark` on <html>.
+     Departures from the handoff, for WCAG AA (4.5:1) on --bg, --panel and --panel2 and on
+     each accent's own 14% tint: --dim is raised in both themes, dark --mute is lifted so it
+     stays clear of --dim, and the light accents are darkened. tests/unit/globals-css.test.ts
+     holds every text token to that bar. */
+  :root {
+    --bg: #f5f5f2;
+    --panel: #ffffff;
+    --panel2: #efefeb;
+    --line: rgba(0, 0, 0, 0.09);
+    --line2: rgba(0, 0, 0, 0.17);
+    --fg: #15171a;
+    --mute: #555a63;
+    --dim: #646972;
+    --a-blue: oklch(0.47 0.15 250);
+    --a-purple: oklch(0.49 0.15 305);
+    --a-green: oklch(0.46 0.13 155);
+    --a-orange: oklch(0.49 0.14 55);
+    --heat0: rgba(0, 0, 0, 0.06);
+
+    /* Rollout aliases: the pre-Terminal names, resolved through the tokens above so
+       unconverted sections render in the new palette. Declared once here; the `.dark`
+       swap reaches them through var(). The final redesign slice deletes them all. */
+    --background: var(--bg);
+    --foreground: var(--fg);
+    --muted: var(--panel);
+    --hero-background: linear-gradient(var(--bg), var(--bg));
+    --card-blue: color-mix(in oklch, var(--a-blue) 12%, transparent);
+    --card-green: color-mix(in oklch, var(--a-green) 12%, transparent);
+    --card-purple: color-mix(in oklch, var(--a-purple) 12%, transparent);
+    --card-orange: color-mix(in oklch, var(--a-orange) 12%, transparent);
+    --card-white: var(--panel);
+    --card-white-transparent: color-mix(in oklch, var(--panel) 85%, transparent);
+    --card-white-80: color-mix(in oklch, var(--panel) 80%, transparent);
+    --bento-gradient: linear-gradient(var(--panel), var(--panel));
+    --heading-text: var(--fg);
+    --body-text: var(--fg);
+    --label-text: var(--fg);
+    --muted-text: var(--mute);
+    --badge-blue-text: var(--a-blue);
+    --badge-green-text: var(--a-green);
+    --badge-purple-text: var(--a-purple);
+    --badge-orange-text: var(--a-orange);
   }
 
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    --muted: 215 28% 17%;
-    --hero-background: linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e1b4b 100%);
-    --card-blue: 215 25% 20%;
-    --card-green: 215 25% 20%;
-    --card-purple: 215 25% 20%;
-    --card-orange: 215 25% 20%;
-    --card-white: 215 25% 20%;
-    --card-white-transparent: 215 25% 20% / 0.85;
-    --card-white-80: 215 25% 20% / 0.8;
-    --bento-gradient: linear-gradient(
-      to bottom right,
-      rgba(15, 23, 43, 0.85),
-      rgba(15, 23, 43, 0.75),
-      rgba(2, 6, 24, 0.7)
-    );
-    --heading-text: 210 40% 98%;
-    --body-text: 218 11% 65%; /* Body text - light gray-400 equivalent */
-    --label-text: 215 20% 65%; /* Labels/semibold text - light gray-300 equivalent */
-    --muted-text: 218 11% 65%; /* Muted/secondary text - gray-400 equivalent */
-
-    /* Colored badge text - lighter for dark backgrounds */
-    --badge-blue-text: 214 100% 75%; /* Light blue for dark backgrounds */
-    --badge-green-text: 142 76% 70%; /* Light green for dark backgrounds */
-    --badge-purple-text: 250 100% 82%; /* Light purple for dark backgrounds (AA on purple-900/40) */
-    --badge-orange-text: 33 100% 70%; /* Light orange for dark backgrounds */
+    --bg: #0b0c0e;
+    --panel: #111317;
+    --panel2: #16191e;
+    --line: rgba(255, 255, 255, 0.08);
+    --line2: rgba(255, 255, 255, 0.15);
+    --fg: #e9eaec;
+    --mute: #a0a6af;
+    --dim: #7d838c;
+    --a-blue: oklch(0.78 0.13 250);
+    --a-purple: oklch(0.78 0.13 305);
+    --a-green: oklch(0.8 0.15 155);
+    --a-orange: oklch(0.8 0.13 65);
+    --heat0: rgba(255, 255, 255, 0.05);
   }
 
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-family:
-      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     transition:
       background-color 0.3s ease,
@@ -89,63 +111,31 @@
 
 @layer utilities {
   .text-heading {
-    color: hsl(var(--heading-text));
+    color: var(--heading-text);
   }
 
   .text-body {
-    color: hsl(var(--body-text));
+    color: var(--body-text);
   }
 
   .text-label {
-    color: hsl(var(--label-text));
+    color: var(--label-text);
   }
 
   .text-muted {
-    color: hsl(var(--muted-text));
-  }
-
-  .text-badge-blue {
-    color: hsl(var(--badge-blue-text));
-  }
-
-  .text-badge-green {
-    color: hsl(var(--badge-green-text));
-  }
-
-  .text-badge-purple {
-    color: hsl(var(--badge-purple-text));
-  }
-
-  .text-badge-orange {
-    color: hsl(var(--badge-orange-text));
-  }
-
-  .card-bg-blue {
-    background-color: hsl(var(--card-blue));
-  }
-
-  .card-bg-green {
-    background-color: hsl(var(--card-green));
-  }
-
-  .card-bg-purple {
-    background-color: hsl(var(--card-purple));
-  }
-
-  .card-bg-orange {
-    background-color: hsl(var(--card-orange));
+    color: var(--muted-text);
   }
 
   .card-bg-white {
-    background-color: hsl(var(--card-white));
+    background-color: var(--card-white);
   }
 
   .card-bg-white-transparent {
-    background-color: hsl(var(--card-white-transparent));
+    background-color: var(--card-white-transparent);
   }
 
   .card-bg-white-80 {
-    background-color: hsl(var(--card-white-80));
+    background-color: var(--card-white-80);
   }
 
   .bento-card-bg {
@@ -154,14 +144,14 @@
 }
 
 .section-surface {
-  background-color: hsl(var(--muted));
+  background-color: var(--muted);
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
 }
 
 .section-surface-contrast {
-  background-color: hsl(var(--background));
+  background-color: var(--background);
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
@@ -185,33 +175,28 @@
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--a-blue) 0%, var(--a-purple) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-text-blue {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: linear-gradient(135deg, var(--a-blue) 0%, var(--a-green) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Glass morphism effect */
+/* The sticky header's frosted bar. */
 .glass {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: color-mix(in oklch, var(--bg) 82%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
   transition:
     background 0.3s ease,
     border-color 0.3s ease;
-}
-
-.dark .glass {
-  background: rgba(17, 24, 39, 0.75);
-  border: 1px solid rgba(75, 85, 99, 0.35);
 }
 
 /* Respect users who prefer reduced motion: neutralize entrance animations,

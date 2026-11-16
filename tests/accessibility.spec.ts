@@ -1,10 +1,28 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 // Scope to WCAG 2.0/2.1 A & AA success criteria — the conformance bar we hold
 // ourselves to — rather than axe's best-practice rules (which flag stylistic
 // nits like every region needing a landmark).
 const WCAG_AA_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
+
+/**
+ * Let entrance animations and transitions finish before axe samples colours.
+ * Mid-fade, an element's opacity blends it into the page and axe reports the
+ * blend, not the colours a reader sees once the page settles. Infinite loops (a
+ * pulse, a blinking cursor) never finish and are skipped; an animation that
+ * hydration cancels rejects, which counts as settled too.
+ */
+async function settle(page: Page) {
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.effect?.getComputedTiming().endTime !== Infinity)
+        .map((a) => a.finished.catch(() => undefined))
+    )
+  );
+}
 
 test.describe("Accessibility", () => {
   test.beforeEach(async ({ page }) => {
@@ -125,6 +143,7 @@ test.describe("Accessibility", () => {
   test("has no WCAG A/AA violations in light mode", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "light" });
     await page.goto("/");
+    await settle(page);
 
     const results = await new AxeBuilder({ page }).withTags(WCAG_AA_TAGS).analyze();
 
@@ -134,6 +153,7 @@ test.describe("Accessibility", () => {
   test("has no WCAG A/AA violations in dark mode", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "dark" });
     await page.goto("/");
+    await settle(page);
 
     const results = await new AxeBuilder({ page }).withTags(WCAG_AA_TAGS).analyze();
 

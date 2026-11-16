@@ -45,7 +45,7 @@ export function OpenSourceSection({
               href={repo.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex flex-col rounded-2xl p-6 card-bg-white border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-2xl transition-all duration-300"
+              className="group flex flex-col rounded-2xl p-6 card-bg-white border border-line shadow-lg hover:shadow-2xl transition-all duration-300"
             >
               <div className="flex items-start justify-between gap-3 mb-4">
                 <div

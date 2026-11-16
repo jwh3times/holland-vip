@@ -47,7 +47,7 @@ export function EducationSection({ surface }: SectionSurfaceProps) {
               </div>
 
               {/* Highlights */}
-              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700">
+              <div className="mt-6 pt-6 border-t border-line">
                 <div className="flex flex-wrap gap-2">
                   {education.highlights.map((highlight) => (
                     <Badge key={highlight.label} accent={highlight.accent}>

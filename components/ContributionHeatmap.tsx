@@ -49,7 +49,7 @@ export function ContributionHeatmap({ calendar }: { calendar: ContributionCalend
   const totalLabel = `${formatCount(calendar.totalContributions)} contributions in the last year`;
 
   return (
-    <div className="mt-12 border-t border-gray-200 pt-10 dark:border-slate-700">
+    <div className="mt-12 border-t border-line pt-10">
       <p className="mb-1 text-sm font-semibold text-label">Contribution activity</p>
       <p className="mb-4 text-xs text-muted">{totalLabel}</p>
 

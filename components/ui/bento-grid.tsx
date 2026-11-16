@@ -1,4 +1,5 @@
 import React from "react";
+import { accent } from "@/lib/accent";
 import { cn } from "@/lib/utils";
 
 function BentoGrid({
@@ -38,14 +39,19 @@ function BentoGridItem({
     <div
       ref={ref}
       className={cn(
-        "row-span-1 rounded-3xl group/bento hover:shadow-2xl transition-all duration-300 shadow-lg/60 dark:shadow-none p-6 bento-card-bg border border-white/70 dark:border-slate-700/60 backdrop-blur-md min-h-[20rem] flex flex-col",
+        "row-span-1 rounded-3xl group/bento hover:shadow-2xl transition-all duration-300 shadow-lg/60 dark:shadow-none p-6 bento-card-bg border border-line backdrop-blur-md min-h-[20rem] flex flex-col",
         className
       )}
       {...props}
     >
       <div className="group-hover/bento:translate-x-1 transition duration-300 text-body flex-grow flex flex-col gap-4">
         {icon && (
-          <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-300 dark:bg-blue-500/15 ring-1 ring-blue-500/20 dark:ring-blue-500/25 flex-shrink-0">
+          <div
+            className={cn(
+              "inline-flex h-11 w-11 items-center justify-center rounded-2xl ring-1 flex-shrink-0",
+              accent.blue.iconChip
+            )}
+          >
             {icon}
           </div>
         )}
