@@ -1,4 +1,9 @@
-import { yearsOfExperience } from "@/lib/site-config";
+import { socialLinks, yearsOfExperience } from "@/lib/site-config";
+
+/** The GitHub profile as the terminal prints it, read from site config: `github.com/<user>`. */
+const githubProfile = socialLinks
+  .find((link) => link.label === "GitHub")
+  ?.href.replace(/^https:\/\//, "");
 
 /** How the hero terminal colours a line: a typed command, its output, or the highlighted listing. */
 export type TerminalLineKind = "command" | "output" | "highlight";
@@ -20,7 +25,7 @@ const script: TerminalLine[] = [
   },
   { text: "$ ls ~/hobby-projects --featured", kind: "command" },
   { text: "nearcited/   causet/   magic-agenda/   press/", kind: "highlight" },
-  { text: "…and many more active on github.com/jwh3times", kind: "output" },
+  { text: `…and many more active on ${githubProfile}`, kind: "output" },
   { text: "$ cat now.txt", kind: "command" },
   {
     text: "leading a greenfield ledger microservice on AKS,\nrolling out PrimeNG + Storybook company-wide,\nand piloting Claude Code + spec-driven dev.",
