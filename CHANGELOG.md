@@ -12,6 +12,27 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.1] - 2026-11-16
+
+### Changed
+
+- The sixth slice of the Terminal redesign (#251): a numbered **Impact** section at `#impact`,
+  reached from the header's new `impact.diff` link, brings the evidence of impact into one place.
+  - The four Career Highlights lead it, each figure shown with its sign (`+15%` … `−83%`, the
+    failure-rate reduction being the one negative).
+  - The three Problem-Solving Highlights follow as `case #001`–`#003`. Each case has a headline
+    metric (`−75%`, `45s → 3s`, `−95%`) and ERR / FIX / OK blocks for the problem, the response and
+    the result.
+  - Technical Capabilities are four columns of `├─` items, and Technical Achievements three cards of
+    `▸` items.
+- About now shows only the Biography; its Career Highlights and Technical Achievements are part of
+  Impact.
+
+### Removed
+
+- The standalone Technical Capabilities and Problem-Solving Highlights sections, which Impact
+  replaces. Neither had an anchor, so no link breaks.
+
 ## [1.6.0] - 2026-11-16
 
 ### Added

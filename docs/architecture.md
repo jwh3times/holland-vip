@@ -59,6 +59,13 @@ from idle to active starts a replay, so moving focus within a card does not rest
 lines keep their space and stay in the accessibility tree, so a replay never shifts the layout. An
 idle card shows every line at 72% opacity. Under reduced motion there is no replay and no lift.
 
+Impact (`#impact`) replaced the Problem-Solving and Technical Capabilities sections and took the
+Career Highlights and Technical Achievements out of About, which now renders only the Biography.
+`ImpactSection` renders the four as lists, each named by a heading only screen readers hear. Its
+copy and those two records live in `content/impact.ts`. Every figure is stored exactly as shown,
+sign included (`+15%`, `−83%` with U+2212), as is each Problem-Solving Highlight's headline `metric`
+in `content/problem-solving.ts`, so the section derives no sign or format from an accent.
+
 Portfolio prose lives in typed modules under `content/`. Section components import and render
 those records, which keeps a resume edit independent from layout code. Contact identity and social
 URLs live in `lib/site-config.ts`; metadata lives in `app/layout.tsx`. The homepage emits a static
