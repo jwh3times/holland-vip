@@ -1,6 +1,6 @@
 /* oxlint-disable typescript/require-await -- async module test doubles intentionally resolve synchronously */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import Home from "@/app/page";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getFeaturedReposWithSource } from "@/lib/github";
@@ -40,7 +40,7 @@ const repoFixture = {
   url: "https://github.com/jwh3times/apexracers",
 };
 
-/** Render the page and read the surface class of each body section, in order. */
+/** Render the page and read each numbered section heading, in page order. */
 async function renderPage() {
   const ui = await Home();
   const view = render(
@@ -48,10 +48,10 @@ async function renderPage() {
       {ui}
     </ThemeProvider>
   );
-  const surfaces = [...view.container.querySelectorAll("main > section")]
-    .filter((s) => !s.classList.contains("hero-section"))
-    .map((s) => (s.classList.contains("section-surface") ? "surface" : "contrast"));
-  return { ...view, surfaces };
+  const numbered = screen
+    .getAllByTestId("section-number")
+    .map((number) => [number.textContent, number.closest("h2")?.textContent?.slice(2)]);
+  return { ...view, numbered };
 }
 
 describe("Home page", () => {
@@ -95,40 +95,61 @@ describe("Home page", () => {
     expect(screen.getByRole("main")).toHaveAttribute("data-github-data-source", "fallback");
   });
 
-  it("alternates section surfaces with no two adjacent sections matching", async () => {
-    const { surfaces } = await renderPage();
+  it("numbers the body sections 01, 02, … in page order", async () => {
+    const { numbered } = await renderPage();
 
-    expect(surfaces.length).toBeGreaterThan(1);
-    for (let i = 0; i < surfaces.length - 1; i++) {
-      expect(surfaces[i], `sections ${i} and ${i + 1} collide`).not.toBe(surfaces[i + 1]);
-    }
+    // Every body section is numbered until the redesign's later slices replace
+    // them; only the hero carries no number.
+    expect(numbered).toEqual([
+      ["01", "About Me"],
+      ["02", "Skills & Technologies"],
+      ["03", "Technical Capabilities"],
+      ["04", "Problem-Solving Highlights"],
+      ["05", "Professional Experience"],
+      ["06", "Professional Work"],
+      ["07", "Open Source"],
+      ["08", "Education"],
+      ["09", "Get In Touch"],
+    ]);
+    expect(
+      within(screen.getByRole("heading", { level: 1 })).queryByTestId("section-number")
+    ).toBeNull();
   });
 
   // The empty-repos path. `OpenSourceSection` used to suppress itself at render
-  // time, which silently re-phased the surface alternation for every section
-  // below it. The decision now lives here, before surfaces are assigned.
-  it("drops the Open Source section when there are no repos", async () => {
+  // time; the decision now lives in the page, before numbers are assigned, so a
+  // section that drops out leaves no gap in the numbers below it.
+  it("drops the Open Source section when there are no repos, keeping the numbers contiguous", async () => {
     vi.mocked(getFeaturedReposWithSource).mockResolvedValue({ data: [], source: "fallback" });
 
-    const { surfaces } = await renderPage();
+    const { numbered } = await renderPage();
 
     expect(screen.queryByRole("heading", { name: "Open Source" })).not.toBeInTheDocument();
-    // The sections that remain still render, and still alternate.
-    expect(screen.getByRole("heading", { name: "About Me" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Education" })).toBeInTheDocument();
-    for (let i = 0; i < surfaces.length - 1; i++) {
-      expect(surfaces[i], `sections ${i} and ${i + 1} collide`).not.toBe(surfaces[i + 1]);
-    }
+    expect(numbered.map(([number]) => number)).toEqual([
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+    ]);
+    expect(numbered.slice(-2)).toEqual([
+      ["07", "Education"],
+      ["08", "Get In Touch"],
+    ]);
   });
 
-  it("renders one fewer section when Open Source drops out", async () => {
-    const withRepos = await renderPage();
-    const withRepoCount = withRepos.surfaces.length;
-    withRepos.unmount();
+  it("links every header anchor to a section rendered on the page", async () => {
+    const { container } = await renderPage();
+    const hrefs = [...container.querySelectorAll('header a[href^="#"]')].map((link) =>
+      link.getAttribute("href")
+    );
 
-    vi.mocked(getFeaturedReposWithSource).mockResolvedValue({ data: [], source: "fallback" });
-    const withoutRepos = await renderPage();
-
-    expect(withoutRepos.surfaces.length).toBe(withRepoCount - 1);
+    expect(hrefs.length).toBeGreaterThan(1);
+    for (const href of hrefs) {
+      expect(container.querySelector(`section${href}`), `no section for ${href}`).not.toBeNull();
+    }
   });
 });

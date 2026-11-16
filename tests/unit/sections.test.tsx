@@ -37,7 +37,7 @@ describe("section components", () => {
   });
 
   it("About renders every career highlight and exploring tag", () => {
-    render(<AboutSection />);
+    render(<AboutSection number="01" />);
     expect(screen.getByRole("heading", { name: "About Me" })).toBeInTheDocument();
     expect(screen.getByText(exploringHeading)).toBeInTheDocument();
     for (const highlight of careerHighlights) {
@@ -49,7 +49,7 @@ describe("section components", () => {
   });
 
   it("Skills renders every category and skill", () => {
-    render(<SkillsSection />);
+    render(<SkillsSection number="01" />);
     expect(screen.getByRole("heading", { name: "Skills & Technologies" })).toBeInTheDocument();
     for (const category of skillCategories) {
       expect(screen.getByText(category.title)).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe("section components", () => {
   });
 
   it("Technical Capabilities renders every capability", () => {
-    render(<TechnicalCapabilities />);
+    render(<TechnicalCapabilities number="01" />);
     expect(screen.getByRole("heading", { name: "Technical Capabilities" })).toBeInTheDocument();
     for (const capability of capabilities) {
       expect(screen.getByText(capability.title)).toBeInTheDocument();
@@ -68,7 +68,7 @@ describe("section components", () => {
   });
 
   it("Problem Solving renders each challenge with all three rows", () => {
-    render(<ProblemSolving />);
+    render(<ProblemSolving number="01" />);
     expect(screen.getByRole("heading", { name: "Problem-Solving Highlights" })).toBeInTheDocument();
     for (const row of challengeRows) {
       expect(screen.getAllByText(row.title)).toHaveLength(challenges.length);
@@ -80,7 +80,7 @@ describe("section components", () => {
   });
 
   it("Experience renders every role and marks the current one", () => {
-    render(<ExperienceSection />);
+    render(<ExperienceSection number="01" />);
     expect(screen.getByRole("heading", { name: "Professional Experience" })).toBeInTheDocument();
     for (const role of experiences) {
       expect(screen.getByText(role.company)).toBeInTheDocument();
@@ -90,7 +90,7 @@ describe("section components", () => {
   });
 
   it("Projects renders as confidential professional work with every bento item", () => {
-    render(<ProjectsSection />);
+    render(<ProjectsSection number="01" />);
     expect(screen.getByRole("heading", { name: "Professional Work" })).toBeInTheDocument();
     expect(screen.getByText(confidentialLabel)).toBeInTheDocument();
     for (const project of projects) {
@@ -99,7 +99,7 @@ describe("section components", () => {
   });
 
   it("Education renders the school, logo, degrees, and highlights", () => {
-    render(<EducationSection />);
+    render(<EducationSection number="01" />);
     expect(screen.getByRole("heading", { name: "Education" })).toBeInTheDocument();
     expect(screen.getByAltText(education.logoAlt)).toBeInTheDocument();
     expect(screen.getByText(education.school)).toBeInTheDocument();
@@ -111,8 +111,23 @@ describe("section components", () => {
     }
   });
 
+  // The page numbers sections by position; a section only forwards what it is handed.
+  it.each([
+    ["About", AboutSection],
+    ["Skills", SkillsSection],
+    ["Technical Capabilities", TechnicalCapabilities],
+    ["Problem Solving", ProblemSolving],
+    ["Experience", ExperienceSection],
+    ["Projects", ProjectsSection],
+    ["Education", EducationSection],
+    ["Contact", ContactSection],
+  ])("%s shows the number it is given rather than choosing one", (_, NumberedSection) => {
+    render(<NumberedSection number="07" />);
+    expect(screen.getByTestId("section-number")).toHaveTextContent("07");
+  });
+
   it("Contact renders the email link", () => {
-    render(<ContactSection />);
+    render(<ContactSection number="01" />);
     expect(screen.getByRole("heading", { name: "Get In Touch" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: contact.ctaLabel })).toHaveAttribute(
       "href",

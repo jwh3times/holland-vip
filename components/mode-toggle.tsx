@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { useTheme } from "next-themes";
-import { Sun, Moon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -10,13 +9,24 @@ import { cn } from "@/lib/utils";
 // server snapshot (false) during SSR + initial hydration, then true on the client.
 const emptySubscribe = () => () => {};
 
-// Shared by the placeholder and the mounted toggle so both render identical
-// server/client markup apart from the icon and the interactive affordances.
+/** The stored theme choices, in the order the pill cycles through them. */
+const CHOICES = ["system", "dark", "light"] as const;
+type Choice = (typeof CHOICES)[number];
+
+/** How the pill shows each choice. The glyphs are part of the text label, not icons. */
+const LABELS: Record<Choice, { glyph: string; name: string }> = {
+  system: { glyph: "◒", name: "auto" },
+  dark: { glyph: "◐", name: "dark" },
+  light: { glyph: "◑", name: "light" },
+};
+
+// Shared by the placeholder and the mounted pill so both render at the same fixed
+// width: the label appearing on mount must not shift the header's nav row.
 const toggleBase =
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 relative h-10 w-10";
+  "inline-flex h-7 w-[88px] shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-line bg-panel2 font-mono text-xs text-fg";
 
 export function ModeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const mounted = React.useSyncExternalStore(
     emptySubscribe,
     () => true,
@@ -24,30 +34,26 @@ export function ModeToggle() {
   );
 
   if (!mounted) {
-    return (
-      <button type="button" className={toggleBase} disabled tabIndex={-1} aria-hidden>
-        <Sun className="h-5 w-5" />
-      </button>
-    );
+    return <button type="button" className={toggleBase} disabled tabIndex={-1} aria-hidden />;
   }
 
-  const isDark = resolvedTheme === "dark";
+  const current: Choice = CHOICES.find((choice) => choice === theme) ?? "system";
+  const next = CHOICES[(CHOICES.indexOf(current) + 1) % CHOICES.length];
+  // "auto (dark)": in auto, say which scheme the OS resolved to, once it is known.
+  const currentState =
+    current === "system" && resolvedTheme ? `auto (${resolvedTheme})` : LABELS[current].name;
 
   return (
     <button
       type="button"
       className={cn(
         toggleBase,
-        "rounded-full border border-transparent hover:border-blue-500/40 hover:bg-blue-500/10 dark:hover:bg-blue-500/10"
+        "cursor-pointer transition-colors hover:border-line2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-a-blue"
       )}
-      onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={isDark ? "Activate light mode" : "Activate dark mode"}
+      onClick={() => setTheme(next)}
+      aria-label={`Theme: ${currentState}. Switch to ${LABELS[next].name}.`}
     >
-      {isDark ? (
-        <Sun className="h-5 w-5 text-amber-300 transition-transform duration-200" />
-      ) : (
-        <Moon className="h-5 w-5 text-slate-600 transition-transform duration-200" />
-      )}
+      <span aria-hidden="true">{LABELS[current].glyph}</span>&nbsp;{LABELS[current].name}
     </button>
   );
 }

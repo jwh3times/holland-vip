@@ -2,14 +2,14 @@ import Image from "next/image";
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Section, type SectionSurfaceProps } from "@/components/ui/section";
+import { Section, type NumberedSectionProps } from "@/components/ui/section";
 import { education } from "@/content/education";
 import { accent } from "@/lib/accent";
 import { cn } from "@/lib/utils";
 
-export function EducationSection({ surface }: SectionSurfaceProps) {
+export function EducationSection({ number }: NumberedSectionProps) {
   return (
-    <Section id="education" title="Education" surface={surface}>
+    <Section id="education" title="Education" number={number}>
       <div className="max-w-4xl mx-auto">
         <Card padding="lg" interactive>
           <div className="flex items-start gap-6">

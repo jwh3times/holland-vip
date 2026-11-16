@@ -15,7 +15,7 @@ import {
   EducationSection,
   ContactSection,
 } from "@/components/sections";
-import { surfaceAt, type SectionSurface } from "@/components/ui/section";
+import { numberAt } from "@/components/ui/section";
 import { getFeaturedReposWithSource } from "@/lib/github";
 import { getContributionsWithSource } from "@/lib/github-contributions";
 import { siteConfig, socialLinks } from "@/lib/site-config";
@@ -65,32 +65,33 @@ export default async function Home() {
   const githubDataSource =
     repoResult.source === "live" && contributionResult.source === "live" ? "live" : "fallback";
 
-  // The page's ordered body sections. Hero sits outside because it carries its own
-  // background rather than one of the two alternating surfaces.
+  // The page's numbered body sections, in order. Hero sits outside: it carries
+  // no number. Until the redesign's later slices replace them, every other
+  // section is numbered.
   //
-  // This list is the single place section order lives, and the surface each section
-  // renders on is derived from its position here — a section never picks its own.
-  // Sections that don't render are dropped from the list *before* surfaces are
-  // assigned, so nothing below them can be re-phased.
-  const bodySections: { key: string; render: (surface: SectionSurface) => React.ReactNode }[] = [
-    { key: "about", render: (surface) => <AboutSection surface={surface} /> },
-    { key: "skills", render: (surface) => <SkillsSection surface={surface} /> },
-    { key: "capabilities", render: (surface) => <TechnicalCapabilities surface={surface} /> },
-    { key: "problem-solving", render: (surface) => <ProblemSolving surface={surface} /> },
-    { key: "experience", render: (surface) => <ExperienceSection surface={surface} /> },
-    { key: "projects", render: (surface) => <ProjectsSection surface={surface} /> },
+  // This list is the single place section order lives, and each section's number
+  // is derived from its position here — a section never picks its own. Sections
+  // that don't render are dropped from the list *before* numbers are assigned, so
+  // nothing below them is left with a gap.
+  const numberedSections: { key: string; render: (number: string) => React.ReactNode }[] = [
+    { key: "about", render: (number) => <AboutSection number={number} /> },
+    { key: "skills", render: (number) => <SkillsSection number={number} /> },
+    { key: "capabilities", render: (number) => <TechnicalCapabilities number={number} /> },
+    { key: "problem-solving", render: (number) => <ProblemSolving number={number} /> },
+    { key: "experience", render: (number) => <ExperienceSection number={number} /> },
+    { key: "projects", render: (number) => <ProjectsSection number={number} /> },
     ...(repos.length > 0
       ? [
           {
             key: "open-source",
-            render: (surface: SectionSurface) => (
-              <OpenSourceSection surface={surface} repos={repos} contributions={contributions} />
+            render: (number: string) => (
+              <OpenSourceSection number={number} repos={repos} contributions={contributions} />
             ),
           },
         ]
       : []),
-    { key: "education", render: (surface) => <EducationSection surface={surface} /> },
-    { key: "contact", render: (surface) => <ContactSection surface={surface} /> },
+    { key: "education", render: (number) => <EducationSection number={number} /> },
+    { key: "contact", render: (number) => <ContactSection number={number} /> },
   ];
 
   return (
@@ -108,8 +109,8 @@ export default async function Home() {
         data-github-data-source={githubDataSource}
       >
         <HeroSection />
-        {bodySections.map(({ key, render }, index) => (
-          <React.Fragment key={key}>{render(surfaceAt(index))}</React.Fragment>
+        {numberedSections.map(({ key, render }, index) => (
+          <React.Fragment key={key}>{render(numberAt(index))}</React.Fragment>
         ))}
       </main>
 

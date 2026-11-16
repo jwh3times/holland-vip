@@ -41,7 +41,7 @@ export default defineConfig({
       // 2,023 physical (9%).
       //
       // These modules are not untested. Their behaviour is asserted through the
-      // seams instead — surface alternation and the anchor registry in
+      // seams instead — section numbering and the anchor registry in
       // section.test.tsx, rendered copy in sections.test.tsx, accents in
       // accent.test.tsx — which is where those invariants actually live.
       exclude: [

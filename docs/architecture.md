@@ -16,9 +16,11 @@ assets live in `public/` and are referenced from application code with root path
 
 ## Page composition and content
 
-`app/page.tsx` composes the single-page portfolio. Hero renders first; the remaining sections are
-an ordered list. `surfaceAt(index)` derives alternating section surfaces after optional sections
-have been filtered, preventing a missing section from shifting every later surface.
+`app/page.tsx` composes the single-page portfolio. Hero renders first and unnumbered; the remaining
+sections are an ordered list, and `numberAt(index)` derives each one's `01`, `02`, … number from
+its position, after optional sections have been filtered, so a missing section leaves no gap.
+Sections receive their number as a prop and never choose it. Every body section is numbered, and
+every section sits on `--bg`: there are no alternating section surfaces.
 
 Portfolio prose lives in typed modules under `content/`. Section components import and render
 those records, which keeps a resume edit independent from layout code. Contact identity and social
@@ -30,10 +32,14 @@ active learning without implying a publication cadence, and a stale, sparsely ma
 would weaken that signal. Reconsider a publishing section only when the owner wants one and can
 sustain a defined cadence.
 
-`components/ui/section.tsx` owns the section shell, vertical rhythm, headings, surfaces, and typed
-anchor registry. `SECTION_IDS` lists anchorable sections and `NAV_SECTION_IDS` selects the
-navigable subset. Navigation labels form a total record over that subset so missing or invented
-links fail to compile.
+`components/ui/section.tsx` owns the section shell, vertical rhythm, the heading row (the mono
+number, the `h2`, and an optional right-aligned accessory), and the typed anchor registry.
+`SECTION_IDS` lists anchorable sections and `NAV_SECTION_IDS` selects the navigable subset.
+Navigation labels form a total record over that subset so missing or invented links fail to
+compile. `components/Navigation.tsx` is the sticky 52px header: a shell prompt, built from the
+contact address in `lib/site-config.ts`, linking to the hero's `#top`; the section links, as a row
+that scrolls sideways on narrow screens rather than collapsing into a menu; and the theme toggle.
+It holds no state, so it stays a server component.
 
 ## UI vocabulary
 
@@ -58,8 +64,8 @@ project-specific utility classes:
 
 - Text hierarchy: `text-heading`, `text-body`, `text-label`, `text-muted`
 - Card surfaces: `card-bg-white`, `card-bg-white-transparent`, `card-bg-white-80`, `bento-card-bg`
-- Section and hero surfaces: `section-surface`, `section-surface-contrast`, `hero-section`
-- Decorative treatments: `gradient-text`, `gradient-text-blue`, `glass`
+- Hero surface: `hero-section`
+- Decorative treatments: `gradient-text`, `glass` (the header's frosted bar)
 - Animation: `animate-fadeInUp`
 
 The four accent names and every associated token live in `lib/accent.ts`. Each token reads the
@@ -75,7 +81,10 @@ variables map to Tailwind's `--font-sans` and `--font-mono`. Only Geist Sans is 
 competes with the hero's LCP text on a throttled connection, and Lighthouse's simulated LCP counts it
 whether or not anything renders in that face.
 
-`next-themes` applies light/dark mode through the root class. A component that reads theme state
+`next-themes` applies light/dark mode through the root class. The theme defaults to `system`, so a
+first visit follows the OS colour scheme. The header's toggle cycles the stored choice auto → dark →
+light → auto, labelled `◒ auto`, `◐ dark` and `◑ light`, and its `aria-label` names the current
+state and the next action ("Theme: auto (dark). Switch to dark."). A component that reads theme state
 uses the `useSyncExternalStore` mount guard in `components/mode-toggle.tsx` and renders stable
 placeholder markup through hydration. The root `<html>` is the only element that suppresses the
 expected hydration warning.

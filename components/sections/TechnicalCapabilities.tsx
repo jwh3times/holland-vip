@@ -1,12 +1,12 @@
 import { Card } from "@/components/ui/card";
-import { Section, type SectionSurfaceProps } from "@/components/ui/section";
+import { Section, type NumberedSectionProps } from "@/components/ui/section";
 import { capabilities } from "@/content/capabilities";
 import { accent } from "@/lib/accent";
 import { cn } from "@/lib/utils";
 
-export function TechnicalCapabilities({ surface }: SectionSurfaceProps) {
+export function TechnicalCapabilities({ number }: NumberedSectionProps) {
   return (
-    <Section title="Technical Capabilities" surface={surface}>
+    <Section title="Technical Capabilities" number={number}>
       <div className="max-w-6xl mx-auto space-y-8">
         {capabilities.map((capability) => (
           <Card key={capability.title}>

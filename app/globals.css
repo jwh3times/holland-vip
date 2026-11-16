@@ -143,20 +143,6 @@
   }
 }
 
-.section-surface {
-  background-color: var(--muted);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-
-.section-surface-contrast {
-  background-color: var(--background);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-
 /* Custom animations */
 @keyframes fadeInUp {
   from {
@@ -181,19 +167,12 @@
   background-clip: text;
 }
 
-.gradient-text-blue {
-  background: linear-gradient(135deg, var(--a-blue) 0%, var(--a-green) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 /* The sticky header's frosted bar. */
 .glass {
   background: color-mix(in oklch, var(--bg) 82%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
   transition:
     background 0.3s ease,
     border-color 0.3s ease;

@@ -89,8 +89,8 @@ rank the open work and name the next command.
   component.
 - `components/sections/` owns rendering; export sections from `components/sections/index.ts`.
 - `components/ui/` owns reusable primitives.
-- `app/page.tsx` owns ordered page composition and derives body-section surfaces with
-  `surfaceAt(index)`. Sections accept and forward a surface; they do not choose one.
+- `app/page.tsx` owns ordered page composition and derives each numbered section's `01`, `02`, …
+  with `numberAt(index)`. Sections accept and forward their number; they do not choose one.
 - `components/ui/section.tsx` owns anchor IDs and the section shell. Add navigable IDs to both
   registries and their navigation label; add intentional deep-link-only IDs to `SECTION_IDS` alone.
 - `lib/site-config.ts` owns the contact email and social URLs.

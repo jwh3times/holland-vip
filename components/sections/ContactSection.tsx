@@ -1,14 +1,14 @@
 import { Cta } from "@/components/ui/cta";
-import { Section, type SectionSurfaceProps } from "@/components/ui/section";
+import { Section, type NumberedSectionProps } from "@/components/ui/section";
 import { contact } from "@/content/contact";
 import { siteConfig } from "@/lib/site-config";
 
-export function ContactSection({ surface }: SectionSurfaceProps) {
+export function ContactSection({ number }: NumberedSectionProps) {
   return (
     <Section
       id="contact"
       title="Get In Touch"
-      surface={surface}
+      number={number}
       width="narrow"
       subtitle={contact.subtitle}
     >

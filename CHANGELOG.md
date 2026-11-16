@@ -12,6 +12,31 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.4.90] - 2026-11-16
+
+### Changed
+
+- The second slice of the Terminal redesign (#247): the navigation bar is a sticky 52px header. A
+  `jerry@holland.vip:~` prompt, built from the contact address in `lib/site-config.ts`, returns to
+  the top of the page, and the section links read as paths (`about.md`, `skills.json`,
+  `career.log`, `work/`, `open-source/`, `contact.sh`). On a narrow screen the links scroll
+  sideways in the header instead of opening a menu, so every link stays one tap away. The skip
+  link is unchanged.
+- The theme toggle is a pill that cycles auto → dark → light → auto, labelled `◒ auto`, `◐ dark`
+  and `◑ light`, so a visitor can return to following their OS scheme after overriding it. Its
+  accessible name states the current theme and what activating it does ("Theme: auto (dark).
+  Switch to dark."). With no stored choice the site still follows the OS.
+- Body sections are numbered `01`, `02`, … in page order, the number set in mono before each
+  heading, and sit on the page background instead of alternating bands. `app/page.tsx` derives each
+  number from the section's position with `numberAt`, after dropping a section that has nothing to
+  show, so the numbers never skip; a section only displays the number it is handed. Section
+  headings are left-aligned over a rule.
+
+### Removed
+
+- The mobile menu button, the alternating section surfaces (`.section-surface`,
+  `.section-surface-contrast`, `surfaceAt`) and the unused `.gradient-text-blue` utility.
+
 ## [1.4.89] - 2026-11-16
 
 ### Added
