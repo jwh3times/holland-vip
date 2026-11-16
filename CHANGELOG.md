@@ -12,6 +12,39 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.5.0] - 2026-11-16
+
+### Added
+
+- The fourth slice of the Terminal redesign (#249): a numbered **Career & stack** section at
+  `#career`, reached from the header's `career.log` link and the hero's `cat career.log` button. A
+  timeline draws one bar per role from 2013 to now. Clicking a company opens the same role in a
+  `git log` view below it, where each role's highlights expand one at a time. The current role
+  starts open and is marked `(HEAD → main)`. Both are keyboard-operable buttons that report what they
+  have opened.
+- Beside the log: a `skills.json` inventory in eight categories, an Agent Skills panel listing six
+  published skills with a link to `jwh3times/skills`, and the Current Explorations, each marked
+  `[~]` as exploratory.
+
+### Changed
+
+- Each role's period, duration (`Ny`, or `Nmo` under a year) and timeline position are all derived
+  from one stored start and end month, so they can never disagree. The current role runs to the
+  build date. SoftPro gains two highlights, for five in all.
+- The skills are reorganised into eight categories and the Current Explorations list is refreshed.
+  Both now live in Career & stack rather than in separate Skills and About blocks.
+- The Contribution Activity heatmap moves from Open Source to the foot of Career & stack and is
+  restyled. Each day's tooltip reads "N on YYYY-MM-DD". On a phone it scrolls sideways at a readable
+  size, and the scroll area can be reached from the keyboard.
+- Education is now a single line at the root of the `git log`.
+
+### Removed
+
+- The Professional Experience, Skills & Technologies and Education sections, with their
+  `#experience`, `#skills` and `#education` anchors and nav links. An old link to one of them still
+  loads the page. The NC State logo and the two card utilities only those sections used are gone
+  too.
+
 ## [1.4.91] - 2026-11-16
 
 ### Changed

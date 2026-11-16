@@ -98,9 +98,11 @@ project-specific utility classes:
 
 The four accent names and every associated token live in `lib/accent.ts`. Each token reads the
 accent's `--a-*` variable, with tinted fills written as `color-mix(in oklch, var(--a-X) N%,
-transparent)` at the design's four steps: 12% (chip), 14% (bar), 30% (hover) and 55% (border glow).
-`Badge` and `Card` consume that table; callers name an accent rather than rebuilding background,
-border, and text class combinations.
+transparent)` at the design's four steps: 12% (chip), 14% (bar), 30% (hover) and 55% (border glow),
+plus 70% for a selected timeline bar's shadow. The same module holds `heatLevels`, the contribution
+heatmap's green ramp from the empty `--heat0` cell to the full accent. `Badge` and `Card` consume
+that table; callers name an accent rather than rebuilding background, border, and text class
+combinations.
 
 Type is Geist for UI text and Geist Mono for labels and terminal text, both from the `geist` package
 and served through `next/font/local` (`app/fonts.ts`). They are self-hosted under
