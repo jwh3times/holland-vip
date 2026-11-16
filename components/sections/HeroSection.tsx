@@ -1,11 +1,11 @@
 import type * as React from "react";
 
 import { HeroTerminal } from "@/components/hero-terminal";
+import { Cta } from "@/components/ui/cta";
 import type { SectionId } from "@/components/ui/section";
 import { hero } from "@/content/hero";
 import type { ContributionCalendar } from "@/lib/github-contributions";
 import { yearsOfExperience } from "@/lib/site-config";
-import { cn } from "@/lib/utils";
 
 export interface HeroSectionProps {
   /** The build-time contribution calendar, live or snapshot; the stats are counted from it. */
@@ -33,9 +33,6 @@ function Stat({ value, label }: { value: React.ReactNode; label: string }) {
     </div>
   );
 }
-
-const ctaBase =
-  "rounded-lg px-[18px] py-3 font-mono text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-a-blue";
 
 /**
  * The page's opening screen. Server-rendered, so the h1 and stats are in the static HTML;
@@ -68,15 +65,10 @@ export function HeroSection({ contributions }: HeroSectionProps) {
           {hero.lead}
         </p>
         <div className="flex flex-wrap gap-3">
-          <a href={primary.href} className={cn(ctaBase, "bg-fg text-bg hover:opacity-85")}>
-            {primary.label}
-          </a>
-          <a
-            href={secondary.href}
-            className={cn(ctaBase, "border border-line2 text-fg hover:bg-panel2")}
-          >
+          <Cta href={primary.href}>{primary.label}</Cta>
+          <Cta href={secondary.href} variant="secondary">
             {secondary.label}
-          </a>
+          </Cta>
         </div>
         <div className="mt-12 grid grid-cols-[repeat(3,auto)] justify-start gap-8 font-mono">
           <Stat

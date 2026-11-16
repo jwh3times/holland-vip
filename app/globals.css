@@ -49,27 +49,6 @@
     --a-green: oklch(0.46 0.13 155);
     --a-orange: oklch(0.49 0.14 55);
     --heat0: rgba(0, 0, 0, 0.06);
-
-    /* Rollout aliases: the pre-Terminal names, resolved through the tokens above so
-       unconverted sections render in the new palette. Declared once here; the `.dark`
-       swap reaches them through var(). The final redesign slice deletes them all. */
-    --background: var(--bg);
-    --foreground: var(--fg);
-    --muted: var(--panel);
-    --card-blue: color-mix(in oklch, var(--a-blue) 12%, transparent);
-    --card-green: color-mix(in oklch, var(--a-green) 12%, transparent);
-    --card-purple: color-mix(in oklch, var(--a-purple) 12%, transparent);
-    --card-orange: color-mix(in oklch, var(--a-orange) 12%, transparent);
-    --card-white: var(--panel);
-    --bento-gradient: linear-gradient(var(--panel), var(--panel));
-    --heading-text: var(--fg);
-    --body-text: var(--fg);
-    --label-text: var(--fg);
-    --muted-text: var(--mute);
-    --badge-blue-text: var(--a-blue);
-    --badge-green-text: var(--a-green);
-    --badge-purple-text: var(--a-purple);
-    --badge-orange-text: var(--a-orange);
   }
 
   .dark {
@@ -96,28 +75,6 @@
     transition:
       background-color 0.3s ease,
       color 0.3s ease;
-  }
-}
-
-@layer utilities {
-  .text-heading {
-    color: var(--heading-text);
-  }
-
-  .text-body {
-    color: var(--body-text);
-  }
-
-  .text-muted {
-    color: var(--muted-text);
-  }
-
-  .card-bg-white {
-    background-color: var(--card-white);
-  }
-
-  .bento-card-bg {
-    background-image: var(--bento-gradient);
   }
 }
 

@@ -27,9 +27,6 @@ test.describe("Homepage", () => {
   test("should have working navigation links", async ({ page }) => {
     const nav = page.getByRole("navigation", { name: "Sections" });
 
-    await nav.getByRole("link", { name: "about.md" }).click();
-    await expect(page.locator("#about")).toBeInViewport();
-
     await nav.getByRole("link", { name: "contact.sh" }).click();
     await expect(page.locator("#contact")).toBeInViewport();
 
@@ -38,9 +35,44 @@ test.describe("Homepage", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeInViewport();
   });
 
-  test("should have a working email link in contact section", async ({ page }) => {
-    const emailLink = page.locator('a[href="mailto:jerry@holland.vip"]');
-    await expect(emailLink).toBeVisible();
+  // #about left the nav but stays a deep link, so old links still land on the Biography.
+  test("lands an old #about link on the Biography", async ({ page }) => {
+    await page.goto("/#about");
+    const about = page.locator("section#about");
+    await expect(about).toBeInViewport();
+    await expect(about.getByRole("heading", { level: 2 })).toHaveText("About");
+    await expect(about).toContainText("# README.md");
+  });
+
+  test("contact shows the email as a large link and the social buttons", async ({ page }) => {
+    const contact = page.locator("section#contact");
+    await expect(contact.getByRole("link", { name: "jerry@holland.vip" })).toHaveAttribute(
+      "href",
+      "mailto:jerry@holland.vip"
+    );
+    await expect(contact.getByRole("link", { name: "github/jwh3times" })).toBeVisible();
+    await expect(contact.getByRole("link", { name: "linkedin/jerryhollandiii" })).toBeVisible();
+  });
+
+  test("closes with the status bar in place of the old footer", async ({ page }) => {
+    const statusBar = page.getByRole("contentinfo");
+    await expect(statusBar).toContainText("● main");
+    await expect(statusBar).toContainText(`© ${new Date().getFullYear()} Holland`);
+    await expect(statusBar).toContainText(/UTF-8 · LF · (dark|light)/);
+  });
+
+  test("every nav link lands on its section", async ({ page }) => {
+    const nav = page.getByRole("navigation", { name: "Sections" });
+    for (const [label, id] of [
+      ["projects/", "projects"],
+      ["career.log", "career"],
+      ["impact.diff", "impact"],
+      ["work/", "work"],
+      ["contact.sh", "contact"],
+    ]) {
+      await nav.getByRole("link", { name: label }).click();
+      await expect(page.locator(`section#${id}`)).toBeInViewport();
+    }
   });
 
   test("should have external links open in new tab", async ({ page }) => {

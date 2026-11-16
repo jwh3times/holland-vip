@@ -1,9 +1,8 @@
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
-
 /**
- * The page-section shell. Every body section on the page renders through it.
+ * The page-section shell. Every numbered body section renders through it; the
+ * unnumbered Hero, About README and Contact have layouts of their own.
  *
  * It owns three things that were previously copied into each section module and
  * enforced by nothing:
@@ -21,25 +20,19 @@ import { cn } from "@/lib/utils";
  * Sections reachable from the nav. `Navigation` maps over this, so every entry
  * must have a label and every nav link provably points at a real section.
  */
-export const NAV_SECTION_IDS = [
-  "about",
-  "projects",
-  "career",
-  "impact",
-  "work",
-  "contact",
-] as const;
+export const NAV_SECTION_IDS = ["projects", "career", "impact", "work", "contact"] as const;
 
 export type NavSectionId = (typeof NAV_SECTION_IDS)[number];
 
 /**
  * Every anchorable section id. A superset of {@link NAV_SECTION_IDS}: `top` (the
- * hero, which the header's prompt links to) is deep-linkable but deliberately
- * not a nav entry. Adding an id here without adding it to `NAV_SECTION_IDS` is
- * a choice, not an accident — before this module existed, `#education` was an
+ * hero, which the header's prompt links to) and `about` (the Biography, kept so
+ * old links still land) are deep-linkable but deliberately not nav entries.
+ * Adding an id here without adding it to `NAV_SECTION_IDS` is a choice, not an
+ * accident — before this module existed, `#education` was an
  * orphan nothing linked to and nothing caught.
  */
-export const SECTION_IDS = [...NAV_SECTION_IDS, "top"] as const;
+export const SECTION_IDS = [...NAV_SECTION_IDS, "top", "about"] as const;
 
 export type SectionId = (typeof SECTION_IDS)[number];
 
@@ -71,19 +64,9 @@ export interface SectionProps {
   accessory?: React.ReactNode;
   /** Optional lead paragraph between the heading and the content. */
   subtitle?: React.ReactNode;
-  /** `wide` for content sections; `narrow` (max-w-3xl, centered) for prose. */
-  width?: "wide" | "narrow";
 }
 
-export function Section({
-  title,
-  children,
-  id,
-  number,
-  accessory,
-  subtitle,
-  width = "wide",
-}: SectionProps) {
+export function Section({ title, children, id, number, accessory, subtitle }: SectionProps) {
   return (
     // `content-visibility: auto` lets the browser skip layout and paint for a section until it
     // nears the viewport, which keeps first-load main-thread work inside the Lighthouse TBT
@@ -93,18 +76,8 @@ export function Section({
       {...(id ? { id } : {})}
       className="py-14 [contain-intrinsic-size:auto_900px] [content-visibility:auto]"
     >
-      <div
-        className={cn(
-          "mx-auto px-[clamp(16px,4vw,40px)]",
-          width === "wide" ? "max-w-[1240px]" : "max-w-3xl text-center"
-        )}
-      >
-        <div
-          className={cn(
-            "mb-7 flex flex-wrap items-baseline gap-4 border-b border-line pb-4",
-            width === "wide" ? "justify-between" : "justify-center"
-          )}
-        >
+      <div className="mx-auto max-w-[1240px] px-[clamp(16px,4vw,40px)]">
+        <div className="mb-7 flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-4">
           <h2 className="text-[clamp(28px,3.4vw,40px)] font-bold tracking-[-0.03em] text-fg">
             {number ? (
               <span
@@ -120,14 +93,7 @@ export function Section({
           {accessory ? <div className="font-mono text-[13px] text-mute">{accessory}</div> : null}
         </div>
         {subtitle ? (
-          <p
-            className={cn(
-              "mb-7 max-w-[720px] leading-relaxed text-mute",
-              width === "narrow" && "mx-auto"
-            )}
-          >
-            {subtitle}
-          </p>
+          <p className="mb-7 max-w-[720px] leading-relaxed text-mute">{subtitle}</p>
         ) : null}
         {children}
       </div>

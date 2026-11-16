@@ -94,19 +94,19 @@ rank the open work and name the next command.
 - `components/ui/section.tsx` owns anchor IDs and the section shell. Add navigable IDs to both
   registries and their navigation label; add intentional deep-link-only IDs to `SECTION_IDS` alone.
 - `lib/site-config.ts` owns the contact email and social URLs.
-- `lib/accent.ts` owns the accent vocabulary and token table. Render accent pills/cards through
-  `<Badge accent>` and `<Card accent>` instead of reconstructing their class strings.
+- `lib/accent.ts` owns the accent vocabulary and token table. Read an accent's classes from it
+  instead of reconstructing them.
 
 ## Styling and React patterns
 
 - Compose classes with `cn()` from `@/lib/utils`; use the `@/*` path alias.
 - Use semantic utilities backed by CSS variables in `app/globals.css`; keep literal color values
   out of components.
-- Use Lucide React as the component icon library. The custom social marks in
-  `components/icons/SocialIcons.tsx` are the intentional exception.
+- Use text glyphs (`●`, `↗`, `▸`, `[~]`, `🔒`) for icons, as the design does; there is no icon
+  library.
 - Add `"use client"` only where interactivity requires it.
-- Theme-dependent components use the existing `useSyncExternalStore` mount guard from
-  `components/mode-toggle.tsx`; render stable placeholder UI until mounted.
+- Theme-dependent components use the shared `useMounted` guard in `lib/use-mounted.ts`; render
+  stable placeholder UI until mounted.
 - Keep `suppressHydrationWarning` limited to the root `<html>` element.
 
 ## GitHub build data

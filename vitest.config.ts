@@ -42,13 +42,9 @@ export default defineConfig({
       //
       // These modules are not untested. Their behaviour is asserted through the
       // seams instead — section numbering and the anchor registry in
-      // section.test.tsx, rendered copy in sections.test.tsx, accents in
-      // accent.test.tsx — which is where those invariants actually live.
-      exclude: [
-        "**/*.d.ts",
-        "components/sections/**",
-        "components/ui/{section,card,badge,bento-grid}.tsx",
-      ],
+      // section.test.tsx and rendered copy in sections.test.tsx — which is where
+      // those invariants actually live.
+      exclude: ["**/*.d.ts", "components/sections/**", "components/ui/section.tsx"],
       thresholds: {
         statements: 95,
         branches: 95,

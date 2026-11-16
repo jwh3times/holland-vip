@@ -9,7 +9,6 @@ import { siteConfig } from "@/lib/site-config";
  * type error rather than a dead anchor.
  */
 const navLabels: Record<NavSectionId, string> = {
-  about: "about.md",
   projects: "projects/",
   career: "career.log",
   impact: "impact.diff",

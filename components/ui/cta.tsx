@@ -8,35 +8,36 @@ import { cn } from "@/lib/utils";
  *
  * Interface — everything a caller needs to know:
  *
- * - `variant`: "primary" (solid --fg fill, --bg text) or "secondary" (outlined).
- *   Defaults to "primary".
- * - `size`: "md" (px-8 py-3) or "lg" (px-10 py-4). Defaults to "md".
+ * - `variant`: "primary" (solid --fg fill, --bg text) or "secondary" (outlined in
+ *   --line2). Defaults to "primary".
+ * - `size`: "md" (the hero's buttons) or "sm" (Contact's social links). Defaults to "md".
  * - The rendered element is derived from the props, not chosen by the caller:
  *     - no `href`            -> <button> (pass `onClick`)
  *     - `href` starting "/"  -> next/link <Link> (internal route)
  *     - any other `href`     -> <a> (hash anchors, mailto:, external)
  *   External `http(s)` hrefs additionally get target="_blank" and
  *   rel="noopener noreferrer".
- * - Focus-visible rings, hover scale, and dark-mode colours are handled
- *   internally and are not configurable.
+ * - The Terminal look — mono text, 8px radius, flat (no hover scale or shadow) —
+ *   focus-visible rings and theme colours are handled internally and are not
+ *   configurable.
  * - `className` is merged last via `cn()`, so callers can still add layout
  *   classes without forking the variant.
  */
 
 type CtaVariant = "primary" | "secondary";
-type CtaSize = "md" | "lg";
+type CtaSize = "sm" | "md";
 
 const base =
-  "inline-block rounded-xl font-semibold transition-all hover:scale-105 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-a-blue focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
+  "inline-block rounded-lg font-mono font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-a-blue";
 
 const variants: Record<CtaVariant, string> = {
-  primary: "bg-fg text-bg hover:shadow-2xl",
-  secondary: "border-2 border-line2 text-fg hover:bg-panel2",
+  primary: "bg-fg text-bg hover:opacity-85",
+  secondary: "border border-line2 text-fg hover:bg-panel2",
 };
 
 const sizes: Record<CtaSize, string> = {
-  md: "px-8 py-3",
-  lg: "px-10 py-4",
+  sm: "px-3.5 py-2 text-[13px]",
+  md: "px-[18px] py-3 text-sm",
 };
 
 export interface CtaProps {

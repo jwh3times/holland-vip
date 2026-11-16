@@ -9,7 +9,7 @@ export default function Loading() {
         </div>
 
         {/* Loading text */}
-        <p className="text-muted text-sm font-medium">Loading...</p>
+        <p className="text-mute text-sm font-medium">Loading...</p>
       </div>
     </div>
   );

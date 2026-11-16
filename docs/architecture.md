@@ -16,12 +16,13 @@ assets live in `public/` and are referenced from application code with root path
 
 ## Page composition and content
 
-`app/page.tsx` composes the single-page portfolio. Hero renders first and unnumbered; the remaining
-sections are an ordered list, and `numberAt(index)` derives each one's `01`, `02`, … number from
-its position. Every section in the list always renders, so the numbers never skip: missing GitHub
-data removes only the repository metadata it feeds, never a section. Sections receive their number
-as a prop and never choose it. Every body section is numbered, and every section sits on `--bg`:
-there are no alternating section surfaces.
+`app/page.tsx` composes the single-page portfolio. The four numbered sections — Hobby projects,
+Career & stack, Impact and Professional work — are an ordered list, and `numberAt(index)` derives
+each one's `01` … `04` from its position. Every section in the list always renders, so the numbers
+never skip: missing GitHub data removes only the repository metadata it feeds, never a section.
+Sections receive their number as a prop and never choose it. The Hero before the list, and the
+About README and Contact after it, are unnumbered, and the status bar closes the page as its
+footer. Every section sits on `--bg`: there are no alternating section surfaces.
 
 The hero (`#top`) is a server component, so its h1 and stats are in the static HTML. It receives the
 build-time contribution calendar from the page and counts its stats from it: the calendar's total
@@ -60,11 +61,24 @@ lines keep their space and stay in the accessibility tree, so a replay never shi
 idle card shows every line at 72% opacity. Under reduced motion there is no replay and no lift.
 
 Impact (`#impact`) replaced the Problem-Solving and Technical Capabilities sections and took the
-Career Highlights and Technical Achievements out of About, which now renders only the Biography.
+Career Highlights and Technical Achievements out of About.
 `ImpactSection` renders the four as lists, each named by a heading only screen readers hear. Its
 copy and those two records live in `content/impact.ts`. Every figure is stored exactly as shown,
 sign included (`+15%`, `−83%` with U+2212), as is each Problem-Solving Highlight's headline `metric`
 in `content/problem-solving.ts`, so the section derives no sign or format from an accent.
+
+Professional work (`#work`) renders the anonymized Professional Projects from
+`content/projects.ts` as a list of `private/{slug}` cells on a hairline grid: a 1px gap over the
+`--line` colour, safe because the 520px minimum keeps it to one or two columns. Its "private repos
+· anonymized" pill is the section's heading accessory. About (`#about`) is the Biography as a
+README panel, kept anchorable so old links still land but out of the nav. Contact (`#contact`) is
+the `./contact.sh` prompt, the address as one large mailto link, and the social buttons; its `h2`
+is visually hidden because the prompt stands in for it. `components/ui/cta.tsx` is the one button
+style, shared by the hero and Contact. `components/status-bar.tsx` is the editor-style footer. It
+is server-rendered with the copyright year fixed at build time, and only the theme name,
+`components/resolved-theme-name.tsx`, is a client component: it names the theme actually painted,
+`dark` or `light`, and renders an empty placeholder until mount, since the static HTML cannot
+know it.
 
 Portfolio prose lives in typed modules under `content/`. Section components import and render
 those records, which keeps a resume edit independent from layout code. Contact identity and social
@@ -83,7 +97,9 @@ browser skips layout and paint for sections far below the fold. That keeps first
 work inside the Lighthouse TBT budget, and the content stays in the accessibility tree and
 find-in-page. Because skipped sections are not painted and their animations do not advance, the axe
 spec renders every section before it scans.
-`SECTION_IDS` lists anchorable sections and `NAV_SECTION_IDS` selects the navigable subset.
+`SECTION_IDS` lists anchorable sections and `NAV_SECTION_IDS` selects the navigable subset:
+`projects`, `career`, `impact`, `work` and `contact`. `top` (the hero) and `about` (the
+Biography) are deep-link-only.
 Navigation labels form a total record over that subset so missing or invented links fail to
 compile. `components/Navigation.tsx` is the sticky 52px header: a shell prompt, built from the
 contact address in `lib/site-config.ts`, linking to the hero's `#top`; the section links, as a row
@@ -104,16 +120,13 @@ token clears 4.5:1 on `--bg`, `--panel` and `--panel2`, and each accent on its o
 `tests/unit/globals-css.test.ts` computes those ratios from the stylesheet, which matters because
 axe only measures the colors a rendered page happens to use.
 
-During the redesign rollout, the pre-Terminal token names (`--background`, `--heading-text`,
-`--card-white`, and the rest) are aliases built only from the new tokens, so sections not yet
-converted render in the new palette. They are declared once on `:root` and follow the theme through
-`var()`. The final redesign slice deletes them, along with the utilities below that read them.
+The pre-Terminal token names (`--background`, `--heading-text`, `--card-white`, and the rest)
+served as aliases while the redesign shipped section by section, and are gone.
+`tests/unit/globals-css.test.ts` fails if one is declared or read again.
 
 Components compose classes with `cn()` from `lib/utils.ts`. `app/globals.css` also defines these
 project-specific utility classes:
 
-- Text hierarchy: `text-heading`, `text-body`, `text-muted`
-- Card surfaces: `card-bg-white`, `bento-card-bg`
 - Decorative treatments: `gradient-text`, `glass` (the header's frosted bar), `heatmap` (the
   contribution grid's cells, filled by `data-level`)
 - Animation: `animate-blink` (the hero terminal's cursor), `animate-status-pulse` (the hero's
@@ -126,8 +139,8 @@ transparent)` at the design's four steps: 12% (chip), 14% (bar), 30% (hover) and
 plus 70% for a selected timeline bar's shadow and 60% for an active Hobby Project card's wider
 `activeShadow`. The contribution heatmap's green ramp, from the
 empty `--heat0` cell to the full accent, is the `.heatmap` rule in `app/globals.css`, keyed by each
-cell's `data-level`, so its ~370 cells carry no class strings. `Badge` and `Card` consume
-that table; callers name an accent rather than rebuilding background, border, and text class
+cell's `data-level`, so its ~370 cells carry no class strings. Components read the token they
+need from that table; they name an accent rather than rebuilding background, border, and text class
 combinations.
 
 Type is Geist for UI text and Geist Mono for labels and terminal text, both from the `geist` package
@@ -141,7 +154,7 @@ whether or not anything renders in that face.
 first visit follows the OS colour scheme. The header's toggle cycles the stored choice auto → dark →
 light → auto, labelled `◒ auto`, `◐ dark` and `◑ light`, and its `aria-label` names the current
 state and the next action ("Theme: auto (dark). Switch to dark."). A component that reads theme state
-uses the `useSyncExternalStore` mount guard in `components/mode-toggle.tsx` and renders stable
+uses the shared `useMounted` guard in `lib/use-mounted.ts` and renders stable
 placeholder markup through hydration. The root `<html>` is the only element that suppresses the
 expected hydration warning.
 

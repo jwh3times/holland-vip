@@ -2,7 +2,7 @@
 import * as React from "react";
 
 import { Navigation } from "@/components/Navigation";
-import { Footer } from "@/components/Footer";
+import { StatusBar } from "@/components/status-bar";
 import {
   HeroSection,
   AboutSection,
@@ -62,15 +62,14 @@ export default async function Home() {
   const githubDataSource =
     repoResult.source === "live" && contributionResult.source === "live" ? "live" : "fallback";
 
-  // The page's numbered body sections, in order. Hero sits outside: it carries
-  // no number. Until the redesign's later slices replace them, every other
-  // section is numbered.
+  // The page's numbered body sections, in order. The unnumbered ones frame them in
+  // the JSX below: the Hero before, the About README and Contact after.
   //
-  // This list is the single place section order lives, and each section's number
-  // is derived from its position here — a section never picks its own. Every
-  // section always renders: missing GitHub data removes only the metadata it feeds.
+  // This list is the single place the numbered sections' order lives, and each
+  // section's number is derived from its position here — a section never picks its
+  // own. Every section always renders: missing GitHub data removes only the metadata
+  // it feeds.
   const numberedSections: { key: string; render: (number: string) => React.ReactNode }[] = [
-    { key: "about", render: (number) => <AboutSection number={number} /> },
     {
       key: "hobby-projects",
       render: (number) => <HobbyProjectsSection number={number} repos={repos} />,
@@ -81,7 +80,6 @@ export default async function Home() {
     },
     { key: "impact", render: (number) => <ImpactSection number={number} /> },
     { key: "work", render: (number) => <ProjectsSection number={number} /> },
-    { key: "contact", render: (number) => <ContactSection number={number} /> },
   ];
 
   return (
@@ -102,9 +100,11 @@ export default async function Home() {
         {numberedSections.map(({ key, render }, index) => (
           <React.Fragment key={key}>{render(numberAt(index))}</React.Fragment>
         ))}
+        <AboutSection />
+        <ContactSection />
       </main>
 
-      <Footer />
+      <StatusBar />
     </div>
   );
 }

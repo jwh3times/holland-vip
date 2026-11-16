@@ -74,11 +74,10 @@ const TEXT_TOKENS = [
 ];
 
 /**
- * The pre-Terminal token names, kept as aliases while sections are converted one
- * slice at a time. The final slice of #245 deletes every one of them, and this
- * list with them.
+ * The pre-Terminal token names. They were aliases onto the Terminal tokens while
+ * the redesign shipped one section at a time; the final slice deleted them all.
  */
-const ROLLOUT_ALIASES = [
+const RETIRED_ALIASES = [
   "--background",
   "--foreground",
   "--muted",
@@ -195,10 +194,7 @@ describe("globals.css interface", () => {
   });
 
   it("has no CSS variable that nothing reads", () => {
-    // Aliases are kept for unconverted callers until the final slice deletes them.
-    const dead = definedVariables().filter(
-      (name) => !ROLLOUT_ALIASES.includes(name) && !css.includes(`var(${name})`)
-    );
+    const dead = definedVariables().filter((name) => !css.includes(`var(${name})`));
     expect(dead, `unreferenced CSS variables in app/globals.css: ${dead.join(", ")}`).toEqual([]);
   });
 
@@ -261,22 +257,12 @@ describe("Terminal tokens", () => {
     }
   });
 
-  it("resolves every old token name through an alias to the new tokens", () => {
-    const undeclared = ROLLOUT_ALIASES.filter((name) => !light.has(name));
-    expect(undeclared, `aliases missing from :root: ${undeclared.join(", ")}`).toEqual([]);
+  it("keeps no pre-Terminal token alias, in the stylesheet or in any caller", () => {
+    const declared = RETIRED_ALIASES.filter((name) => definedVariables().includes(name));
+    expect(declared, `old aliases still declared: ${declared.join(", ")}`).toEqual([]);
 
-    const stray = ROLLOUT_ALIASES.filter((name) => {
-      const value = light.get(name)!;
-      const refs = [...value.matchAll(/var\((--[a-z0-9-]+)\)/g)].map((m) => m[1]);
-      // An alias is built only from the new tokens: no literal colour of its own.
-      const literal = /#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|oklch)\(/i.test(value);
-      return literal || refs.length === 0 || refs.some((ref) => !TERMINAL_TOKENS.includes(ref));
-    });
-    expect(stray, `aliases not built from the new tokens: ${stray.join(", ")}`).toEqual([]);
-
-    // Declared once on :root, so `.dark` swapping the new tokens recolours them too.
-    const overridden = ROLLOUT_ALIASES.filter((name) => dark.has(name));
-    expect(overridden, `aliases redeclared under .dark: ${overridden.join(", ")}`).toEqual([]);
+    const read = RETIRED_ALIASES.filter((name) => (css + source).includes(`var(${name})`));
+    expect(read, `old aliases still read: ${read.join(", ")}`).toEqual([]);
   });
 
   it("exposes the tokens and the Geist fonts as Tailwind theme variables", () => {

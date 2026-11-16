@@ -32,7 +32,7 @@ test.describe("Hobby projects", () => {
     await expect(page.locator("#open-source")).toHaveCount(0);
   });
 
-  test("the hero's ./see-projects lands on the cards and work/ on Professional Work", async ({
+  test("the hero's ./see-projects lands on the cards and work/ on Professional work", async ({
     page,
   }) => {
     await page.goto("/");
@@ -46,7 +46,7 @@ test.describe("Hobby projects", () => {
       .click();
     await expect(page.locator("section#work")).toBeInViewport();
     await expect(page.locator("section#work").getByRole("heading", { level: 2 })).toHaveText(
-      /Professional Work/
+      /Professional work/
     );
   });
 

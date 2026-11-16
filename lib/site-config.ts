@@ -1,10 +1,8 @@
-import { GitHubIcon, LinkedInIcon } from "@/components/icons/SocialIcons";
-
 /**
  * Single source of truth for contact + social links.
  * `siteConfig` is read by the layout, the page's JSON-LD, the header prompt and
- * ContactSection; `socialLinks` by the Footer, the JSON-LD and the hero terminal's
- * script in `content/hero.ts`.
+ * ContactSection; `socialLinks` by ContactSection and the JSON-LD; `githubUrl` by the
+ * hero terminal's script in `content/hero.ts` and the Hobby Projects' link.
  */
 export const siteConfig = {
   email: "jerry@holland.vip",
@@ -27,15 +25,8 @@ export const yearsOfExperience = new Date().getFullYear() - CAREER_START_YEAR;
 /** The GitHub profile: its social link, the hero's `ls` footnote and the Hobby Projects' link. */
 export const githubUrl = "https://github.com/jwh3times";
 
+/** Contact's social buttons, labelled as paths: `github/<user>`. */
 export const socialLinks = [
-  {
-    href: githubUrl,
-    label: "GitHub",
-    icon: GitHubIcon,
-  },
-  {
-    href: "https://www.linkedin.com/in/jerryhollandiii",
-    label: "LinkedIn",
-    icon: LinkedInIcon,
-  },
+  { href: githubUrl, label: "github/jwh3times" },
+  { href: "https://www.linkedin.com/in/jerryhollandiii", label: "linkedin/jerryhollandiii" },
 ];
