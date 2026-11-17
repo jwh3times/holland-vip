@@ -24,8 +24,6 @@ export interface AccentTokens {
   bullet: string;
   /** Solid dot — timeline nodes, language indicators. */
   dot: string;
-  /** Tinted background: a Hobby Project card's screenshot area, at the 12% chip tint. */
-  cardBg: string;
   /** Bar fill — a timeline span: the 14% tint. */
   bar: string;
   /** Border glow on a selected or hovered element: the 55% tint. */
@@ -55,7 +53,6 @@ export const accent: Record<Accent, AccentTokens> = {
     text: "text-a-blue",
     bullet: "text-a-blue",
     dot: "bg-a-blue",
-    cardBg: "bg-[color-mix(in_oklch,var(--a-blue)_12%,transparent)]",
     bar: "bg-[color-mix(in_oklch,var(--a-blue)_14%,transparent)]",
     glow: "border-[color-mix(in_oklch,var(--a-blue)_55%,transparent)]",
     outline: "border-a-blue",
@@ -67,7 +64,6 @@ export const accent: Record<Accent, AccentTokens> = {
     text: "text-a-green",
     bullet: "text-a-green",
     dot: "bg-a-green",
-    cardBg: "bg-[color-mix(in_oklch,var(--a-green)_12%,transparent)]",
     bar: "bg-[color-mix(in_oklch,var(--a-green)_14%,transparent)]",
     glow: "border-[color-mix(in_oklch,var(--a-green)_55%,transparent)]",
     outline: "border-a-green",
@@ -79,7 +75,6 @@ export const accent: Record<Accent, AccentTokens> = {
     text: "text-a-purple",
     bullet: "text-a-purple",
     dot: "bg-a-purple",
-    cardBg: "bg-[color-mix(in_oklch,var(--a-purple)_12%,transparent)]",
     bar: "bg-[color-mix(in_oklch,var(--a-purple)_14%,transparent)]",
     glow: "border-[color-mix(in_oklch,var(--a-purple)_55%,transparent)]",
     outline: "border-a-purple",
@@ -91,7 +86,6 @@ export const accent: Record<Accent, AccentTokens> = {
     text: "text-a-orange",
     bullet: "text-a-orange",
     dot: "bg-a-orange",
-    cardBg: "bg-[color-mix(in_oklch,var(--a-orange)_12%,transparent)]",
     bar: "bg-[color-mix(in_oklch,var(--a-orange)_14%,transparent)]",
     glow: "border-[color-mix(in_oklch,var(--a-orange)_55%,transparent)]",
     outline: "border-a-orange",

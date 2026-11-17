@@ -32,6 +32,24 @@ test.describe("Hobby projects", () => {
     await expect(page.locator("#open-source")).toHaveCount(0);
   });
 
+  test("shows each card's screenshot, loaded, in its reserved 16:8 box", async ({ page }) => {
+    await page.goto("/#projects");
+
+    for (const name of ["Nearcited", "causet", "Magic Agenda", "Press"]) {
+      const shot = card(page, name).getByRole("img");
+      await shot.scrollIntoViewIfNeeded();
+      await expect(shot).toBeVisible();
+      await expect(shot).toHaveAttribute("alt", /\S/);
+      // Loaded, not a broken image: the file is the 1600×800 capture.
+      await expect
+        .poll(() => shot.evaluate((img: HTMLImageElement) => img.naturalWidth))
+        .toBe(1600);
+      const box = await shot.boundingBox();
+      expect(box).not.toBeNull();
+      expect(Math.abs(box!.width / box!.height - 2)).toBeLessThan(0.02);
+    }
+  });
+
   test("the hero's ./see-projects lands on the cards and work/ on Professional work", async ({
     page,
   }) => {
