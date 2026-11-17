@@ -7,8 +7,8 @@ const SUMMARY = /^Terminal session\. Jerry Holland/;
 const HYDRATION_ERROR = /hydrat|#418|#423|#425/i;
 
 test.describe("Hero", () => {
-  // The served document, before any script runs. (The app-wide loading boundary keeps the
-  // prerendered page in a hidden block until React reveals it, so this reads the HTML itself.)
+  // The served document, before any script runs. Reading the HTML itself also catches a Suspense
+  // boundary that would ship the prerendered page as hidden content (#259).
   test("puts the h1 and stats in the static HTML", async ({ request }) => {
     const html = await (await request.get("/")).text();
 
