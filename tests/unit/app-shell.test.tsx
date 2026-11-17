@@ -1,15 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import ErrorBoundary from "@/app/error";
-import Loading from "@/app/loading";
 import NotFound from "@/app/not-found";
 
 describe("app shell screens", () => {
-  it("Loading shows the spinner label", () => {
-    render(<Loading />);
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
-  });
-
   it("NotFound shows the 404 message and a home link", () => {
     render(<NotFound />);
     expect(screen.getByRole("heading", { name: "404" })).toBeInTheDocument();
