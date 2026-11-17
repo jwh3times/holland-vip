@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import * as React from "react";
 
 import { hobbyProjectsCopy, type HobbyProject } from "@/content/hobby-projects";
@@ -71,17 +72,15 @@ export function HobbyProjectCard({ project, meta }: HobbyProjectCardProps) {
           : "border-line"
       )}
     >
-      {/* Placeholder until the screenshots arrive: the accent-tinted panel and the name in mono. */}
-      <div className="relative aspect-[16/8] border-b border-line bg-panel2">
-        <div
-          aria-hidden="true"
-          className={cn(
-            "absolute inset-0 flex items-center justify-center font-mono text-sm text-mute",
-            tokens.cardBg
-          )}
-        >
-          {project.name}
-        </div>
+      {/* The 16:8 box is reserved before the image loads, so it causes no layout shift. */}
+      <div className="relative aspect-[16/8] overflow-hidden border-b border-line bg-panel2">
+        <Image
+          src={`/projects/${project.slug}.png`}
+          alt={project.screenshotAlt}
+          width={1600}
+          height={800}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
         <span
           className={cn(
             "absolute top-3 left-3 rounded-md border border-line bg-[color-mix(in_oklch,var(--bg)_80%,transparent)] px-2 py-1 font-mono text-[11px]",

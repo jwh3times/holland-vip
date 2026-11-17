@@ -11,6 +11,8 @@ export interface HobbyProject {
   accent: Accent;
   /** Maturity, shown in the screenshot area's pill. */
   status: string;
+  /** Describes the screenshot at `/projects/{slug}.png` (16:8, 1600×800), for its alt text. */
+  screenshotAlt: string;
   /** Where "open ↗" goes: the live site, or the repository when there is none. */
   url: string;
   /** The GitHub repository's name. It must be in `HOBBY_PROJECT_REPOS`; a test checks the sets match. */
@@ -31,6 +33,8 @@ export const hobbyProjects: HobbyProject[] = [
     kind: "SaaS · AI search visibility",
     accent: "blue",
     status: "early · live providers",
+    screenshotAlt:
+      "The Nearcited locations dashboard for three demo home-service businesses: each one's visibility score with a rising trend, how often ChatGPT, Claude, AI Overviews and the map pack name it, and who gets named instead.",
     url: "https://github.com/jwh3times/Nearcited",
     repo: "Nearcited",
     oneLiner:
@@ -59,6 +63,8 @@ export const hobbyProjects: HobbyProject[] = [
     kind: "CLI · causal source control",
     accent: "purple",
     status: "experimental · v0.2x",
+    screenshotAlt:
+      "A terminal running cst merge-plan on a demo repository: two changes already covered by a hard-squash receipt and two new ones, summarised as 2 covered, 0 candidate, 2 new.",
     url: "https://github.com/jwh3times/causet",
     repo: "causet",
     oneLiner:
@@ -85,6 +91,8 @@ export const hobbyProjects: HobbyProject[] = [
     kind: "Web app · task board",
     accent: "green",
     status: "live · magicagenda.app",
+    screenshotAlt:
+      "A Magic Agenda board in its cork theme, with handwritten sticky-note tasks across To Do, In Progress and Completed.",
     url: "https://magicagenda.app",
     repo: "magic-agenda",
     oneLiner:
@@ -112,6 +120,8 @@ export const hobbyProjects: HobbyProject[] = [
     kind: "Mobile · golf games & settlement",
     accent: "orange",
     status: "TestFlight · pressgolf.cc",
+    screenshotAlt:
+      "Three Press screens on phones: a live round's home with each player's running total, a hole being scored, and the settlement listing who pays whom.",
     url: "https://pressgolf.cc",
     repo: "PressGolf",
     oneLiner:

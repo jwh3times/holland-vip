@@ -64,6 +64,20 @@ describe("HobbyProjectsSection", () => {
     }
   });
 
+  it("shows each project's screenshot from the public folder, with its alt text, and no placeholder", () => {
+    render(<HobbyProjectsSection number="01" repos={[]} />);
+
+    for (const project of hobbyProjects) {
+      const article = within(card(project.name));
+      const shot = article.getByRole("img", { name: project.screenshotAlt });
+      expect(shot).toHaveAttribute("src", `/projects/${project.slug}.png`);
+      // The placeholder printed the name in the screenshot area; now only the heading carries it.
+      expect(article.getAllByText(project.name)).toHaveLength(1);
+      // The status pill stays, overlaid on the image.
+      expect(article.getByText(`● ${project.status}`)).toBeInTheDocument();
+    }
+  });
+
   it("shows repository metadata on every card when live data covers them all", () => {
     render(
       <HobbyProjectsSection

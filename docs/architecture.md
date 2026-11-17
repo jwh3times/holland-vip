@@ -58,13 +58,16 @@ bordered "window" with a shell-prompt header row.
 
 Hobby Projects (`#projects`) replaced the Open Source section, and Professional Work moved to
 `#work`. `HobbyProjectsSection` renders one card per project in `content/hobby-projects.ts` and
-matches each to its build-time repository data by name (see Build-time GitHub data).
-`components/hobby-project-card.tsx` is the section's one client component. Hovering a card, or
-focusing anything inside it, makes it active: its border and shadow take its accent, it lifts, and
-its mini terminal replays the sample output one line every 380ms (`REPLAY_STEP_MS`). Only the move
-from idle to active starts a replay, so moving focus within a card does not restart it. Hidden
-lines keep their space and stay in the accessibility tree, so a replay never shifts the layout. An
-idle card shows every line at 72% opacity. Under reduced motion there is no replay and no lift.
+matches each to its build-time repository data by name (see Build-time GitHub data). Each card's
+screenshot is `public/projects/{slug}.png`, a 1600×800 capture rendered through `next/image` with
+the project's `screenshotAlt` as its alt text and the status pill overlaid. Its 16:8 box is reserved
+before the lazy image loads, so loading it shifts no layout. `components/hobby-project-card.tsx`
+is the section's one client component. Hovering a card, or focusing anything inside it, makes it
+active: its border and shadow take its accent, it lifts, and its mini terminal replays the sample
+output one line every 380ms (`REPLAY_STEP_MS`). Only the move from idle to active starts a replay,
+so moving focus within a card does not restart it. Hidden lines keep their space and stay in the
+accessibility tree, so a replay never shifts the layout. An idle card shows every line at 72%
+opacity. Under reduced motion there is no replay and no lift.
 
 Impact (`#impact`) replaced the Problem-Solving and Technical Capabilities sections and took the
 Career Highlights and Technical Achievements out of About.

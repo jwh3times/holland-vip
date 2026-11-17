@@ -6,7 +6,6 @@ const TOKEN_KEYS: (keyof AccentTokens)[] = [
   "text",
   "bullet",
   "dot",
-  "cardBg",
   "bar",
   "glow",
   "outline",
@@ -58,7 +57,6 @@ describe("accent table on the Terminal tokens", () => {
 
   it("tints at 12% for chips, 14% for bars, 30% for hover and 55% for the border glow", () => {
     for (const key of ACCENTS) {
-      expect(accent[key].cardBg).toContain(`bg-${tint(key, 12)}`);
       expect(accent[key].chip).toContain(`bg-${tint(key, 12)}`);
       expect(accent[key].chip).toContain(`hover:bg-${tint(key, 30)}`);
       expect(accent[key].bar).toContain(`bg-${tint(key, 14)}`);
