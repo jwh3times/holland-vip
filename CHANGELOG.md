@@ -12,6 +12,22 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.6] - 2026-11-16
+
+### Changed
+
+- The Hobby Project cards show real screenshots in place of their placeholders (#253), completing
+  the Terminal redesign. Each image is described by alt text from `content/`, keeps the status pill
+  over it, and loads lazily into a reserved 16:8 box, so it shifts nothing:
+  - **Nearcited:** the locations dashboard for three demo businesses, from mock providers.
+  - **causet:** a terminal running `cst merge-plan` on a demo repository.
+  - **Magic Agenda:** a cork-theme board of sample tasks.
+  - **Press:** the home, scoring and settlement screens on three phones.
+
+### Removed
+
+- The screenshot placeholder and the `cardBg` accent token that only it used.
+
 ## [1.6.5] - 2026-11-16
 
 ### Changed
