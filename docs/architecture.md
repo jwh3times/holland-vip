@@ -24,6 +24,12 @@ Sections receive their number as a prop and never choose it. The Hero before the
 About README and Contact after it, are unnumbered, and the status bar closes the page as its
 footer. Every section sits on `--bg`: there are no alternating section surfaces.
 
+The whole page renders without JavaScript, so the app has no `loading.tsx` or other Suspense
+boundary above it. The async page awaits its build-time GitHub fetches, so such a boundary would
+make the static export ship its fallback visibly and the real page in a hidden block that only
+React's inline script reveals (#259). `tests/no-javascript.spec.ts` loads `/` with JavaScript
+disabled and requires the hero heading and Contact to be visible.
+
 The hero (`#top`) is a server component, so its h1 and stats are in the static HTML. It receives the
 build-time contribution calendar from the page and counts its stats from it: the calendar's total
 for "contributions / 12mo" and the sum of its last 30 days for "contributions / 30d", whichever

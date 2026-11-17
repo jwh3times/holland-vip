@@ -12,6 +12,15 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.4] - 2026-11-16
+
+### Fixed
+
+- The homepage now renders without JavaScript (#259). A loading boundary used to put the whole page
+  in a hidden block behind a "Loading..." spinner, revealed only by a script, so a visitor or
+  crawler without JavaScript saw nothing but the spinner. The spinner is gone and the prerendered
+  page is the document.
+
 ## [1.6.3] - 2026-11-16
 
 ### Changed
