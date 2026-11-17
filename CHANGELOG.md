@@ -12,6 +12,16 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.5] - 2026-11-16
+
+### Changed
+
+- `docs/agents/releases.md` now records how PRs merge into `main` (#263). `main`'s required checks
+  are strict, so each merge leaves the other open PRs behind. A feature PR catches up by merging
+  `main`, never by rebasing, and a Dependabot PR through `@dependabot rebase`. Beside a Dependabot
+  PR, the feature PR merges first so its changelog section keeps the version it mints.
+  `CONTRIBUTING.md` says a PR must be up to date with `main` to merge.
+
 ## [1.6.4] - 2026-11-16
 
 ### Fixed
