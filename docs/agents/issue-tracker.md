@@ -68,6 +68,9 @@ takes one of the two parked states instead and states its trigger in the Issue b
 
 Setting `Status` needs the GraphQL mutation `updateProjectV2ItemFieldValue` with the project id,
 item id, field id, and the target option id; `gh project field-list` and `item-list` supply them.
+`gh auth login` doesn't grant the `project` scope, so after a token rotation every board call fails
+with `missing required scopes [read:project]`. The maintainer runs `gh auth refresh -s project` (the
+write scope; `read:project` can't set `Status`), which opens a browser.
 
 ## Human follow-up actions
 
@@ -103,7 +106,9 @@ Create a GitHub Issue in the repository selected by the routing table.
 ## When a skill says "fetch the relevant ticket"
 
 Read it as in **Read an issue** above.
-Run `gh issue view <number> --comments`.
+Run `gh issue view <number> --comments` and `gh issue view <number> --json body --jq .body`: off a
+terminal, `--comments` prints only the comments, so an issue whose body holds the whole task reads
+as empty.
 
 ## Wayfinding operations
 

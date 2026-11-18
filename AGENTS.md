@@ -12,6 +12,8 @@ Authoritative guidance for coding agents working in this repository.
   its public/private boundary is authoritative.
 - Read [Development flow](#development-flow) before a code edit, or when routing work
   without a ready Issue, judging an exemption, or naming a branch or PR.
+- Read [Merging](docs/agents/merging.md) once a PR is open, and [Local runs](docs/agents/local-runs.md)
+  before running Playwright, shell checks or credential helpers on a development machine.
 - This Next.js version may differ from training data. Read the relevant guide under
   `node_modules/next/dist/docs/` before changing Next.js behavior.
 
