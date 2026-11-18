@@ -25,7 +25,7 @@ document about it.
 
 - **Create a public issue**: `gh issue create -R jwh3times/holland-vip --title "..." --body "..."`.
 - **Create a private issue**: `gh issue create -R jwh3times/holland-vip-workspace --title "..." --body "..."`.
-- **Read an issue**: `gh issue view -R <owner/repo> <number> --comments`, filtering comments by `jq` and also fetching labels.
+- **Read an issue**: `gh issue view -R <owner/repo> <number> --comments`, filtering comments by `jq` and also fetching labels, plus `gh issue view -R <owner/repo> <number> --json body --jq .body`: off a terminal, `--comments` prints only the comments, so an issue whose body holds the whole task reads as empty.
 - **List issues**: `gh issue list -R <owner/repo> --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'` with appropriate `--label` and `--state` filters.
 - **Make an issue a sub-issue of a parent**: `gh issue create --parent <parent> ...`, or `gh issue edit <parent> --add-sub-issue <child>` afterwards (`gh` 2.94+). Older `gh`: `gh api --method POST repos/<owner>/<repo>/issues/<parent>/sub_issues -F sub_issue_id=<child-db-id>` (database id, as in **Blocking** below). Without sub-issues, put `Part of #<parent>` at the top of the child body.
 - **Blocking**: GitHub's **native issue dependencies**, the canonical, UI-visible representation. Add an edge with `gh issue create --blocked-by <n>,<n> ...` or `gh issue edit <child> --add-blocked-by <blocker>` (`gh` 2.94+). Older `gh`: `gh api --method POST repos/<owner>/<repo>/issues/<child>/dependencies/blocked_by -F issue_id=<blocker-db-id>`, where `<blocker-db-id>` is the blocker's numeric **database id** (`gh api repos/<owner>/<repo>/issues/<n> --jq .id`, _not_ the `#number` or `node_id`). Where dependencies aren't available, fall back to a `Blocked by: #<n>, #<n>` line at the top of the child body. A ticket is unblocked when every blocker is closed.
@@ -68,6 +68,9 @@ takes one of the two parked states instead and states its trigger in the Issue b
 
 Setting `Status` needs the GraphQL mutation `updateProjectV2ItemFieldValue` with the project id,
 item id, field id, and the target option id; `gh project field-list` and `item-list` supply them.
+`gh auth login` doesn't grant the `project` scope, so after a token rotation every board call fails
+with `missing required scopes [read:project]`. The maintainer runs `gh auth refresh -s project` (the
+write scope; `read:project` can't set `Status`), which opens a browser.
 
 ## Human follow-up actions
 
@@ -102,8 +105,7 @@ Create a GitHub Issue in the repository selected by the routing table.
 
 ## When a skill says "fetch the relevant ticket"
 
-Read it as in **Read an issue** above.
-Run `gh issue view <number> --comments`.
+Read it as in **Read an issue** above, body included.
 
 ## Wayfinding operations
 

@@ -27,8 +27,9 @@
 - `docs/adr/*.md` — accepted decisions. `frozen`: report a contradiction between an accepted ADR
   and the code instead of editing either.
 - `CHANGELOG.md` — release history, Keep a Changelog, one dated section per merge. `ship-owned`.
-- `docs/agents/*.md` — conventions and settings the skills read. **When:** a convention, route or
-  setting changes.
+- `docs/agents/*.md` — conventions and settings the skills read, plus `merging.md` (from open PR to
+  finished merge) and `local-runs.md` (the development machine's traps). **When:** a convention,
+  route or setting changes; a merge or local-run lesson is learned that no check enforces.
 - `.agents/skills/*/**` — installed skills, mirrored to `.claude/skills/`: `end-session`, `handoff`,
   `lets-go`, `ship`, `docs-updater` and `what-next` from `jwh3times/skills` (ADR-0005), and the
   `mattpocock/skills` snapshot. `frozen` here: fixed upstream, and what they need to know goes in
