@@ -12,6 +12,15 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.9] - 2026-11-18
+
+### Changed
+
+- The project permission allowlist in `.claude/settings.json` now allows the read-only
+  `gh project item-list`, `gh project field-list`, `gh label list` and `nslookup` commands, so
+  reading the board, its fields and the repository's labels no longer prompts. The rules come from
+  a scan of recent agent sessions; commands that write or run code stay behind a prompt.
+
 ## [1.6.8] - 2026-11-18
 
 ### Added
