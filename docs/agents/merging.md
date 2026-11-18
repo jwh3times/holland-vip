@@ -7,20 +7,22 @@ holds the checks around it and what has gone wrong.
 ## Before merging
 
 - **The maintainer works sessions in parallel**, from another agent session, an IDE or the web UI,
-  so `main` can move mid-task. Before any rebase, PR or version computation, re-derive the state:
-  `git fetch --all --tags --prune`, `git branch --show-current`, `git log --oneline origin/main..HEAD`,
-  and `git reflog` when a branch's base is unclear. Never trust a `next-version.mjs` result from
-  earlier in the session.
+  so `main` can move mid-task. Before updating a branch, opening a PR or computing a version,
+  re-derive the state: `git fetch --all --tags --prune`, `git branch --show-current`,
+  `git log --oneline origin/main..HEAD`, and `git reflog` when a branch's base is unclear. Never
+  trust a `next-version.mjs` result from earlier in the session.
 - **A green PR's `Changelog Version` check is provisional until it merges.** Another merge, a
-  Dependabot one included, takes the version the branch names and flips the check to red with no
-  change to the branch. Fix it with `git rebase origin/main`, renumber the heading, `npm ci` (the
-  merge may have moved dependencies), re-run the gates, then `git push --force-with-lease`.
+  Dependabot one included, takes the version the branch names, and the check fails on the branch's
+  next CI run with no change to the branch. Catch up as [releases](releases.md#merging-into-main)
+  says, never by rebasing or force-pushing a pushed branch: re-run `ship`, which renumbers the
+  section, merges `origin/main`, runs the fast checks and pushes. Run `npm ci` after its merge and
+  before those checks, since the merge may have moved dependencies.
 - **Ship one branch at a time.** Cut the next branch from an updated `main` only after the previous
   one merges, and confirm its tag exists first: `version.yml` mints it asynchronously.
 
 ## Reading CI
 
-- **`Playwright Tests` and `Lighthouse Budget` both red on a no-op diff** is usually Google's Chrome
+- **`Playwright Tests` and `Lighthouse Budget (advisory)` both red on a no-op diff** is usually Google's Chrome
   apt mirror (`Hash Sum mismatch` in the browser-install step), not the code. Read which step failed
   before the diff, and rerun with `gh run rerun <run-id> --failed`.
 - **The Lighthouse job never fails the workflow** (`continue-on-error: true`). Before calling the
@@ -46,7 +48,7 @@ targeted bump should touch only its package's version, `resolved` and `integrity
 ## After the merge
 
 - **Closing an issue doesn't always move its board `Status` to Done.** Re-query the board and set it
-  with the mutation ([issue tracker](issue-tracker.md)) if it is still stale.
+  with the mutation ([issue tracker](issue-tracker.md#project-board)) if it is still stale.
 - **A published security advisory keeps `closed_at: null` forever**, and that is correct: `closed` is
   the alternative to publishing a draft, never a step after it. Never PATCH a published advisory to
   `closed`; judge one by `state`, `withdrawn_at` and its `patched_versions`.

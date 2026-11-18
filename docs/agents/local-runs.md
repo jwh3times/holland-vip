@@ -29,7 +29,7 @@ Traps on the development machine, mostly the maintainer's Windows checkout.
   settings, rulesets and DNS return 403. For zone facts, ask the maintainer for a dashboard read or a
   scoped read token instead of probing again; public HTTP observation and the Pages API need no
   extra access.
-- **Recapturing a hobby-project screenshot** ([architecture](../architecture.md)): the images are
+- **Recapturing a hobby-project screenshot** ([architecture](../architecture.md#page-composition-and-content)): the images are
   generated from each project's own sample data, rendered with Playwright's Chromium from this
   repository's `node_modules`. Nearcited's is captured in dark mode. Magic Agenda's and Nearcited's
   local Supabase stacks use the same ports, so only one runs at a time. Show the maintainer the image

@@ -12,6 +12,32 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.8] - 2026-11-18
+
+### Added
+
+- `docs/agents/merging.md` covers the path from an open PR to a finished merge: re-deriving state
+  when parallel sessions move `main`, why a green `Changelog Version` check is provisional, reading
+  red Playwright and Lighthouse runs, diffing `package-lock.json` past its `-diff` attribute, and
+  the board and advisory checks after a merge.
+- `docs/agents/local-runs.md` records the development machine's traps: only Chromium is installed
+  for Playwright, there is no `shellcheck`, a credential helper is tested against a canary value
+  rather than printed, no agent credential reads the Cloudflare zone's settings, and how a hobby
+  project screenshot is recaptured.
+
+### Changed
+
+- `AGENTS.md` and the doc map point agents at the two new files. These lessons used to live in one
+  harness's private memory, where Codex and other machines couldn't read them.
+- `docs/agents/issue-tracker.md` says the board needs `gh auth refresh -s project` after a token
+  rotation, and that `gh issue view --comments` omits the issue body off a terminal.
+
+## [1.6.7] - 2026-11-17
+
+### Changed
+
+- Bumped `@playwright/test` from 1.65.0 to 1.65.1 (Dependabot, #268).
+
 ## [1.6.6] - 2026-11-16
 
 ### Changed
