@@ -49,7 +49,7 @@ test("a stamp commit has the stamp subject and ends in the trailer", () => {
 });
 
 test("a malformed fragment is salvaged under Changed, never blocking a release", () => {
-  assert.deepEqual([...salvageFragment("﻿## [1.2.1]\n\n- X.\n  more\n")], [
+  assert.deepEqual([...salvageFragment("\uFEFF## [1.2.1]\n\n- X.\n  more\n")], [
     ["Changed", ["- X.", "  more"]],
   ]);
   assert.equal(salvageFragment("## Nothing\n\n"), null);
