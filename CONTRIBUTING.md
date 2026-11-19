@@ -27,7 +27,7 @@ Follow the [Getting started](./README.md#getting-started) section of the README
    ```
 
 4. Open a Pull Request and fill in the template. CI (build/lint/format, unit
-   coverage, E2E) and the dependency-review check must pass, and the branch must be up to date
+   coverage, E2E), CodeQL and the dependency-review check must pass, and the branch must be up to date
    with `main`: merge `main` into it when another PR lands first, rather than rebasing.
 
 ## Standards

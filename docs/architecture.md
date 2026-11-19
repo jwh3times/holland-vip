@@ -241,7 +241,7 @@ job to fail without blocking a merge and retains its generated reports for diagn
 
 Keep Lighthouse advisory, with the existing budgets and five-run collection unchanged. A budget
 failure can merge; the maintainer accepts responsibility for inspecting the retained report and
-triaging a repeatable regression. Lighthouse is not a required branch-protection check. This
+triaging a repeatable regression. Lighthouse is not a required status check. This
 separates an actionable performance signal from a merge guarantee.
 
 The decision for [#146](https://github.com/jwh3times/holland-vip/issues/146) used 12 retained CI
@@ -274,7 +274,7 @@ claiming long-term merge-gate reliability from this sample.
 
 Reconsider enforcement if advisory review misses a confirmed regression, or when a longer baseline
 covers substantive page changes and runner/browser updates. Promotion must both remove the
-workflow allowance and add the Lighthouse job to required branch-protection checks; changing only
+workflow allowance and add the Lighthouse job to the ruleset's required status checks; changing only
 `continue-on-error` would not prevent merges under the current required-check configuration.
 
 ### Deployment and release checks
@@ -298,6 +298,11 @@ live GitHub data. Release tags and changelog sections follow
 [ADR 0006](adr/0006-stamp-changelog-on-tag.md): each branch writes a `changelog.d/` fragment, and
 `version.yml` stamps it into a dated section and tags the merge commit, so open PRs merge in any
 order ([Merging into main](agents/releases.md#merging-into-main)).
+
+`main` is protected only by repository rulesets, which also hold its required status checks
+(`gh api repos/jwh3times/holland-vip/rules/branches/main` lists them). The release GitHub App that
+pushes the stamp commit is the ruleset's bypass actor, but no actor can bypass classic branch
+protection's required checks, so `main` carries none: adding it back blocks every release.
 
 The scheduled production smoke workflow also opens the deployed homepage in Chromium. It rejects
 browser errors, failed requests, duplicate or manually embedded Cloudflare Web Analytics scripts,
