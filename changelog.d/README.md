@@ -17,6 +17,10 @@ date:
 - The theme toggle no longer flashes on first load.
 ```
 
+Name a file in backticks rather than linking it: a relative link resolves from `changelog.d/` on
+the branch but from the repository root once stamped into `CHANGELOG.md`, so it breaks in one place
+or the other.
+
 After the merge, `.github/workflows/version.yml` runs `scripts/stamp-changelog.mjs`, which moves
 the fragments that merge added into its dated section of `CHANGELOG.md`, deletes them, and tags
 the merge. A merge with no fragment gets one `### Changed` bullet from its PR title. A fragment

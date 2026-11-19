@@ -19,9 +19,11 @@ gone wrong.
 
 ## The release
 
-- **`version.yml` stamps and tags asynchronously.** Each merge gets a stamp commit,
-  `chore(release): v<x.y.z> [skip ci]`, on top of it, and its tag on the merge commit. Pull before
-  cutting the next branch so it starts from the stamped changelog.
+- **`version.yml` stamps and tags asynchronously.** Each run pushes one stamp commit,
+  `chore(release): v<x.y.z>[, ...] [skip ci]`, for every merge it releases, and tags each merge
+  commit. Pull before cutting the next branch so it starts from the stamped changelog, and update
+  another open PR only after the stamp commit lands: it moves `main` again, so a PR updated before
+  it is behind once more.
 - **A run that ends "main moved during this run" is not a failure**: the run queued behind it
   releases both merges. Any other failed run leaves its merges untagged until a later run succeeds,
   so re-run it once the cause is fixed. A release GitHub App token that fails to mint means the
