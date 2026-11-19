@@ -173,7 +173,7 @@ test("stamps each untagged merge with its own version and tags the merge commit"
 
     const message = git(root, "log", "-1", "--format=%B");
     assert.match(message, /^chore\(release\): v1\.2\.1, v1\.2\.2 \[skip ci\]/);
-    assert.match(message, new RegExp(TRAILER.replace(/[()]/g, "\\$&")));
+    assert.equal(message.trimEnd().split("\n").at(-1), TRAILER);
     assert.equal(git(root, "status", "--porcelain"), "");
 
     printed.length = 0;
