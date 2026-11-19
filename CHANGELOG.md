@@ -14,6 +14,16 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.12] - 2026-11-19
+
+### Changed
+
+- The shared skills and their canonical changelog scripts are updated from `jwh3times/skills`. The
+  `Changelog` check now accepts one kind of `CHANGELOG.md` section on a branch: a backfill for a
+  version already tagged with no section, which only a merge from before the move to changelog
+  fragments can leave. Every other section a branch adds is still rejected. Every tag here already
+  has its section, so no backfill is due.
+
 ## [1.6.11] - 2026-11-19
 
 ### Changed
