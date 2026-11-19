@@ -28,7 +28,10 @@ gone wrong.
   releases both merges. Any other failed run leaves its merges untagged until a later run succeeds,
   so re-run it once the cause is fixed. A release GitHub App token that fails to mint means the
   `RELEASE_APP_CLIENT_ID` variable, the `RELEASE_APP_PRIVATE_KEY` secret or the App's installation
-  on this repository is gone.
+  on this repository is gone. A stamp push rejected with `GH013` means a rule the App cannot bypass
+  now applies to `main`, such as classic branch protection or a ruleset that does not list the App:
+  `main`'s protection lives only in rulesets
+  ([architecture](../architecture.md#deployment-and-release-checks)).
 
 ## Reading CI
 
