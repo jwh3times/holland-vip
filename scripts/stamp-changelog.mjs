@@ -92,7 +92,7 @@ export function isStampCommit(message) {
 // stamped section, whose body the check lets a branch edit.
 export function salvageFragment(text) {
   const lines = text
-    .replace(/^﻿/, "")
+    .replace(/^\uFEFF/, "")
     .replace(/\r\n?/g, "\n")
     .split("\n")
     .filter((line) => line.trim() !== "" && !/^#{1,6}\s/.test(line));

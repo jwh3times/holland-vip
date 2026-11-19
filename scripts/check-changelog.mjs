@@ -20,7 +20,9 @@
 // stamp-on-tag: a branch's entries live in its own `changelog.d/<branch-slug>.md` fragment, and
 // the tag workflow (`scripts/stamp-changelog.mjs`) writes the dated sections. So the branch may not
 // add, remove or renumber a version section or add entries to `## [Unreleased]` (it may empty it,
-// and prose elsewhere, such as the policy at the top, may change); it may not edit or delete a
+// and prose elsewhere, such as the policy at the top, may change); the one section it may add is a
+// backfill for a version already tagged with none, which only a merge from before the move to
+// this scheme leaves, since the workflow stamps every later one; it may not edit or delete a
 // fragment another merge added; every fragment it adds must parse; and, with `--source` paths, a
 // change under one needs a fragment. Without `--source`, a branch with no fragment is fine: the
 // tag workflow writes its entry from the PR title.
@@ -163,7 +165,7 @@ export function parseFragment(text) {
   const categories = new Map();
   const errors = [];
   let current = null;
-  const normalized = text.replace(/^﻿/, "").replace(/\r\n?/g, "\n");
+  const normalized = text.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n");
   for (const [index, line] of normalized.split("\n").entries()) {
     const heading = /^### (\S.*?)\s*$/.exec(line);
     if (heading) {
@@ -193,10 +195,25 @@ export function parseFragment(text) {
   return { categories, errors };
 }
 
+// The versions a branch's changelog adds to its base's, or null when it removes, reorders or
+// repeats one of them.
+export function addedVersions(versions, baseVersions) {
+  if (new Set(versions).size !== versions.length) return null;
+  const added = [];
+  let next = 0;
+  for (const version of versions) {
+    if (version === baseVersions[next]) next += 1;
+    else if (baseVersions.includes(version)) return null;
+    else added.push(version);
+  }
+  return next === baseVersions.length ? added : null;
+}
+
 // `pending` lists fragments that already exist on the base and that the branch edits or deletes:
 // they belong to merges not yet stamped, and the stamp reads each from its own merge, so an edit
 // would be lost. Emptying `## [Unreleased]` is allowed, so the move to this scheme can carry its
-// accumulated entries into a fragment.
+// accumulated entries into a fragment. `tagged` lists the released versions: a section added for
+// one of them backfills a tag minted before the move, which the workflow will never stamp.
 export function checkStampOnTag({
   changelog,
   baseChangelog,
@@ -204,13 +221,17 @@ export function checkStampOnTag({
   fragments,
   pending = [],
   sources,
+  tagged = [],
 }) {
   const errors = [];
   if (baseChangelog !== null) {
-    if (documentedVersions(changelog).join() !== documentedVersions(baseChangelog).join()) {
+    const added = addedVersions(documentedVersions(changelog), documentedVersions(baseChangelog));
+    const untagged = added?.filter((version) => !tagged.includes(version)) ?? [];
+    if (added === null || untagged.length > 0) {
       errors.push(
         `This branch adds, removes or renumbers a version section; the tag workflow writes them. ` +
-          `Put its entries in ${FRAGMENT_DIR}/<branch-slug>.md.`,
+          `Put its entries in ${FRAGMENT_DIR}/<branch-slug>.md. Only a version already tagged ` +
+          `with no section may be added, as a backfill.`,
       );
     }
     const unreleased = unreleasedSection(changelog);
@@ -306,6 +327,8 @@ function checkStampOnTagRepository(root, changelog, options) {
   const pending = changed
     .filter(({ status, file }) => status !== "A" && isFragmentPath(file))
     .map(({ file }) => file);
+  refreshTags(root);
+  const tagged = releasedVersions(gitTags(root));
   return checkStampOnTag({
     changelog,
     baseChangelog: baseFile.ok ? baseFile.stdout : null,
@@ -313,6 +336,7 @@ function checkStampOnTagRepository(root, changelog, options) {
     fragments,
     pending,
     sources: options.sources,
+    tagged,
   });
 }
 
