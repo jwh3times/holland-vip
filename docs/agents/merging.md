@@ -1,24 +1,34 @@
 # Merging
 
-From an open pull request to a finished merge. The order in which feature and Dependabot PRs merge,
-and how each catches up with `main`, is in [releases](releases.md#merging-into-main); this file
-holds the checks around it and what has gone wrong.
+From an open pull request to a finished merge. How feature and Dependabot PRs catch up with `main`
+is in [releases](releases.md#merging-into-main); this file holds the checks around it and what has
+gone wrong.
 
 ## Before merging
 
 - **The maintainer works sessions in parallel**, from another agent session, an IDE or the web UI,
-  so `main` can move mid-task. Before updating a branch, opening a PR or computing a version,
+  so `main` can move mid-task. Before updating a branch, opening a PR or reading a release,
   re-derive the state: `git fetch --all --tags --prune`, `git branch --show-current`,
-  `git log --oneline origin/main..HEAD`, and `git reflog` when a branch's base is unclear. Never
-  trust a `next-version.mjs` result from earlier in the session.
-- **A green PR's `Changelog Version` check is provisional until it merges.** Another merge, a
-  Dependabot one included, takes the version the branch names, and the check fails on the branch's
-  next CI run with no change to the branch. Catch up as [releases](releases.md#merging-into-main)
-  says, never by rebasing or force-pushing a pushed branch: re-run `ship`, which renumbers the
-  section, merges `origin/main`, runs the fast checks and pushes. Run `npm ci` after its merge and
-  before those checks, since the merge may have moved dependencies.
-- **Ship one branch at a time.** Cut the next branch from an updated `main` only after the previous
-  one merges, and confirm its tag exists first: `version.yml` mints it asynchronously.
+  `git log --oneline origin/main..HEAD`, and `git reflog` when a branch's base is unclear.
+- **Catch a branch up by merging, never by rebasing or force-pushing a pushed branch**, as
+  [releases](releases.md#merging-into-main) says. Run `npm ci` after the merge and before the fast
+  checks, since the merge may have moved dependencies.
+- **Never edit or delete a fragment already on `main`.** It belongs to the merge that added it, and
+  `version.yml` releases that merge's copy, so the `Changelog` check rejects the change. A
+  correction to a released entry is a new fragment.
+
+## The release
+
+- **`version.yml` stamps and tags asynchronously.** Each run pushes one stamp commit,
+  `chore(release): v<x.y.z>[, ...] [skip ci]`, for every merge it releases, and tags each merge
+  commit. Pull before cutting the next branch so it starts from the stamped changelog, and update
+  another open PR only after the stamp commit lands: it moves `main` again, so a PR updated before
+  it is behind once more.
+- **A run that ends "main moved during this run" is not a failure**: the run queued behind it
+  releases both merges. Any other failed run leaves its merges untagged until a later run succeeds,
+  so re-run it once the cause is fixed. A release GitHub App token that fails to mint means the
+  `RELEASE_APP_CLIENT_ID` variable, the `RELEASE_APP_PRIVATE_KEY` secret or the App's installation
+  on this repository is gone.
 
 ## Reading CI
 

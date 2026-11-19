@@ -26,7 +26,9 @@
   skill: report a term the code contradicts instead of editing it.
 - `docs/adr/*.md` — accepted decisions. `frozen`: report a contradiction between an accepted ADR
   and the code instead of editing either.
-- `CHANGELOG.md` — release history, Keep a Changelog, one dated section per merge. `ship-owned`.
+- `CHANGELOG.md` — release history, Keep a Changelog, one dated section per merge, written by
+  `version.yml` from the merge's fragments. `frozen` for this skill: branches never edit it.
+- `changelog.d/*.md` — one fragment per branch, its changelog entries. `ship-owned`.
 - `docs/agents/*.md` — conventions and settings the skills read, plus `merging.md` (from open PR to
   finished merge) and `local-runs.md` (the development machine's traps). **When:** a convention,
   route or setting changes; a merge or local-run lesson is learned that no check enforces.

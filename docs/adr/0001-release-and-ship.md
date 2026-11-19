@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0006
 ---
 
 # Share one release prediction across ship, CI, and GitHub Releases

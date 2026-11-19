@@ -95,8 +95,9 @@ GitHub Actions deploy workflow. `public/_headers` is the source of truth for pro
 headers.
 
 Every merge to `main` creates a `v<major>.<minor>.<build>` tag and GitHub Release. The release line
-comes from `package.json`; `scripts/next-version.mjs` computes the exact version shared by CI, the
-release workflow, and `/ship`. Release history lives in [CHANGELOG.md](CHANGELOG.md).
+comes from `package.json`, and `scripts/next-version.mjs` computes the exact version. Each branch
+writes its changelog entries to a `changelog.d/` fragment, which the release workflow stamps into
+[CHANGELOG.md](CHANGELOG.md) under the version its merge mints.
 
 ## Contributing
 

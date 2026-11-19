@@ -40,7 +40,7 @@ jobs:
 
       - name: Verify generated agent artifacts are in sync and tool-neutral
         run: |
-          node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/check-docs.test.mjs scripts/check-skills.test.mjs
+          node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/stamp-changelog.test.mjs scripts/check-docs.test.mjs scripts/check-skills.test.mjs
           node scripts/sync-agents.mjs --check
           node scripts/check-skills.mjs
           npm run lint:agents
@@ -173,25 +173,24 @@ jobs:
           retention-days: 7
 
   changelog:
-    name: Changelog Version
+    name: Changelog
     runs-on: ubuntu-latest
-    # PR-only: on push to main, version.yml mints the tag and next-version would advance
-    # past the changelog's top entry, so the guard must not run there. Dependabot PRs don't
-    # touch the changelog; version.yml still tags them, so exempt the bot.
-    # Key off the PR author, not github.actor: actor is whoever triggered THIS run, so a
-    # human pushing a fixup to a Dependabot branch would re-arm the guard on `synchronize`.
-    if: github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
+    # PR-only: a branch's entries are its changelog.d/ fragment, which version.yml stamps after the
+    # merge. The guard checks the fragments parse and that the branch edits no released section, no
+    # `## [Unreleased]` entry and no fragment already on main. A Dependabot PR touches none of them
+    # and passes; version.yml gives its merge a section from its PR title.
+    if: github.event_name == 'pull_request'
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0 # full tags, needed to compute the next build number
+          fetch-depth: 0 # origin/main, the base the branch's changelog changes are compared with
 
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: ".nvmrc"
 
-      - name: Verify CHANGELOG top version matches the version this merge will mint
+      - name: Verify the changelog fragments and that no released section changed
         run: node scripts/check-changelog.mjs
