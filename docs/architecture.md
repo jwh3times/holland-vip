@@ -294,9 +294,10 @@ assertions, which suits their fixed single values. The security.txt assertions c
 notice it, so the daily run is what catches it. The refresh workflow
 calls the Cloudflare Pages deploy hook, polls the returned deployment ID through the Pages API until
 it succeeds or fails, then verifies both that deployment's URL and the production homepage report
-live GitHub data. Release tags and changelog prediction follow
-[ADR 0001](adr/0001-release-and-ship.md); the merge order that keeps each prediction true while
-several PRs are open is in [Merging into main](agents/releases.md#merging-into-main).
+live GitHub data. Release tags and changelog sections follow
+[ADR 0006](adr/0006-stamp-changelog-on-tag.md): each branch writes a `changelog.d/` fragment, and
+`version.yml` stamps it into a dated section and tags the merge commit, so open PRs merge in any
+order ([Merging into main](agents/releases.md#merging-into-main)).
 
 The scheduled production smoke workflow also opens the deployed homepage in Chromium. It rejects
 browser errors, failed requests, duplicate or manually embedded Cloudflare Web Analytics scripts,

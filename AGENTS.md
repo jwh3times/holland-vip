@@ -152,8 +152,9 @@ projects against `out/`. `tests/global-setup.ts` rejects a foreign server alread
 - `.github/workflows/ci.yml` owns lint/build, coverage, static-export Playwright, advisory
   Lighthouse budgets, and changelog validation. The advisory decision and report-review
   responsibility are recorded in `docs/architecture.md` under Lighthouse merge policy.
-- `.github/workflows/version.yml` tags every merge to `main`; `scripts/next-version.mjs` is the
-  version source of truth.
+- `.github/workflows/version.yml` tags every merge to `main` and stamps its changelog section from
+  the branch's `changelog.d/` fragment; `scripts/next-version.mjs` is the version source of truth
+  ([ADR 0006](docs/adr/0006-stamp-changelog-on-tag.md)).
 - `.github/workflows/smoke.yml` checks the deployed site. Cloudflare Bot Fight Mode must stay off
   for GitHub-hosted runners to reach it.
 - `.github/workflows/refresh.yml` triggers and verifies the Cloudflare Pages rebuild that refreshes
@@ -227,8 +228,9 @@ node scripts/sync-agents.mjs
 ```
 
 `scripts/sync-agents.mjs`, `lint-agent-neutrality.mjs`, `check-docs.mjs`, `check-skills.mjs`, and
-`sync-main.mjs`, `next-version.mjs` and `check-changelog.mjs` where this repository carries them, are
-canonical in `jwh3times/skills` with their tests: fix them there, then copy them here.
+`sync-main.mjs`, `next-version.mjs`, `check-changelog.mjs` and `stamp-changelog.mjs` where this
+repository carries them, are canonical in `jwh3times/skills` with their tests: fix them there, then
+copy them here.
 `sync-agents.mjs` also writes the marked blocks in this file: change them in `jwh3times/skills`, not
 here.
 

@@ -4,7 +4,9 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) via the
-`v<major>.<minor>.<build>` tags minted by `.github/workflows/version.yml`.
+`v<major>.<minor>.<build>` tags minted by `.github/workflows/version.yml`. Branches never edit this
+file: each writes its entries to `changelog.d/`, and the workflow stamps them into the section for
+the version its merge mints.
 
 _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate this changelog._
 
