@@ -26,9 +26,9 @@ Follow the [Getting started](./README.md#getting-started) section of the README
    npm test                               # Playwright E2E (CI runs Chromium projects)
    ```
 
-4. Open a Pull Request and fill in the template. CI (build/lint/format, unit
-   coverage, E2E), CodeQL and the dependency-review check must pass, and the branch must be up to date
-   with `main`: merge `main` into it when another PR lands first, rather than rebasing.
+4. Open a Pull Request and fill in the template. CI (build/lint/format, unit coverage, E2E),
+   CodeQL, the dependency-review check and the changelog check must pass, and the branch must be up
+   to date with `main`: merge `main` into it when another PR lands first, rather than rebasing.
 
 ## Standards
 
