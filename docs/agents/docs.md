@@ -34,8 +34,8 @@
   route or setting changes; a merge or local-run lesson is learned that no check enforces.
   `dependabot.md` (what a Dependabot review needs here) also changes with `.github/dependabot.yml`,
   a CI job, or a config file it names.
-- `.agents/skills/*/**` — installed skills, mirrored to `.claude/skills/`: `end-session`, `handoff`,
-  `lets-go`, `ship`, `docs-updater` and `what-next` from `jwh3times/skills` (ADR-0005), and the
+- `.agents/skills/*/**` — installed skills, mirrored to `.claude/skills/`: the skills from
+  `jwh3times/skills` that the `shared-skills` block in `AGENTS.md` installs (ADR-0005), and the
   `mattpocock/skills` snapshot. `frozen` here: fixed upstream, and what they need to know goes in
   `AGENTS.md` or `docs/agents/`. **When:** a skill is added, removed or replaced (`.agents/skills/`,
   `skills-lock.json`): AGENTS.md's development-flow paragraph.
