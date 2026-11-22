@@ -14,6 +14,15 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.21] - 2026-11-22
+
+### Changed
+
+- The docs map in `docs/agents/docs.md` and the agent-artifact paragraph in `docs/architecture.md`
+  no longer keep their own lists of the skills installed from `jwh3times/skills`, which had gone
+  stale (they missed `land` and `dependabot`); both point to the `shared-skills` block in
+  `AGENTS.md` instead. No site behavior changes.
+
 ## [1.6.20] - 2026-11-22
 
 ### Added
