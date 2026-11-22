@@ -314,8 +314,8 @@ the static build artifact and invisible to the HTTP-only smoke assertions.
 
 Agent skill and subagent artifacts follow [ADR 0002](adr/0002-agent-artifact-sync.md), and
 `npm run lint:agents` keeps the authored sources correct when read from their mirrored copies. The
-shared workflow skills (`end-session`, `handoff`, `lets-go`, `ship`, `docs-updater`, `what-next`)
-install from `jwh3times/skills` per
+shared workflow skills, the ones the `shared-skills` block in `AGENTS.md` lists, install from
+`jwh3times/skills` per
 [ADR 0005](adr/0005-shared-skills-install-from-jwh3times-skills.md) and read this repository's facts
 from the settings files under `docs/agents/`. The public repository/private companion boundary follows [ADR 0003](adr/0003-private-workspace.md); machine
 recovery steps live in [Workspace bootstrap](agents/workspace-bootstrap.md).
