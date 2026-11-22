@@ -32,6 +32,8 @@
 - `docs/agents/*.md` — conventions and settings the skills read, plus `merging.md` (from open PR to
   finished merge) and `local-runs.md` (the development machine's traps). **When:** a convention,
   route or setting changes; a merge or local-run lesson is learned that no check enforces.
+  `dependabot.md` (what a Dependabot review needs here) also changes with `.github/dependabot.yml`,
+  a CI job, or a config file it names.
 - `.agents/skills/*/**` — installed skills, mirrored to `.claude/skills/`: `end-session`, `handoff`,
   `lets-go`, `ship`, `docs-updater` and `what-next` from `jwh3times/skills` (ADR-0005), and the
   `mattpocock/skills` snapshot. `frozen` here: fixed upstream, and what they need to know goes in
