@@ -30,8 +30,10 @@
   `version.yml` from the merge's fragments. `frozen` for this skill: branches never edit it.
 - `changelog.d/*.md` — one fragment per branch, its changelog entries. `ship-owned`.
 - `docs/agents/*.md` — conventions and settings the skills read, plus `merging.md` (from open PR to
-  finished merge) and `local-runs.md` (the development machine's traps). **When:** a convention,
-  route or setting changes; a merge or local-run lesson is learned that no check enforces.
+  finished merge), `local-runs.md` (the development machine's traps) and `guard.md` (the commands
+  and paths `scripts/guard.mjs` stops here). **When:** a convention, route or setting changes; a
+  merge or local-run lesson is learned that no check enforces; a never-run command or never-remove
+  path is added or dropped (`guard.md`).
   `dependabot.md` (what a Dependabot review needs here) also changes with `.github/dependabot.yml`,
   a CI job, or a config file it names.
 - `.agents/skills/*/**` — installed skills, mirrored to `.claude/skills/`: the skills from
