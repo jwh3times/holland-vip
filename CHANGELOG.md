@@ -14,6 +14,16 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.26] - 2026-11-23
+
+### Added
+
+- `docs/agents/guard.md` lists the commands and paths the shared `scripts/guard.mjs` guard stops in
+  this repository on top of its shared rules: printing the GitHub CLI token, `npx skills update`,
+  force-staging or submoduling the private companion, closing a security advisory, and protected
+  local paths (`private/`, env files, local Claude settings, `node_modules/`), with a Playwright
+  browser install and a rebase asking first. The docs map names it. No site behavior changes.
+
 ## [1.6.25] - 2026-11-23
 
 ### Changed
