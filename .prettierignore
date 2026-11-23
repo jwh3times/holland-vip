@@ -36,6 +36,8 @@ scripts/check-docs.mjs
 scripts/check-docs.test.mjs
 scripts/check-skills.mjs
 scripts/check-skills.test.mjs
+scripts/guard.mjs
+scripts/guard.test.mjs
 
 # Installed and never edited here: the install's bytes are the
 # source, so the local Prettier config must not reformat them.
