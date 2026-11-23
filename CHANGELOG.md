@@ -14,6 +14,15 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.22] - 2026-11-22
+
+### Changed
+
+- `THIRD_PARTY_NOTICES.md` no longer lists the skills installed from `jwh3times/skills` by hand,
+  a list that had gone stale (it missed `land` and `dependabot`); it points to the
+  `shared-skills` block in `AGENTS.md` instead. The attribution and license notices are unchanged.
+  No site behavior changes.
+
 ## [1.6.21] - 2026-11-22
 
 ### Changed
