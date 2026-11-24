@@ -65,3 +65,11 @@ targeted bump should touch only its package's version, `resolved` and `integrity
 - **A published security advisory keeps `closed_at: null` forever**, and that is correct: `closed` is
   the alternative to publishing a draft, never a step after it. Never PATCH a published advisory to
   `closed`; judge one by `state`, `withdrawn_at` and its `patched_versions`.
+
+## Dependabot catch-up
+
+`gh pr comment <n> --body "@dependabot rebase"`
+
+A Dependabot PR catches up only through Dependabot's own rebase
+([releases](releases.md#merging-into-main)); the merge commit `gh pr update-branch` pushes stops
+Dependabot from rebasing the branch later.
