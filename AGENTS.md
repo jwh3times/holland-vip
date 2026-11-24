@@ -48,7 +48,7 @@ Authoritative guidance for coding agents working in this repository.
 <!-- shared:development-flow -->
 
 The flow skills are this repository's binding process for changing code. Read
-`.agents/skills/ship/settings/dev-flow.md` (the routing, exemptions and issue linking) and
+`.agents/skills/open-pr/settings/dev-flow.md` (the routing, exemptions and issue linking) and
 `docs/agents/dev-flow.md` (what this repository adds) before the first edit of a change, and whenever
 no ready issue exists. `/ask-matt` maps the flow itself.
 
@@ -66,14 +66,15 @@ no ready issue exists. `/ask-matt` maps the flow itself.
   prep, and an explicit user waiver recorded in the PR body as `Flow waived by the user: <reason>`.
 - **Linking.** Branches are `<type>/<issue#>-<slug>`; the PR body opens with `Closes #N` or
   `Part of #N`.
-- **The flow ends at `/ship`.** `/implement` stops at a commit; `/ship` refreshes the docs, writes the
-  changelog and the PR body, and opens the PR. When the user says to merge it, `/land` merges it
+- **The flow ends at `/open-pr`.** `/implement` stops at a commit; `/open-pr` refreshes the docs,
+  writes the changelog and the PR body, and opens the PR (Claude Code's built-in `/ship` is a
+  different command, outside this flow). When the user says to merge it, `/land` merges it
   and confirms its release. `/dependabot` reviews the open Dependabot PRs and hands the ones the
   user names to `/land`; nothing merges a Dependabot PR on its own. `/ask-matt` also routes to
   `/pr`, `/retro` and `/implement-spec`, which are not installed here.
 - **Tests are proven, reds are read.** Before `/implement` commits a change that adds or changes
   tests, and in `/code-review`, run `/test-prover`: in a scratch worktree it reverts the fix and
-  breaks its guards, and every new test must go red. `/ship` runs it too. `/land` and
+  breaks its guards, and every new test must go red. `/open-pr` runs it too. `/land` and
   `/dependabot` read a red check with `/ci-triage`, which never re-runs anything.
   `/records-audit` checks the board, the trackers, the follow-up wiki and the changelog against
   each other; run it weekly, and `/what-next` says when it is due.
@@ -81,16 +82,16 @@ no ready issue exists. `/ask-matt` maps the flow itself.
   out with `/end-session`, and `/lets-go` resumes it. It does not write the portable file `/ask-matt`
   describes, so a `/prototype` detour stays in the session or uses a branch.
 - **A wizard is not the record.** A step only a human can take follows the `## Procedure` in
-  `.agents/skills/ship/settings/human-follow-up.md`, whose instructions stand without the script.
+  `.agents/skills/open-pr/settings/human-follow-up.md`, whose instructions stand without the script.
 - **Research goes where it is safe to keep.** `/research` findings that would expose private material
   go to the private companion, where there is one, never to an ignored folder with no repository
   behind it. Details of an unpublished vulnerability are a draft advisory, never a research file.
 
 <!-- /shared:development-flow -->
 
-Outside the gated flow, use `/ship` when a branch is ready for review, `/end-session` to record and
+Outside the gated flow, use `/open-pr` when a branch is ready for review, `/end-session` to record and
 tidy a session without pushing, `/handoff` / `/lets-go` to move a session between machines through the
-Handoffs folder, `/docs-updater` to audit or refresh the docs outside `/ship`, and `/what-next` to
+Handoffs folder, `/docs-updater` to audit or refresh the docs outside `/open-pr`, and `/what-next` to
 rank the open work and name the next command.
 
 ## Code and content boundaries
@@ -187,7 +188,7 @@ projects against `out/`. `tests/global-setup.ts` rejects a foreign server alread
 - `private/README.md`: confidential storage contract.
 
 Update the owning document when its contract changes. The full map, with each document's update
-trigger, is the `Doc map` in [docs/agents/docs.md](docs/agents/docs.md). `/ship` runs the
+trigger, is the `Doc map` in [docs/agents/docs.md](docs/agents/docs.md). `/open-pr` runs the
 `docs-updater` skill over the branch's changes and writes the changelog entry. Run `npm run format`
 before agent synchronization.
 
@@ -210,7 +211,7 @@ a bare `$0`–`$9` in a `SKILL.md` or a relative link that breaks under `.claude
 
 <!-- shared:shared-skills -->
 
-`end-session`, `handoff`, `lets-go`, `ship`, `land`, `dependabot`, `docs-updater`, `what-next`,
+`end-session`, `handoff`, `lets-go`, `open-pr`, `land`, `dependabot`, `docs-updater`, `what-next`,
 `test-prover`, `ci-triage` and `records-audit` install from `jwh3times/skills`, and are never
 edited here: reinstalling overwrites a local edit.
 A fix goes upstream, and what they need to know about this repository goes in the settings files
@@ -226,7 +227,7 @@ Re-running the install is the update; never run `npx skills update`, which leave
 linked to its source instead of copied:
 
 ```bash
-npx skills add jwh3times/skills -s end-session -s handoff -s lets-go -s ship -s land -s dependabot -s docs-updater -s what-next -s test-prover -s ci-triage -s records-audit -a codex --copy -y
+npx skills add jwh3times/skills -s end-session -s handoff -s lets-go -s open-pr -s land -s dependabot -s docs-updater -s what-next -s test-prover -s ci-triage -s records-audit -a codex --copy -y
 npx skills add mattpocock/skills#d1478fcb140db0b93c0c8df17bcfd311844749d0 \
   -s ask-matt -s code-review -s codebase-design -s diagnosing-bugs -s domain-modeling -s grill-me \
   -s grill-with-docs -s grilling -s implement -s improve-codebase-architecture -s prototype \
