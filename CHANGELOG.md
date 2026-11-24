@@ -14,6 +14,13 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.36] - 2026-11-24
+
+### Changed
+
+- Record the `Dependabot catch-up` merging setting, so `land` catches a Dependabot PR up with
+  `@dependabot rebase` instead of `gh pr update-branch`.
+
 ## [1.6.35] - 2026-11-24
 
 ### Changed
