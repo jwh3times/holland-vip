@@ -14,6 +14,12 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.35] - 2026-11-24
+
+### Changed
+
+- chore(deps): bump the `minor-and-patch` group across 1 directory with 4 updates (#288)
+
 ## [1.6.34] - 2026-11-24
 
 ### Changed
