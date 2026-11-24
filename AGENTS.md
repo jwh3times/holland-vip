@@ -89,9 +89,9 @@ no ready issue exists. `/ask-matt` maps the flow itself.
 
 <!-- /shared:development-flow -->
 
-Outside the gated flow, use `/ship` when a branch is ready for review, `/end-session` to record and
+Outside the gated flow, use `/open-pr` when a branch is ready for review, `/end-session` to record and
 tidy a session without pushing, `/handoff` / `/lets-go` to move a session between machines through the
-Handoffs folder, `/docs-updater` to audit or refresh the docs outside `/ship`, and `/what-next` to
+Handoffs folder, `/docs-updater` to audit or refresh the docs outside `/open-pr`, and `/what-next` to
 rank the open work and name the next command.
 
 ## Code and content boundaries
@@ -188,7 +188,7 @@ projects against `out/`. `tests/global-setup.ts` rejects a foreign server alread
 - `private/README.md`: confidential storage contract.
 
 Update the owning document when its contract changes. The full map, with each document's update
-trigger, is the `Doc map` in [docs/agents/docs.md](docs/agents/docs.md). `/ship` runs the
+trigger, is the `Doc map` in [docs/agents/docs.md](docs/agents/docs.md). `/open-pr` runs the
 `docs-updater` skill over the branch's changes and writes the changelog entry. Run `npm run format`
 before agent synchronization.
 

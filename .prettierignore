@@ -44,7 +44,7 @@ scripts/guard.test.mjs
 .agents/skills/
 
 # Agent scratch — untracked working files, not project source. Prettier does not read
-# nested .gitignore files, so without this /ship's format:check fails on them.
+# nested .gitignore files, so without this /open-pr's format:check fails on them.
 .superpowers/
 
 # Misc
