@@ -14,6 +14,12 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.34] - 2026-11-24
+
+### Changed
+
+- chore(deps-dev): bump `@testing-library/jest-dom` from `7.0.1` to `8.0.0` in the testing-library group across 1 directory (#287)
+
 ## [1.6.33] - 2026-11-24
 
 ### Changed
