@@ -14,6 +14,12 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.30] - 2026-11-23
+
+### Changed
+
+- docs: add the test-proof settings and the Due board field (#297)
+
 ## [1.6.29] - 2026-11-23
 
 ### Changed
