@@ -15,8 +15,8 @@ from `.nvmrc` (a major only, matching `engines.node`).
 `.github/dependabot.yml` updates two ecosystems from `/`: `npm` and `github-actions`. Each groups
 its minor and patch bumps into one PR. In npm, the majors of these families arrive as one PR each:
 `next-ecosystem`, `react`, `testing-library`, `vite-ecosystem` and `lint-and-typescript` (oxlint,
-oxlint-tsgolint, typescript). The `radix-ui` group matches nothing: no `@radix-ui/*` package is
-installed.
+oxlint-tsgolint, typescript). `tests/unit/dependabot-groups.test.ts` fails when a group matches no
+declared dependency.
 
 Workflows run on pull requests: `ci.yml` (`Build & Lint`, `Playwright Tests`,
 `Unit Tests & Coverage`, `Changelog`, and the advisory `Lighthouse Budget (advisory)`),
