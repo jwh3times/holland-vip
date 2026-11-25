@@ -47,13 +47,6 @@ updates:
         update-types:
           - "major"
 
-      # All @radix-ui/* primitives peer-require the same React major.
-      radix-ui:
-        patterns:
-          - "@radix-ui/*"
-        update-types:
-          - "major"
-
       # @testing-library/react and user-event both peer-require @testing-library/dom.
       testing-library:
         patterns:
