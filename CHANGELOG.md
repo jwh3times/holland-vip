@@ -14,6 +14,18 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.39] - 2026-11-25
+
+### Changed
+
+- A unit test now fails when an npm group in `.github/dependabot.yml` matches no declared
+  dependency
+
+### Removed
+
+- Drop the `radix-ui` Dependabot group, which matched no dependency after the last `@radix-ui/*`
+  package was removed (#293)
+
 ## [1.6.38] - 2026-11-25
 
 ### Changed
