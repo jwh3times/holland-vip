@@ -14,6 +14,12 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.40] - 2026-11-25
+
+### Changed
+
+- chore(deps-dev): bump `oxlint-tsgolint` from `7.0.2007` to `7.0.2008` in the minor-and-patch group across 1 directory (#305)
+
 ## [1.6.39] - 2026-11-25
 
 ### Changed
