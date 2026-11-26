@@ -14,6 +14,15 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.42] - 2026-11-26
+
+### Fixed
+
+- The Agent Skills panel in Career & stack names `open-pr` instead of `ship` (#301). The shared
+  skill was renamed upstream, so the panel listed an Agent Skill that no longer installs. A unit
+  test now fails when any panel entry names a skill not installed under `.agents/skills/`, so the
+  next rename cannot leave the panel stale unnoticed.
+
 ## [1.6.41] - 2026-11-25
 
 ### Changed
