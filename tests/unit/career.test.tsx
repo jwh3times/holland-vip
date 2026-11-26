@@ -1,3 +1,5 @@
+import { existsSync, readdirSync } from "node:fs";
+import { join, resolve } from "node:path";
 import { describe, it, expect, vi, afterAll } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -185,6 +187,22 @@ describe("CareerSection", () => {
       "href",
       agentSkillsSource.href
     );
+  });
+
+  it("names only Agent Skills installed in this repository", () => {
+    // A shared skill renamed upstream leaves the panel naming one that no longer installs (#301).
+    // Match the directory listing, not existsSync alone: Windows and macOS match paths
+    // case-insensitively, so `Open-PR` would pass there and fail on Linux.
+    const skillsDir = resolve(".agents", "skills");
+    const installedNames = readdirSync(skillsDir);
+    const missing = agentSkills
+      .map((skill) => skill.name)
+      .filter(
+        (name) => !installedNames.includes(name) || !existsSync(join(skillsDir, name, "SKILL.md"))
+      );
+    expect(installedNames).not.toHaveLength(0);
+    expect(agentSkills).not.toHaveLength(0);
+    expect(missing).toEqual([]);
   });
 
   it("marks every Current Exploration as exploratory", () => {
