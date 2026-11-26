@@ -8,7 +8,7 @@ export interface AgentSkill {
 
 /** The Agent Skills panel in Career & stack. Never call these "skills": that word is the inventory. */
 export const agentSkills: AgentSkill[] = [
-  { name: "ship", does: "finished branch → open PR: release level, docs, changelog, checks" },
+  { name: "open-pr", does: "finished branch → open PR: release level, docs, changelog, checks" },
   { name: "handoff", does: "hands a session to another machine, then closes it out" },
   { name: "lets-go", does: "resumes the active handoff on the other machine" },
   { name: "end-session", does: "memory, issues, board, follow-ups, docs, workspace" },
