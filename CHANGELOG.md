@@ -14,6 +14,12 @@ _Releases before 1.1.0 used a legacy 4-part `v1.0.0.x` tag scheme and predate th
 
 No unreleased changes.
 
+## [1.6.43] - 2026-11-27
+
+### Changed
+
+- chore(deps-dev): bump `oxlint` from `1.94.0` to `1.95.0` in the minor-and-patch group (#311)
+
 ## [1.6.42] - 2026-11-26
 
 ### Fixed
